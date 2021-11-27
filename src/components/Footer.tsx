@@ -3,12 +3,12 @@ import React from 'react'
 const Footer: React.FC<{}> = () => {
   return (
     <footer className="w-full flex align-center justify-end">
-      <ul className="flex align-center justify-between w-20">
+      <ul className="flex align-center justify-between w-28">
         <li>
           <a href="https://twitter.com/">
             <svg
-              width="20"
-              height="20"
+              width="30"
+              height="30"
               viewBox="0 0 16 16"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -23,8 +23,8 @@ const Footer: React.FC<{}> = () => {
         <li>
           <a href="https://google.com/">
             <svg
-              width="36"
-              height="36"
+              width="48"
+              height="48"
               viewBox="0 0 36 36"
               xmlns="http://www.w3.org/2000/svg"
             >
