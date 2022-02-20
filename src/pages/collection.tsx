@@ -39,16 +39,16 @@ const Collection: React.FC<{}> = () => {
             }}
           />
         </div>
-        <div className="relative px-8 w-full pt-[180px] flex justify-between z-10">
+        <div className="relative px-2 md:px-8 w-full pt-[180px] flex flex-col md:flex-row justify-between z-10">
           <img
             src={profile_image}
             alt={name}
-            className="h-64 w-64 rounded-md"
+            className="h-64 w-64 rounded-md mr-8"
           />
           <Stats collection={collection} />
         </div>
       </div>
-      <div className="rounded-md bg-white m-8 p-2 flex items-start justify-between text-black">
+      <div className="rounded-md bg-white mt-8 m-2 md:m-8 p-2 flex flex-col md:flex-row items-start justify-between text-black">
         <div className="w-full md:w-2/12">
           <h1 className="text-2xl font-bold flex items-start">
             {name} {verified && <MdVerified className="ml-1" />}
@@ -84,7 +84,7 @@ const Collection: React.FC<{}> = () => {
             )}
           </div>
         </div>
-        <div className="md:w-10/12 px-6">
+        <div className="w-full md:w-10/12 mt-6 md:mt-0 md:px-6">
           <button className="bg-black px-6 py-2 text-white text-lg rounded-md flex items-center mb-8">
             <FaImages className="mr-2 text-white" /> Items
           </button>
