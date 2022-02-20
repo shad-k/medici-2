@@ -1,23 +1,13 @@
 import React from 'react'
 import Hero from '../components/Hero'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Collections from '../components/Collections'
 
 const Home: React.FC<{}> = () => {
   return (
-    <main
-      className="bg-app bg-background text-text-primary w-screen h-screen bg-no-repeat font-sans"
-      style={{
-        backgroundImage: "url('/background-illustration.svg')",
-        backgroundSize: '120%',
-      }}
-    >
-      <div className="w-full lg:w-2/3 mx-auto h-full flex flex-col">
-        <Header />
-        <Hero />
-        <Footer />
-      </div>
-    </main>
+    <div className="w-full mx-auto h-full flex flex-col">
+      <Hero />
+      <Collections />
+    </div>
   )
 }
 

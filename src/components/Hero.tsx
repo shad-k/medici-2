@@ -2,13 +2,12 @@ import React from 'react'
 
 const Hero: React.FC<{}> = () => {
   return (
-    <section className="text-text-primary flex flex-col align-center justify-center flex-1">
-      <h1 className="font-bold text-6xl text-center mb-4 animate-reveal-from-bottom">
-        "To every age its art, to every art its freedom"
-      </h1>
-      <h6 className="text-text-secondary text-center text-xl animate-reveal-from-bottom-delayed ">
-        Supporting NFT usability.
-      </h6>
+    <section className="lg:w-4/5 m-auto flex justify-center flex-1 py-20">
+      <img
+        src="https://placeholder.pics/svg/600x300"
+        alt="Medici"
+        className="w-full object-contain object-top"
+      />
     </section>
   )
 }
