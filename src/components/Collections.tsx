@@ -7,7 +7,7 @@ import CollectionCard from './CollectionCard'
 
 const Collections: React.FC<{}> = () => {
   const collections = useCollections()
-  console.log(collections)
+
   if (collections.length === 0) {
     return null
   }
