@@ -11,7 +11,7 @@ const App: React.FC<{}> = () => {
     <div className="bg-background border-t border-transparent h-full">
       <Router>
         <Header />
-        <main className="bg-background text-text-primary font-sans mt-16 pb-6 h-[calc(100%-64px)]">
+        <main className="bg-background text-text-primary font-sans mt-16 pb-6 min-h-[calc(100%-64px)]">
           <Routes>
             <Route path="/collection/:slug" element={<Collection />} />
             <Route path="/asset/:collectionSlug/:tokenId" element={<Asset />} />
