@@ -1,13 +1,12 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { MdArrowForward } from 'react-icons/md'
+// import { Link } from 'react-router-dom'
+// import { MdArrowForward } from 'react-icons/md'
 
 import useCollections from '../hooks/useCollections'
 import CollectionCard from './CollectionCard'
 
 const Collections: React.FC<{}> = () => {
   const collections = useCollections()
-
   if (collections.length === 0) {
     return null
   }
@@ -17,10 +16,10 @@ const Collections: React.FC<{}> = () => {
       <h3 className="text-xl text-white border border-white rounded-md px-4 py-2">
         Collections
       </h3>
-      <Link to="/collections" className="flex items-center text-xl">
+      {/* <Link to="/collections" className="flex items-center text-xl">
         View All <MdArrowForward className="ml-1" />
-      </Link>
-      <div className="mt-4 w-full">
+      </Link> */}
+      <div className="mt-4 w-full grid md:grid-cols-3 px-2 md:px-0">
         {collections.map((collection) => (
           <CollectionCard collection={collection} />
         ))}

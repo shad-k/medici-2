@@ -1,10 +1,11 @@
 import mockData from '../mockData.json'
+import { Collection } from '../types'
 
-const useCollection = (slug: string) => {
-  const collection = mockData.collections.find(
-    ({ collection }) => collection.slug === slug
+const useCollection = (slug: string): Collection => {
+  const collection = (mockData as any).tokenContracts.find(
+    ({ id }: any) => id === slug
   )
-  return collection ? collection.collection : undefined
+  return collection
 }
 
 export default useCollection

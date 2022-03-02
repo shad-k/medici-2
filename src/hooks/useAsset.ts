@@ -1,14 +1,11 @@
 import mockData from '../mockData.json'
+import { Token } from '../types'
 
-const useAsset = (collectionSlug: string, tokenId: string) => {
-  const collections = mockData.collections
-  const collection = collections.find(
-    ({ collection }) => collection.slug === collectionSlug
-  )
+const useAsset = (collectionId: string, tokenId: string) => {
+  const collections = (mockData as any).tokenContracts
+  const collection = collections.find(({ id }: any) => id === collectionId)
 
-  const nft = collection?.collection.owner_list.find(
-    (nft) => nft.tokenId === parseInt(tokenId)
-  )
+  const nft = collection?.tokens.find((nft: Token) => nft.tokenID === tokenId)
 
   return nft
 }

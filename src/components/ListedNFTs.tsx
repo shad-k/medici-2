@@ -5,11 +5,11 @@ import NFT from './NFT'
 import { Collection } from '../types'
 
 const ListedNFTs: React.FC<{ collection: Collection }> = ({ collection }) => {
-  const { owner_list: nfts } = collection
+  const { tokens: nfts } = collection
   return (
-    <div className="w-full space-y-3 md:space-y-0 md:space-x-3 grid grid-cols-1 md:grid-cols-4">
+    <div className="w-full grid grid-cols-1 md:grid-cols-4">
       {nfts.map((nft) => (
-        <Link to={`/asset/${collection.slug}/${nft.tokenId}`}>
+        <Link to={`/asset/${collection.id}/${nft.tokenID}`} className="m-2">
           <NFT collection={collection} nft={nft} />
         </Link>
       ))}

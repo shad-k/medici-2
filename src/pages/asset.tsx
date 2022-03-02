@@ -12,11 +12,12 @@ import { utils } from 'ethers'
 import useAsset from '../hooks/useAsset'
 import useCollection from '../hooks/useCollection'
 import { FaWallet } from 'react-icons/fa'
+import ImageFromIPFSMetadata from '../components/ImageFromIPFSMetadata'
 
 const Asset: React.FC<{}> = () => {
-  const { collectionSlug, tokenId } = useParams()
-  const collection = useCollection(collectionSlug as string)
-  const nft = useAsset(collectionSlug as string, tokenId as string)
+  const { collectionId, tokenId } = useParams()
+  const collection = useCollection(collectionId as string)
+  const nft = useAsset(collectionId as string, tokenId as string)
   const [openDescription, setOpenDescription] = React.useState(true)
   const [openOffers, setOpenOffers] = React.useState(true)
 
@@ -35,14 +36,30 @@ const Asset: React.FC<{}> = () => {
   // TODO: assign offers below
   const offers = null
 
+  // TODO: remove
+  const description =
+    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem qui sed quae repellat dolor minima dolorum! Beatae necessitatibus distinctio itaque doloremque excepturi explicabo totam, asperiores ut reprehenderit, minus corrupti quibusdam.'
+  const floor_price = 0
+
+  const collectionImage =
+    collection.tokens.length > 0 ? collection.tokens[0].tokenURI : null
+
   return (
     <div className="lg:w-4/5 m-auto flex justify-between items-center flex-wrap pb-4 h-full">
       <div className="w-2/5 h-full">
-        <img
-          src={nft?.image}
-          alt={`${nft?.tokenId}` || collection?.name || ''}
-          className="rounded-md"
-        />
+        {nft.tokenURI && nft.tokenURI.startsWith('ipfs://') ? (
+          <ImageFromIPFSMetadata
+            src={nft.tokenURI}
+            alt={`${nft?.tokenId}` || collection?.name || ''}
+            className="rounded-md"
+          />
+        ) : (
+          <img
+            src={'https://placeholder.pics/svg/300x300'}
+            alt={`${nft?.tokenId}` || collection?.name || ''}
+            className="rounded-md"
+          />
+        )}
         <div className="w-full rounded-md border border-gray-300 mt-10">
           <div
             className="flex items-center p-4 cursor-pointer"
@@ -53,18 +70,24 @@ const Asset: React.FC<{}> = () => {
             {openDescription ? <BiChevronDown /> : <BiChevronRight />}
           </div>
           {openDescription && (
-            <div className="p-4 border-t border-gray-300">
-              {collection?.description}
-            </div>
+            <div className="p-4 border-t border-gray-300">{description}</div>
           )}
         </div>
       </div>
       <div className="w-3/5 flex flex-col items-start p-8 pt-20 h-full">
-        <Link to={`/collection/${collection?.slug}`}>
+        <Link to={`/collection/${collection?.id}`}>
           <div className="rounded-md shadow-md flex items-center justify-between p-2 bg-white text-black">
-            {collection?.profile_image && (
+            {collectionImage && collectionImage.startsWith('ipfs://') ? (
+              <ImageFromIPFSMetadata
+                src={collectionImage}
+                height={50}
+                width={50}
+                alt={collection.name}
+                className="rounded-md"
+              />
+            ) : (
               <img
-                src={collection?.profile_image}
+                src={'https://placeholder.pics/svg/50x50'}
                 height={50}
                 width={50}
                 alt={collection.name}
@@ -86,7 +109,7 @@ const Asset: React.FC<{}> = () => {
           {collection.name} #{nft.tokenId}
         </h2>
         <p className="mt-2 text-sm">
-          Owned by <span className="text-red-500">{nft.owner}</span>
+          Owned by <span className="text-red-500">{nft.owner.id}</span>
         </p>
 
         <div className="text-white font-bold mt-8 mb-1 py-0">
@@ -104,7 +127,7 @@ const Asset: React.FC<{}> = () => {
               >
                 <path d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"></path>
               </svg>
-              {utils.formatUnits(collection.floor_price, 'gwei')}
+              {utils.formatUnits(floor_price, 'gwei')}
             </div>
           </div>
         </div>
