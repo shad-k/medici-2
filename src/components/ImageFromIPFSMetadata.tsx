@@ -9,14 +9,29 @@ const ImageFromIPFSMetadata: React.FC<Props> = ({ src, ...restProps }) => {
 
   React.useEffect(() => {
     ;(async () => {
-      const metadata = await fetch(
-        src.replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
-      )
-        .then((res) => res.json())
-        .then((res) => res)
-      setImageSrc(
-        metadata.image.replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
-      )
+      try {
+        const metadata = await fetch(
+          src
+            .replace('/ipfs/', '')
+            .replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
+            .replace(' ', '')
+        )
+          .then((res) => res.json())
+          .then((res) => res)
+        setImageSrc(
+          metadata.image.replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
+        )
+      } catch (error) {
+        console.log(
+          'Failed for',
+          src,
+          'Request url:',
+          src
+            .replace('/ipfs/', '')
+            .replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
+            .replace(' ', '')
+        )
+      }
     })()
   }, [src])
 

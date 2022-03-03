@@ -9,7 +9,11 @@ const ListedNFTs: React.FC<{ collection: Collection }> = ({ collection }) => {
   return (
     <div className="w-full grid grid-cols-1 md:grid-cols-4">
       {nfts.map((nft) => (
-        <Link to={`/asset/${collection.id}/${nft.tokenID}`} className="m-2">
+        <Link
+          to={`/asset/${collection.id}/${nft.tokenID}`}
+          className="m-2"
+          key={nft.tokenID}
+        >
           <NFT collection={collection} nft={nft} />
         </Link>
       ))}

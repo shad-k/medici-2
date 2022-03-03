@@ -3,6 +3,7 @@ import React from 'react'
 // import { MdArrowForward } from 'react-icons/md'
 
 import useCollections from '../hooks/useCollections'
+import { Collection } from '../types'
 import CollectionCard from './CollectionCard'
 
 const Collections: React.FC<{}> = () => {
@@ -20,8 +21,8 @@ const Collections: React.FC<{}> = () => {
         View All <MdArrowForward className="ml-1" />
       </Link> */}
       <div className="mt-4 w-full grid md:grid-cols-3 px-2 md:px-0">
-        {collections.map((collection) => (
-          <CollectionCard collection={collection} />
+        {collections.map((collection: Collection) => (
+          <CollectionCard collection={collection} key={collection.id} />
         ))}
       </div>
     </div>
