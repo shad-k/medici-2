@@ -13,13 +13,16 @@ const ImageFromIPFSMetadata: React.FC<Props> = ({ src, ...restProps }) => {
         const metadata = await fetch(
           src
             .replace('/ipfs/', '')
-            .replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
+            .replace('ipfs://', 'https://medici-test.mypinata.cloud/ipfs/')
             .replace(' ', '')
         )
           .then((res) => res.json())
           .then((res) => res)
         setImageSrc(
-          metadata.image.replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
+          metadata.image.replace(
+            'ipfs://',
+            'https://medici-test.mypinata.cloud/ipfs/'
+          )
         )
       } catch (error) {
         console.log(
@@ -28,7 +31,7 @@ const ImageFromIPFSMetadata: React.FC<Props> = ({ src, ...restProps }) => {
           'Request url:',
           src
             .replace('/ipfs/', '')
-            .replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
+            .replace('ipfs://', 'https://medici-test.mypinata.cloud/ipfs/')
             .replace(' ', '')
         )
       }
