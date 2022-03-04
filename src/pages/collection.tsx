@@ -8,6 +8,7 @@ import Stats from '../components/Stats'
 import ListedNFTs from '../components/ListedNFTs'
 import useCollection from '../hooks/useCollection'
 import ImageFromIPFSMetadata from '../components/ImageFromIPFSMetadata'
+import ImageFromBase64 from '../components/ImageFromBase64'
 
 const Collection: React.FC<{}> = () => {
   const { id } = useParams()
@@ -37,23 +38,45 @@ const Collection: React.FC<{}> = () => {
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis sunt unde explicabo odit voluptatibus iusto, nesciunt maiores possimus suscipit natus quisquam inventore dignissimos et, ab temporibus quo? Perferendis, minima ab?'
   /** */
 
-  const coverImage = tokens?.length > 0 ? tokens[0].tokenURI : null
+  const coverImage = tokens?.length > 0 ? tokens[1].tokenURI : null
   const profileImage = tokens?.length > 0 ? tokens[0].tokenURI : null
 
   return (
     <div className="w-full min-h-[calc(100vh-65px)]">
       <div className="relative w-full">
         <div className="absolute w-full h-80 top-0">
-          {coverImage && coverImage.startsWith('ipfs://') ? (
-            <ImageFromIPFSMetadata
-              src={coverImage}
-              alt={name}
-              className="w-full object-cover"
-              style={{
-                width: '100%',
-                height: '300px',
-              }}
-            />
+          {coverImage ? (
+            coverImage.startsWith('ipfs://') ? (
+              <ImageFromIPFSMetadata
+                src={coverImage}
+                alt={name}
+                className="w-full object-cover"
+                style={{
+                  width: '100%',
+                  height: '300px',
+                }}
+              />
+            ) : coverImage.startsWith('data:application/json;base64') ? (
+              <ImageFromBase64
+                src={coverImage}
+                alt={name}
+                className="w-full object-cover"
+                style={{
+                  width: '100%',
+                  height: '300px',
+                }}
+              />
+            ) : (
+              <img
+                src={'https://placeholder.pics/svg/600x300'}
+                alt={name}
+                className="w-full object-cover"
+                style={{
+                  width: '100%',
+                  height: '300px',
+                }}
+              />
+            )
           ) : (
             <img
               src={'https://placeholder.pics/svg/600x300'}
@@ -67,12 +90,26 @@ const Collection: React.FC<{}> = () => {
           )}
         </div>
         <div className="relative px-2 md:px-8 w-full pt-[180px] flex flex-col md:flex-row justify-between z-10">
-          {profileImage && profileImage.startsWith('ipfs://') ? (
-            <ImageFromIPFSMetadata
-              src={profileImage}
-              alt={name}
-              className="h-64 w-64 rounded-md mr-8"
-            />
+          {profileImage ? (
+            profileImage.startsWith('ipfs://') ? (
+              <ImageFromIPFSMetadata
+                src={profileImage}
+                alt={name}
+                className="h-64 w-64 rounded-md mr-8"
+              />
+            ) : profileImage.startsWith('data:application/json;base64') ? (
+              <ImageFromBase64
+                src={profileImage}
+                alt={name}
+                className="h-64 w-64 rounded-md mr-8"
+              />
+            ) : (
+              <img
+                src={profileImage as string}
+                alt={name}
+                className="h-64 w-64 rounded-md mr-8"
+              />
+            )
           ) : (
             <img
               src={profileImage as string}

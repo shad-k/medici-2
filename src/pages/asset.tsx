@@ -13,6 +13,7 @@ import useAsset from '../hooks/useAsset'
 import useCollection from '../hooks/useCollection'
 import { FaWallet } from 'react-icons/fa'
 import ImageFromIPFSMetadata from '../components/ImageFromIPFSMetadata'
+import ImageFromBase64 from '../components/ImageFromBase64'
 
 const Asset: React.FC<{}> = () => {
   const { collectionId, tokenId } = useParams()
@@ -47,12 +48,26 @@ const Asset: React.FC<{}> = () => {
   return (
     <div className="lg:w-4/5 m-auto flex justify-between items-center flex-wrap pb-4 h-full">
       <div className="w-2/5 h-full">
-        {nft.tokenURI && nft.tokenURI.startsWith('ipfs://') ? (
-          <ImageFromIPFSMetadata
-            src={nft.tokenURI}
-            alt={`${nft?.tokenId}` || collection?.name || ''}
-            className="rounded-md"
-          />
+        {nft.tokenURI ? (
+          nft.tokenURI.startsWith('ipfs://') ? (
+            <ImageFromIPFSMetadata
+              src={nft.tokenURI}
+              alt={`${nft?.tokenId}` || collection?.name || ''}
+              className="rounded-md"
+            />
+          ) : nft.tokenURI.startsWith('data:application/json;base64') ? (
+            <ImageFromBase64
+              src={nft.tokenURI}
+              alt={`${nft?.tokenId}` || collection?.name || ''}
+              className="rounded-md"
+            />
+          ) : (
+            <img
+              src={'https://placeholder.pics/svg/300x300'}
+              alt={`${nft?.tokenId}` || collection?.name || ''}
+              className="rounded-md"
+            />
+          )
         ) : (
           <img
             src={'https://placeholder.pics/svg/300x300'}
@@ -77,14 +92,32 @@ const Asset: React.FC<{}> = () => {
       <div className="w-3/5 flex flex-col items-start p-8 pt-20 h-full">
         <Link to={`/collection/${collection?.id}`}>
           <div className="rounded-md shadow-md flex items-center justify-between p-2 bg-white text-black">
-            {collectionImage && collectionImage.startsWith('ipfs://') ? (
-              <ImageFromIPFSMetadata
-                src={collectionImage}
-                height={50}
-                width={50}
-                alt={collection.name}
-                className="rounded-md"
-              />
+            {collectionImage ? (
+              collectionImage.startsWith('ipfs://') ? (
+                <ImageFromIPFSMetadata
+                  src={collectionImage}
+                  height={50}
+                  width={50}
+                  alt={collection.name}
+                  className="rounded-md"
+                />
+              ) : collectionImage.startsWith('data:application/json;base64') ? (
+                <ImageFromBase64
+                  src={collectionImage}
+                  height={50}
+                  width={50}
+                  alt={collection.name}
+                  className="rounded-md"
+                />
+              ) : (
+                <img
+                  src={'https://placeholder.pics/svg/50x50'}
+                  height={50}
+                  width={50}
+                  alt={collection.name}
+                  className="rounded-md"
+                />
+              )
             ) : (
               <img
                 src={'https://placeholder.pics/svg/50x50'}

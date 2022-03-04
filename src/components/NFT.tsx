@@ -4,6 +4,7 @@ import { MdVerified, MdTimer } from 'react-icons/md'
 
 import { Collection, Token } from '../types'
 import ethIcon from './eth-icon.svg'
+import ImageFromBase64 from './ImageFromBase64'
 import ImageFromIPFSMetadata from './ImageFromIPFSMetadata'
 
 const NFT: React.FC<{
@@ -20,12 +21,26 @@ const NFT: React.FC<{
 
   return (
     <div className="bg-white rounded-md overflow-hidden flex flex-col shadow-lg">
-      {tokenURI && tokenURI.startsWith('ipfs://') ? (
-        <ImageFromIPFSMetadata
-          src={tokenURI}
-          alt={`NFT ${tokenID}`}
-          className="w-full h-64 object-cover"
-        />
+      {tokenURI ? (
+        tokenURI.startsWith('ipfs://') ? (
+          <ImageFromIPFSMetadata
+            src={tokenURI}
+            alt={`NFT ${tokenID}`}
+            className="w-full h-64 object-cover"
+          />
+        ) : tokenURI.startsWith('data:application/json;base64') ? (
+          <ImageFromBase64
+            src={tokenURI}
+            alt={`NFT ${tokenID}`}
+            className="w-full h-64 object-cover"
+          />
+        ) : (
+          <img
+            src={'https://placeholder.pics/svg/64x64'}
+            alt={`NFT ${tokenID}`}
+            className="w-full h-64 object-cover"
+          />
+        )
       ) : (
         <img
           src={'https://placeholder.pics/svg/64x64'}

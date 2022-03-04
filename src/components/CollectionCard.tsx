@@ -7,6 +7,7 @@ import { utils } from 'ethers'
 import type { Collection } from '../types'
 import ethIcon from './eth-icon.svg'
 import ImageFromIPFSMetadata from './ImageFromIPFSMetadata'
+import ImageFromBase64 from './ImageFromBase64'
 
 const CollectionCard: React.FC<{ collection: Collection }> = ({
   collection,
@@ -19,16 +20,38 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
       to={`/collection/${id}`}
       className="rounded-md shadow-lg p-2 bg-white flex items-center justify-between mx-2 my-4 text-black"
     >
-      {collectionImage && collectionImage.startsWith('ipfs://') ? (
-        <ImageFromIPFSMetadata
-          src={collectionImage}
-          alt={name}
-          className="rounded-md overflow-hidden object-cover object-center"
-          style={{
-            height: '150px',
-            width: '120px',
-          }}
-        />
+      {collectionImage ? (
+        collectionImage.startsWith('ipfs://') ? (
+          <ImageFromIPFSMetadata
+            src={collectionImage}
+            alt={name}
+            className="rounded-md overflow-hidden object-cover object-center"
+            style={{
+              height: '150px',
+              width: '120px',
+            }}
+          />
+        ) : collectionImage.startsWith('data:application/json;base64') ? (
+          <ImageFromBase64
+            src={collectionImage}
+            alt={name}
+            className="rounded-md overflow-hidden object-cover object-center"
+            style={{
+              height: '150px',
+              width: '120px',
+            }}
+          />
+        ) : (
+          <img
+            src={'https://placeholder.pics/svg/120x150'}
+            alt={name}
+            className="rounded-md overflow-hidden object-cover object-center"
+            style={{
+              height: '150px',
+              width: '120px',
+            }}
+          />
+        )
       ) : (
         <img
           src={'https://placeholder.pics/svg/120x150'}
