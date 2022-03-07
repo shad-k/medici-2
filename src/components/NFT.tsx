@@ -26,19 +26,19 @@ const NFT: React.FC<{
           <ImageFromIPFSMetadata
             src={tokenURI}
             alt={`NFT ${tokenID}`}
-            className="w-full h-64 object-cover"
+            className="w-full h-64 object-contain"
           />
         ) : tokenURI.startsWith('data:application/json;base64') ? (
           <ImageFromBase64
             src={tokenURI}
             alt={`NFT ${tokenID}`}
-            className="w-full h-64 object-cover"
+            className="w-full h-64 object-contain"
           />
         ) : (
           <img
             src={'https://placeholder.pics/svg/64x64'}
             alt={`NFT ${tokenID}`}
-            className="w-full h-64 object-cover"
+            className="w-full h-64 object-contain"
           />
         )
       ) : (

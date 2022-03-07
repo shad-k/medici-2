@@ -38,8 +38,8 @@ const Collection: React.FC<{}> = () => {
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis sunt unde explicabo odit voluptatibus iusto, nesciunt maiores possimus suscipit natus quisquam inventore dignissimos et, ab temporibus quo? Perferendis, minima ab?'
   /** */
 
-  const coverImage = tokens?.length > 0 ? tokens[1].tokenURI : null
-  const profileImage = tokens?.length > 0 ? tokens[0].tokenURI : null
+  const coverImage = tokens?.length > 0 ? tokens[1]?.tokenURI : null
+  const profileImage = tokens?.length > 0 ? tokens[0]?.tokenURI : null
 
   return (
     <div className="w-full min-h-[calc(100vh-65px)]">
@@ -95,19 +95,19 @@ const Collection: React.FC<{}> = () => {
               <ImageFromIPFSMetadata
                 src={profileImage}
                 alt={name}
-                className="h-64 w-64 rounded-md mr-8"
+                className="h-64 w-64 rounded-md mr-8 object-contain bg-white p-2"
               />
             ) : profileImage.startsWith('data:application/json;base64') ? (
               <ImageFromBase64
                 src={profileImage}
                 alt={name}
-                className="h-64 w-64 rounded-md mr-8"
+                className="h-64 w-64 rounded-md mr-8 object-contain bg-white p-2"
               />
             ) : (
               <img
                 src={profileImage as string}
                 alt={name}
-                className="h-64 w-64 rounded-md mr-8"
+                className="h-64 w-64 rounded-md mr-8 object-contain bg-white p-2"
               />
             )
           ) : (
