@@ -2,8 +2,8 @@ import React from 'react'
 import { utils } from 'ethers'
 import numeral from 'numeral'
 
-import ethIcon from './eth-icon.svg'
 import { Collection } from '../types'
+import EthIcon from './svgComponents/EthIcon'
 
 const Stats: React.FC<{ collection: Collection }> = ({ collection }) => {
   const { numTokens, numOwners, tokens } = collection
@@ -35,14 +35,14 @@ const Stats: React.FC<{ collection: Collection }> = ({ collection }) => {
       </div>
       <div className="flex flex-col items-center justify-between bg-white rounded-md shadow-md flex-1 py-2 min-w-[100px] my-2 md:my-0">
         <span className="text-black font-bold flex items-center">
-          <img src={ethIcon} alt="Floor Price" />
+          <EthIcon />
           {utils.formatUnits(floor_price, 'gwei')}
         </span>
         <span className="text-gray-700 text-sm">floor</span>
       </div>
       <div className="flex flex-col items-center justify-between bg-white rounded-md shadow-md flex-1 py-2 min-w-[100px] my-2 md:my-0">
         <span className="text-black font-bold flex items-center">
-          <img src={ethIcon} alt="Volume Traded" />
+          <EthIcon />
           {parseFloat(utils.formatUnits(volume_traded, 'gwei')).toFixed(2)}
         </span>
         <span className="text-gray-700 text-sm">volume</span>

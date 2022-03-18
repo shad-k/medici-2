@@ -5,9 +5,9 @@ import numeral from 'numeral'
 import { utils } from 'ethers'
 
 import type { Collection } from '../types'
-import ethIcon from './eth-icon.svg'
 import ImageFromIPFSMetadata from './ImageFromIPFSMetadata'
 import ImageFromBase64 from './ImageFromBase64'
+import EthIcon from './svgComponents/EthIcon'
 
 const CollectionCard: React.FC<{ collection: Collection }> = ({
   collection,
@@ -88,7 +88,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
           </div>
           <div className="flex flex-col items-center justify-between">
             <span className="text-black font-bold flex items-center">
-              <img src={ethIcon} alt="Floor Price" />
+              <EthIcon />
               {/* {utils.formatUnits(floor_price, 'gwei')} */}
               {utils.formatUnits(0, 'gwei')}
             </span>
@@ -96,7 +96,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
           </div>
           <div className="flex flex-col items-center justify-between">
             <span className="text-black font-bold flex items-center">
-              <img src={ethIcon} alt="Volume Traded" />
+              <EthIcon />
               {/* {parseFloat(utils.formatUnits(volume_traded, 'gwei')).toFixed(2)} */}
               {parseFloat(utils.formatUnits(0, 'gwei')).toFixed(2)}
             </span>

@@ -3,9 +3,9 @@ import React from 'react'
 import { MdVerified, MdTimer } from 'react-icons/md'
 
 import { Collection, Token } from '../types'
-import ethIcon from './eth-icon.svg'
 import ImageFromBase64 from './ImageFromBase64'
 import ImageFromIPFSMetadata from './ImageFromIPFSMetadata'
+import EthIcon from './svgComponents/EthIcon'
 
 const NFT: React.FC<{
   collection: Collection
@@ -60,7 +60,7 @@ const NFT: React.FC<{
         <div className="my-2 flex flex-col">
           <span className="text-gray-700 text-xs">Price</span>
           <div className="flex items-center py-1">
-            <img src={ethIcon} alt="Floor Price" />
+            <EthIcon />
             {utils.formatUnits(floor_price, 'gwei')}
           </div>
         </div>
