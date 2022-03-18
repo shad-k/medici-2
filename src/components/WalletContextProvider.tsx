@@ -1,6 +1,6 @@
 import React from 'react'
 import type { ConnectOptions } from '@web3-onboard/core'
-import { init, useConnectWallet, useWallets } from '@web3-onboard/react'
+import { init, useConnectWallet } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
 
 import { WalletContextReturn } from '../types'
