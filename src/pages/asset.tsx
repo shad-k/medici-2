@@ -14,6 +14,9 @@ import useCollection from '../hooks/useCollection'
 import { FaWallet } from 'react-icons/fa'
 import ImageFromIPFSMetadata from '../components/ImageFromIPFSMetadata'
 import ImageFromBase64 from '../components/ImageFromBase64'
+import BuyConfirmationModal from '../components/BuyConfirmationModal'
+import NFTImage from '../components/NFTImage'
+import EthIcon from '../components/svgComponents/EthIcon'
 
 const Asset: React.FC<{}> = () => {
   const { collectionId, tokenId } = useParams()
@@ -21,6 +24,8 @@ const Asset: React.FC<{}> = () => {
   const nft = useAsset(collectionId as string, tokenId as string)
   const [openDescription, setOpenDescription] = React.useState(true)
   const [openOffers, setOpenOffers] = React.useState(true)
+  const [showBuyConfirmationModal, setShowBuyConfirmationModal] =
+    React.useState(false)
 
   const toggleDescription = () => {
     setOpenDescription((val) => !val)
@@ -45,36 +50,18 @@ const Asset: React.FC<{}> = () => {
   const collectionImage =
     collection.tokens.length > 0 ? collection.tokens[0].tokenURI : null
 
+  const openBuyConfirmationModal = () => {
+    setShowBuyConfirmationModal(true)
+  }
+
+  const closeBuyConfirmationModal = () => {
+    setShowBuyConfirmationModal(false)
+  }
+
   return (
     <div className="lg:w-4/5 m-auto flex justify-between items-center flex-wrap pb-4 h-full">
       <div className="w-2/5 h-full">
-        {nft.tokenURI ? (
-          nft.tokenURI.startsWith('ipfs://') ? (
-            <ImageFromIPFSMetadata
-              src={nft.tokenURI}
-              alt={`${nft?.tokenId}` || collection?.name || ''}
-              className="rounded-md"
-            />
-          ) : nft.tokenURI.startsWith('data:application/json;base64') ? (
-            <ImageFromBase64
-              src={nft.tokenURI}
-              alt={`${nft?.tokenId}` || collection?.name || ''}
-              className="rounded-md"
-            />
-          ) : (
-            <img
-              src={'https://placeholder.pics/svg/300x300'}
-              alt={`${nft?.tokenId}` || collection?.name || ''}
-              className="rounded-md"
-            />
-          )
-        ) : (
-          <img
-            src={'https://placeholder.pics/svg/300x300'}
-            alt={`${nft?.tokenId}` || collection?.name || ''}
-            className="rounded-md"
-          />
-        )}
+        <NFTImage nft={nft} collection={collection} />
         <div className="w-full rounded-md border border-gray-300 mt-10">
           <div
             className="flex items-center p-4 cursor-pointer"
@@ -139,7 +126,7 @@ const Asset: React.FC<{}> = () => {
         </Link>
 
         <h2 className="mt-10 text-2xl font-bold">
-          {collection.name} #{nft.tokenId}
+          {collection.name} #{nft.tokenID}
         </h2>
         <p className="mt-2 text-sm">
           Owned by <span className="text-red-500">{nft.owner.id}</span>
@@ -149,17 +136,7 @@ const Asset: React.FC<{}> = () => {
           <div className="flex flex-col">
             <span className="text-xs">Price</span>
             <div className="flex items-center py-1 text-white">
-              <svg
-                stroke="currentColor"
-                fill="currentColor"
-                strokeWidth="0"
-                viewBox="0 0 320 512"
-                height="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"></path>
-              </svg>
+              <EthIcon />
               {utils.formatUnits(floor_price, 'gwei')}
             </div>
           </div>
@@ -170,7 +147,10 @@ const Asset: React.FC<{}> = () => {
         </div>
 
         <div className="mt-8 flex items-center">
-          <button className="bg-white px-6 py-2 text-black text-lg rounded-md flex items-center mr-4">
+          <button
+            className="bg-white px-6 py-2 text-black text-lg rounded-md flex items-center mr-4"
+            onClick={openBuyConfirmationModal}
+          >
             <FaWallet className="mr-2" /> Buy Now
           </button>
           <button className="bg-black border border-white px-6 py-2 text-white text-lg rounded-md flex items-center">
@@ -198,6 +178,13 @@ const Asset: React.FC<{}> = () => {
           )}
         </div>
       </div>
+      {showBuyConfirmationModal && (
+        <BuyConfirmationModal
+          closeModal={closeBuyConfirmationModal}
+          nft={nft}
+          collection={collection}
+        />
+      )}
     </div>
   )
 }
