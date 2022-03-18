@@ -1,3 +1,5 @@
+import type { ConnectOptions, WalletState } from '@web3-onboard/core'
+
 export type ListedNFT = {
   owner: string
   tokenId: number
@@ -41,4 +43,10 @@ export type Collection = {
   // discord_link: string
   // site_link: string
   // owner_list: Array<ListedNFT>
+}
+
+export type WalletContextReturn = {
+  connect: (options: ConnectOptions) => Promise<void>
+  wallet: WalletState | null
+  connecting: boolean
 }
