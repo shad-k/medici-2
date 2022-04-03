@@ -21,7 +21,7 @@ import EthIcon from '../components/svgComponents/EthIcon'
 const Asset: React.FC<{}> = () => {
   const { collectionId, tokenId } = useParams()
   const { data: collection, error } = useCollection(collectionId as string)
-  const nft = useAsset(collectionId as string, tokenId as string)
+  const { data: nft } = useAsset(tokenId as string, collection)
   const [openDescription, setOpenDescription] = React.useState(true)
   const [openOffers, setOpenOffers] = React.useState(true)
   const [showBuyConfirmationModal, setShowBuyConfirmationModal] =

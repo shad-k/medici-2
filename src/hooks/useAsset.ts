@@ -1,13 +1,16 @@
-import mockData from '../mockData.json'
-import { Token } from '../types'
+import { Collection, Token } from '../types'
 
-const useAsset = (collectionId: string, tokenId: string): Token => {
-  const collections = (mockData as any).tokenContracts
-  const collection = collections.find(({ id }: any) => id === collectionId)
-
+type UseAssetReturn = {
+  data?: Token
+  error?: unknown
+}
+const useAsset = (tokenId: string, collection?: Collection): UseAssetReturn => {
+  if (!collection) {
+    return { data: undefined, error: undefined }
+  }
   const nft = collection?.tokens.find((nft: Token) => nft.tokenID === tokenId)
 
-  return nft
+  return { data: nft }
 }
 
 export default useAsset
