@@ -12,10 +12,15 @@ import ImageFromBase64 from '../components/ImageFromBase64'
 
 const Collection: React.FC<{}> = () => {
   const { id } = useParams()
-  const collection = useCollection(id as string)
-  if (!collection) {
+  const { data, error } = useCollection(id as string)
+  if (!data && !error) {
     return null
   }
+
+  if (!data) {
+    return null
+  }
+
   const {
     id: collectionId,
     name,
@@ -26,7 +31,7 @@ const Collection: React.FC<{}> = () => {
     // twitter_link,
     // discord_link,
     // site_link,
-  } = collection
+  } = data
 
   /**
    * Remove these once we have data
@@ -117,7 +122,7 @@ const Collection: React.FC<{}> = () => {
               className="h-64 w-64 rounded-md mr-8"
             />
           )}
-          <Stats collection={collection} />
+          <Stats collection={data} />
         </div>
       </div>
       <div className="rounded-md bg-white mt-8 m-2 md:m-8 p-2 flex flex-col md:flex-row items-start justify-between text-black">
@@ -162,7 +167,7 @@ const Collection: React.FC<{}> = () => {
             <FaImages className="mr-2 text-white" /> Items
           </button>
           {tokens.length > 0 ? (
-            <ListedNFTs collection={collection} />
+            <ListedNFTs collection={data} />
           ) : (
             <div className="h-40 w-full flex items-center justify-center text-gray-500 text-lg font-bold">
               No NFTs listed for this collection

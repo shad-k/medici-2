@@ -1,11 +1,23 @@
-import mockData from '../mockData.json'
-import { Collection } from '../types'
+import useSWR from 'swr'
 
-const useCollection = (slug: string): Collection => {
-  const collection = (mockData as any).tokenContracts.find(
-    ({ id }: any) => id === slug
+import { Collection } from '../types'
+import apiClient from '../utils/apiClient'
+import { API_PATHS } from '../utils/config'
+
+type UseCollectionReturn = {
+  data?: Collection
+  error?: unknown
+}
+const useCollection = (slug: string): UseCollectionReturn => {
+  const { data, error } = useSWR<Collection>(
+    [API_PATHS.COLLECTION, slug],
+    (url, slug) => {
+      return apiClient(`${url}/${slug}`).then((res) => {
+        return res.data.data.tokenContract
+      })
+    }
   )
-  return collection
+  return { data, error }
 }
 
 export default useCollection
