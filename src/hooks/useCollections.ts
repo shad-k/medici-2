@@ -1,13 +1,10 @@
 import React from 'react'
-import mockData from '../mockData.json'
+import useSWR from 'swr'
+import { API_PATHS } from '../utils/config'
 
 const useCollections = () => {
-  const [collections, setCollections] = React.useState([])
-
-  React.useEffect(() => {
-    setCollections((mockData as any).tokenContracts)
-  }, [])
-  return collections
+  const { data, error } = useSWR(API_PATHS.COLLECTIONS)
+  return { data, error }
 }
 
 export default useCollections
