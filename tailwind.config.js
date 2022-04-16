@@ -9,9 +9,11 @@ module.exports = {
     extend: {
       colors: {
         background: '#151719',
-        text: {
+        medici: {
           primary: colors.white,
-          secondary: '#6618E4',
+          purple: {
+            DEFAULT: '#6618E4',
+          },
         },
       },
     },

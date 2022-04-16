@@ -11,10 +11,10 @@ import WalletContextProvider from './components/WalletContextProvider'
 const App: React.FC<{}> = () => {
   return (
     <WalletContextProvider>
-      <div className="border-t border-transparent h-full">
+      <div className="border-t border-transparent h-full text-medici-primary">
         <Router>
           <Header />
-          <main className="text-text-primary font-sans mt-16 pb-6 h-[calc(100%-64px)] overflow-auto">
+          <main className="font-sans mt-16 pb-6 h-[calc(100%-64px)] overflow-auto">
             <Routes>
               <Route path="/collections" element={<AllCollectionsPage />} />
               <Route path="/collection/:id" element={<Collection />} />
