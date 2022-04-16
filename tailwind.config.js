@@ -11,7 +11,7 @@ module.exports = {
         background: '#151719',
         text: {
           primary: colors.white,
-          secondary: '#9CA9B3',
+          secondary: '#6618E4',
         },
       },
     },
