@@ -1,8 +1,8 @@
 import React from 'react'
 
 import { Collection } from '../types'
-import CollectionCard from './CollectionCard'
 import useCollections from '../hooks/useCollections'
+import FeaturedCollectionCard from './FeaturedCollectionCard'
 
 const AllCollections = () => {
   const { data: collections, error } = useCollections()
@@ -21,7 +21,7 @@ const AllCollections = () => {
       </h3>
       <div className="mt-4 w-full grid md:grid-cols-3 px-2 md:px-0">
         {collections.map((collection: Collection) => (
-          <CollectionCard collection={collection} key={collection.id} />
+          <FeaturedCollectionCard collection={collection} key={collection.id} />
         ))}
       </div>
     </div>
