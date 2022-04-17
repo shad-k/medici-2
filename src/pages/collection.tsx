@@ -21,6 +21,7 @@ const Collection: React.FC<{}> = () => {
     return null
   }
 
+  console.log(data)
   const {
     id: collectionId,
     name,
@@ -39,12 +40,18 @@ const Collection: React.FC<{}> = () => {
   const twitter_link = 'null'
   const discord_link = 'null'
   const site_link = 'null'
-  const description =
-    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis sunt unde explicabo odit voluptatibus iusto, nesciunt maiores possimus suscipit natus quisquam inventore dignissimos et, ab temporibus quo? Perferendis, minima ab?'
   /** */
 
-  const coverImage = tokens?.length > 0 ? tokens[1]?.tokenURI : null
-  const profileImage = tokens?.length > 0 ? tokens[0]?.tokenURI : null
+  const coverImage = tokens?.length > 1 ? tokens[1]?.tokenURI : null
+  const tokenURIJson =
+    tokens?.length > 0
+      ? JSON.parse(
+          tokens[0]?.tokenURI.substring(0, tokens[0]?.tokenURI.length - 1)
+        )
+      : null
+
+  const profileImage = tokenURIJson.image
+  const description = tokenURIJson.description
 
   return (
     <div className="w-full min-h-[calc(100vh-65px)]">

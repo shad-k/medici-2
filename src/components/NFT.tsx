@@ -12,7 +12,9 @@ const NFT: React.FC<{
   nft: Token
 }> = ({ collection, nft }) => {
   const { tokenURI, tokenID } = nft
-  const { name } = collection
+  console.log(tokenURI)
+  const tokenURIJson = JSON.parse(tokenURI.substring(0, tokenURI.length - 1))
+  const { name, image } = tokenURIJson
 
   // TODO: remove
   const verified = true
@@ -21,16 +23,22 @@ const NFT: React.FC<{
 
   return (
     <div className="bg-white rounded-md overflow-hidden flex flex-col shadow-lg">
-      {tokenURI ? (
-        tokenURI.startsWith('ipfs://') ? (
+      {image ? (
+        image.startsWith('ipfs://') ? (
           <ImageFromIPFSMetadata
-            src={tokenURI}
+            src={image}
             alt={`NFT ${tokenID}`}
             className="w-full h-64 object-contain"
           />
-        ) : tokenURI.startsWith('data:application/json;base64') ? (
+        ) : image.startsWith('data:application/json;base64') ? (
           <ImageFromBase64
-            src={tokenURI}
+            src={image}
+            alt={`NFT ${tokenID}`}
+            className="w-full h-64 object-contain"
+          />
+        ) : image.startsWith('https://') ? (
+          <img
+            src={image}
             alt={`NFT ${tokenID}`}
             className="w-full h-64 object-contain"
           />
@@ -38,7 +46,7 @@ const NFT: React.FC<{
           <img
             src={'https://placeholder.pics/svg/64x64'}
             alt={`NFT ${tokenID}`}
-            className="w-full h-64 object-contain"
+            className="w-full h-64 object-cover"
           />
         )
       ) : (

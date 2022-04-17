@@ -10,7 +10,6 @@ const FeaturedCollectionCard: React.FC<{ collection: Collection }> = ({
   collection,
 }) => {
   const { id, tokens } = collection
-  console.log(collection)
   const tokenURIJson =
     tokens?.length > 0
       ? JSON.parse(
