@@ -2,21 +2,21 @@ import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   MdOutlineDescription,
-  MdVerified,
-  MdTimer,
-  MdLocalOffer,
+  // MdVerified,
+  // MdTimer,
+  // MdLocalOffer,
 } from 'react-icons/md'
 import { BiChevronRight, BiChevronDown } from 'react-icons/bi'
-import { utils } from 'ethers'
+// import { utils } from 'ethers'
 
 import useAsset from '../hooks/useAsset'
 import useCollection from '../hooks/useCollection'
-import { FaWallet } from 'react-icons/fa'
-import ImageFromIPFSMetadata from '../components/ImageFromIPFSMetadata'
-import ImageFromBase64 from '../components/ImageFromBase64'
+// import { FaWallet } from 'react-icons/fa'
+// import ImageFromIPFSMetadata from '../components/ImageFromIPFSMetadata'
+// import ImageFromBase64 from '../components/ImageFromBase64'
 import BuyConfirmationModal from '../components/BuyConfirmationModal'
 import NFTImage from '../components/NFTImage'
-import EthIcon from '../components/svgComponents/EthIcon'
+// import EthIcon from '../components/svgComponents/EthIcon'
 
 const Asset: React.FC<{}> = () => {
   const { collectionId, tokenId } = useParams()
@@ -150,7 +150,7 @@ const Asset: React.FC<{}> = () => {
           </button>
         </div> */}
 
-        <div className="w-full rounded-md border border-gray-300 mt-10">
+        {/* <div className="w-full rounded-md border border-gray-300 mt-10">
           <div
             className="flex items-center p-4 cursor-pointer"
             onClick={toggleOffers}
@@ -168,8 +168,8 @@ const Asset: React.FC<{}> = () => {
               )}
             </div>
           )}
-        </div>
-        <div className="w-full rounded-md border border-gray-300 mt-10">
+        </div> */}
+        <div className="w-full rounded-md mt-10">
           <div
             className="flex items-center p-4 cursor-pointer"
             onClick={toggleDescription}
@@ -179,7 +179,7 @@ const Asset: React.FC<{}> = () => {
             {openDescription ? <BiChevronDown /> : <BiChevronRight />}
           </div>
           {openDescription && (
-            <div className="p-4 border-t border-gray-300">{description}</div>
+            <div className="p-4 border-t border-gray-700">{description}</div>
           )}
         </div>
       </div>

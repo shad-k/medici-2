@@ -16,9 +16,6 @@ const FeaturedCollections = () => {
 
   return (
     <div className="lg:w-4/5 m-auto flex justify-between items-center flex-wrap">
-      <h3 className="text-xl text-white border border-white rounded-md px-4 py-2">
-        Collections
-      </h3>
       <Link to="/collections" className="flex items-center text-xl">
         View All <MdArrowForward className="ml-1" />
       </Link>

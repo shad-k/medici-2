@@ -1,5 +1,4 @@
 import React from 'react'
-import { MdVerified } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import numeral from 'numeral'
 import { utils } from 'ethers'
@@ -17,7 +16,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
 
   return (
     <Link
-      to={`/collection/${id}`}
+      to={`/asset/${id}/${tokens[0].tokenID}`}
       className="rounded-md shadow-lg p-2 bg-white flex items-center justify-between mx-2 my-4 text-black"
     >
       {collectionImage ? (
@@ -67,7 +66,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
       <div className="flex-1 flex flex-col justify-between items-start pl-2">
         <span className="flex items-center font-bold">
           {/* {name} {verified && <MdVerified className="ml-2" />} */}
-          {name} <MdVerified className="ml-2" />
+          {name}
         </span>
         <span className="text-gray-700 text-sm">
           {/* {description.substring(0, 50)}... */}

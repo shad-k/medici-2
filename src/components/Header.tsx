@@ -11,28 +11,28 @@ const Header: React.FC<{}> = () => {
   const connectedWallet = wallet?.accounts[0]
 
   return (
-    <header className="h-16 w-full py-4 fixed top-0 left-0 bg-transparent border-t border-transparent z-10">
-      <div className="w-full md:w-4/5 mx-auto flex items-center justify-between">
+    <header className="h-16 w-full py-4 fixed top-0 left-0 bg-black/10 border-t border-transparent z-10">
+      <div className="w-full md:w-4/5 mx-auto flex items-center justify-between h-full">
         <div className="flex items-center justify-center md:justify-between w-2/6">
           <Link to="/" className="flex align-center">
             <img src="/logo-medici.svg" alt="" className="mr-4" />
           </Link>
-          <Link to="/explore" className="hidden md:block">
+          {/* <Link to="/explore" className="hidden md:block">
             Explore
           </Link>
           <Link to="/about" className="hidden md:block">
             About
-          </Link>
+          </Link> */}
         </div>
-        <div className="flex items-center justify-center md:justify-between w-3/6">
-          <div className="border border-medici-primary rounded-2xl flex items-center px-2 py-1 hidden md:flex">
+        <div className="flex items-center justify-end md:justify-end w-3/6">
+          {/* <div className="border border-medici-primary rounded-2xl flex items-center px-2 py-1 hidden md:flex">
             <MdSearch size="25" />
             <input
               type="text"
               placeholder="Search..."
               className="border-none outline-none bg-transparent placeholder:text-medici-primary placeholder:text-sm ml-2"
             />
-          </div>
+          </div> */}
           {connectedWallet ? (
             <div className="px-5 py-2 rounded-2xl text-sm bg-white text-medici-purple">
               {connectedWallet?.ens?.name ??
@@ -50,7 +50,7 @@ const Header: React.FC<{}> = () => {
               {connecting ? 'Connecting' : 'Connect Wallet'}
             </button>
           )}
-          <RiShoppingCartLine size="30" className="hidden md:block" />
+          {/* <RiShoppingCartLine size="30" className="hidden md:block" /> */}
         </div>
       </div>
     </header>

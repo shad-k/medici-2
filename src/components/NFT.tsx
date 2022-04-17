@@ -1,6 +1,6 @@
 import { utils } from 'ethers'
 import React from 'react'
-import { MdVerified, MdTimer } from 'react-icons/md'
+import { MdTimer } from 'react-icons/md'
 
 import { Collection, Token } from '../types'
 import ImageFromBase64 from './ImageFromBase64'
@@ -57,9 +57,7 @@ const NFT: React.FC<{
         />
       )}
       <div className="text-black  font-bold p-2 border-b border-gray-300">
-        <div className="flex items-center text-xs my-2">
-          {name} {verified && <MdVerified className="ml-1" />}
-        </div>
+        <div className="flex items-center text-xs my-2">{name}</div>
         <div className="font-bold min-h-[44px]">
           {name} #{tokenID}
         </div>

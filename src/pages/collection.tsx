@@ -1,5 +1,5 @@
 import React from 'react'
-import { MdVerified, MdWeb } from 'react-icons/md'
+import { MdWeb } from 'react-icons/md'
 import { BsTwitter } from 'react-icons/bs'
 import { FaDiscord, FaImages } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
@@ -136,7 +136,7 @@ const Collection: React.FC<{}> = () => {
         <div className="w-full md:w-2/12">
           <h1 className="text-2xl font-bold flex items-start">
             {/* {name} {verified && <MdVerified className="ml-1" />} */}
-            {name} <MdVerified className="ml-1" />
+            {name}
           </h1>
           <div className="text-sm text-gray-700 mt-2">{description}</div>
           <div className="text-sm text-gray-700 mt-2 flex items-center">

@@ -1,5 +1,4 @@
 import React from 'react'
-import { MdVerified } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 
 import type { Collection } from '../types'
@@ -21,7 +20,7 @@ const FeaturedCollectionCard: React.FC<{ collection: Collection }> = ({
 
   return (
     <Link
-      to={`/collection/${id}`}
+      to={`/asset/${id}/${tokens[0].tokenID}`}
       className="rounded-2xl shadow-xl shadow-white bg-white mx-2 my-4 text-black order-1 md:order-2 hero-collection"
     >
       {collectionImage ? (
@@ -61,7 +60,7 @@ const FeaturedCollectionCard: React.FC<{ collection: Collection }> = ({
       <div className="flex flex-col justify-between items-start px-4 py-6">
         <span className="flex items-center font-bold">
           {/* {name} {verified && <MdVerified className="ml-2" />} */}
-          {name} <MdVerified className="ml-2" color="#1AC689" />
+          {name}
         </span>{' '}
       </div>
     </Link>

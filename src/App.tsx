@@ -12,7 +12,7 @@ import Background from './components/Background'
 const App: React.FC<{}> = () => {
   return (
     <WalletContextProvider>
-      <div className="text-medici-primary relative overflow-auto">
+      <div className="text-medici-primary relative overflow-auto min-h-full">
         <Router>
           <main className="font-sans mt-16 pb-6">
             <Background />
