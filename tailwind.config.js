@@ -4,7 +4,7 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   theme: {
     fontFamily: {
-      sans: ['Inter'],
+      sans: ['Poppins'],
     },
     extend: {
       colors: {
