@@ -9,24 +9,37 @@ interface INFTImageProps {
 }
 
 const NFTImage: React.FC<INFTImageProps> = ({ nft, collection }) => {
-  if (nft?.tokenURI.startsWith('ipfs://')) {
-    return (
+  const tokenURIJson = JSON.parse(
+    nft.tokenURI.substring(0, nft.tokenURI.length - 1)
+  )
+  const { image: tokenImage } = tokenURIJson
+  let image
+  if (tokenImage.startsWith('ipfs://')) {
+    image = (
       <ImageFromIPFSMetadata
-        src={nft.tokenURI}
+        src={tokenImage}
         alt={`${nft?.tokenID}` || collection?.name || ''}
         className="rounded-md"
       />
     )
-  } else if (nft?.tokenURI.startsWith('data:application/json;base64')) {
-    return (
+  } else if (tokenImage.startsWith('data:application/json;base64')) {
+    image = (
       <ImageFromBase64
-        src={nft.tokenURI}
+        src={tokenImage}
+        alt={`${nft?.tokenID}` || collection?.name || ''}
+        className="rounded-md"
+      />
+    )
+  } else if (tokenImage.startsWith('https://')) {
+    image = (
+      <img
+        src={tokenImage}
         alt={`${nft?.tokenID}` || collection?.name || ''}
         className="rounded-md"
       />
     )
   } else {
-    return (
+    image = (
       <img
         src={'https://placeholder.pics/svg/300x300'}
         alt={`${nft?.tokenID}` || collection?.name || ''}
@@ -34,6 +47,12 @@ const NFTImage: React.FC<INFTImageProps> = ({ nft, collection }) => {
       />
     )
   }
+
+  return (
+    <div className="w-full h-full lg:fixed top-0 w-full lg:w-4/12 flex justify-between items-center">
+      {image}
+    </div>
+  )
 }
 
 export default NFTImage
