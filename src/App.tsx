@@ -7,20 +7,27 @@ import Asset from './pages/asset'
 import Header from './components/Header'
 import AllCollectionsPage from './pages/collections'
 import WalletContextProvider from './components/WalletContextProvider'
+import Background from './components/Background'
 
 const App: React.FC<{}> = () => {
   return (
     <WalletContextProvider>
-      <div className="border-t border-transparent h-full text-medici-primary">
+      <div className="text-medici-primary relative overflow-auto">
         <Router>
-          <Header />
-          <main className="font-sans mt-16 pb-6 h-[calc(100%-64px)] overflow-auto">
-            <Routes>
-              <Route path="/collections" element={<AllCollectionsPage />} />
-              <Route path="/collection/:id" element={<Collection />} />
-              <Route path="/asset/:collectionId/:tokenId" element={<Asset />} />
-              <Route path="/" element={<Home />} />
-            </Routes>
+          <main className="font-sans mt-16 pb-6">
+            <Background />
+            <Header />
+            <div className="z-1 relative">
+              <Routes>
+                <Route path="/collections" element={<AllCollectionsPage />} />
+                <Route path="/collection/:id" element={<Collection />} />
+                <Route
+                  path="/asset/:collectionId/:tokenId"
+                  element={<Asset />}
+                />
+                <Route path="/" element={<Home />} />
+              </Routes>
+            </div>
           </main>
         </Router>
       </div>

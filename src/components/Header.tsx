@@ -11,7 +11,7 @@ const Header: React.FC<{}> = () => {
   const connectedWallet = wallet?.accounts[0]
 
   return (
-    <header className="h-16 w-full bg-transparent py-4 fixed top-0 left-0 bg-background/10 z-10">
+    <header className="h-16 w-full py-4 fixed top-0 left-0 bg-transparent border-t border-transparent z-10">
       <div className="w-full md:w-4/5 mx-auto flex items-center justify-between">
         <div className="flex items-center justify-center md:justify-between w-2/6">
           <Link to="/" className="flex align-center">

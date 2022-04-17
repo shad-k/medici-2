@@ -12,7 +12,21 @@ body,
   height: 100%;
   width: 100%;
 
-  background: linear-gradient(180deg, #562469 0%, rgb(0, 0, 0) 100%);
+  /* background: linear-gradient(180deg, #562469 0%, rgb(0, 0, 0) 100%); */
   /* #6618E4 @ 0% */
   /* #952EE5 @ 100% */
+}
+
+.header-bg {
+  background: linear-gradient(to right, #281869 0%, #562469 100%);
+}
+
+.header-bg-bottom {
+  background: linear-gradient(to bottom, transparent 0%, #000 100%);
+}
+
+.body-bg {
+  background: url('../public/background.svg');
+  background-color: #000;
+  background-repeat: repeat-y;
 }
