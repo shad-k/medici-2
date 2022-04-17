@@ -13,6 +13,7 @@ module.exports = {
           primary: colors.white,
           purple: {
             DEFAULT: '#6618E4',
+            dark: '#952EE6',
           },
         },
       },

@@ -1,6 +1,15 @@
 import React from 'react'
+import useCollections from '../hooks/useCollections'
+import HeroCollectionCard from './HeroCollectionCard'
 
 const Hero: React.FC<{}> = () => {
+  const { data, error } = useCollections()
+  if (!data && !error) {
+    return null
+  }
+
+  const heroCollection = data[0]
+
   return (
     <section className="lg:w-4/5 m-auto flex flex-col md:flex-row items-center justify-between flex-1 py-20">
       <div className="w-full md:w-1/2 order-2 md:order-1 text-center md:text-left flex flex-col items-center md:items-start">
@@ -9,15 +18,16 @@ const Hero: React.FC<{}> = () => {
           <br />
           with Medici
         </h1>
-        <button className="px-4 py-2 w-48 rounded-md bg-white text-black text-xl mt-12">
-          Mint
-        </button>
+        <a
+          href="https://mint.medicilabs.xyz/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-4 py-2 w-56 rounded-full text-medici-primary text-xl mt-12 bg-gradient-to-l from-medici-purple to-medici-purple-dark"
+        >
+          Mint Your NFT Now
+        </a>
       </div>
-      <img
-        src="https://placeholder.pics/svg/150x300"
-        alt="Medici"
-        className="w-[450px] h-[500px] object-cover object-center order-1 md:order-2"
-      />
+      <HeroCollectionCard collection={heroCollection} />
     </section>
   )
 }
