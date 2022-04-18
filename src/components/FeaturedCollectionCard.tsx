@@ -28,32 +28,32 @@ const FeaturedCollectionCard: React.FC<{ collection: Collection }> = ({
           <ImageFromIPFSMetadata
             src={collectionImage}
             alt={name}
-            className="rounded-t-2xl overflow-hidden object-cover object-center w-full w-full h-[300px]"
+            className="rounded-t-2xl overflow-hidden object-cover object-center w-full w-full h-[400px]"
           />
         ) : collectionImage.startsWith('data:application/json;base64') ? (
           <ImageFromBase64
             src={collectionImage}
             alt={name}
-            className="rounded-t-2xl overflow-hidden object-cover object-center w-full w-full h-[300px]"
+            className="rounded-t-2xl overflow-hidden object-cover object-center w-full w-full h-[400px]"
           />
         ) : collectionImage.startsWith('https://') ? (
           <img
             src={collectionImage}
             alt={name}
-            className="rounded-t-2xl overflow-hidden object-cover object-center w-full w-full h-[300px]"
+            className="rounded-t-2xl overflow-hidden object-cover object-center w-full w-full h-[400px]"
           />
         ) : (
           <img
             src={'https://placeholder.pics/svg/120x150'}
             alt={name}
-            className="rounded-t-2xl overflow-hidden object-cover object-center w-full w-full h-[300px]"
+            className="rounded-t-2xl overflow-hidden object-cover object-center w-full w-full h-[400px]"
           />
         )
       ) : (
         <img
           src={'https://placeholder.pics/svg/120x150'}
           alt={name}
-          className="rounded-t-2xl overflow-hidden object-cover object-center w-full w-full h-[300px]"
+          className="rounded-t-2xl overflow-hidden object-cover object-center w-full w-full h-[400px]"
         />
       )}
 
