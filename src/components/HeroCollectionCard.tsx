@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import type { Collection } from '../types'
@@ -9,19 +9,17 @@ const HeroCollectionCard: React.FC<{ collection: Collection }> = ({
   collection,
 }) => {
   const { id, tokens } = collection
-  const tokenURIJson =
+  const tokenURIJson = 
     tokens?.length > 0
-      ? JSON.parse(
-          tokens[0].tokenURI.substring(0, tokens[0].tokenURI.length - 1)
-        )
-      : null
+    ? tokens[0].tokenURI.substring(0, tokens[0].tokenURI.length) : null
 
-  const { image: collectionImage, name } = tokenURIJson
+  const name = collection.name
+  const collectionImage  = tokenURIJson
 
   return (
     <Link
       to={`/asset/${id}/${tokens[0].tokenID}`}
-      className="rounded-2xl shadow-xl shadow-white bg-white mx-2 my-4 text-black order-1 md:order-2 hero-collection w-11/12 lg:w-1/3"
+      className="rounded-2xl shadow-xl shadow-white bg-white mx-2 my-4 text-black order-1 md:order-2 hero-collection w-11/12 lg:w-6/12 lg:min-w-[320px]"
     >
       {collectionImage ? (
         collectionImage.startsWith('ipfs://') ? (
@@ -34,7 +32,7 @@ const HeroCollectionCard: React.FC<{ collection: Collection }> = ({
           <ImageFromBase64
             src={collectionImage}
             alt={name}
-            className="rounded-t-2xl overflow-hidden object-cover object-center w-full lg:min-w-[320px] lg:min-h-[320px] lg:min-w-[320px] lg:min-h-[480px] lg:max-h-[480px]"
+            className="rounded-t-2xl overflow-hidden object-cover object-center w-full min-w-[320px] min-h-[480px] max-h-[480px]"
           />
         ) : collectionImage.startsWith('https://') ? (
           <img
@@ -57,8 +55,8 @@ const HeroCollectionCard: React.FC<{ collection: Collection }> = ({
         />
       )}
 
-      <div className="flex flex-col justify-between items-start px-4 py-6">
-        <span className="flex items-center font-bold">
+      <div className="flex flex-col justify-between items-start px-2 py-2 md:px-4 md:py-6">
+        <span className="flex items-center font-bold text-sm text-xl">
           {/* {name} {verified && <MdVerified className="ml-2" />} */}
           {name}
         </span>{' '}

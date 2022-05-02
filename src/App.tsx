@@ -7,6 +7,7 @@ import Asset from './pages/asset'
 import Header from './components/Header'
 import AllCollectionsPage from './pages/collections'
 import WalletContextProvider from './components/WalletContextProvider'
+import Footer from './components/Footer'
 import Background from './components/Background'
 
 const App: React.FC<{}> = () => {

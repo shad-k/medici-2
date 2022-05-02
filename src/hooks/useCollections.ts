@@ -5,7 +5,7 @@ import { API_PATHS } from '../utils/config'
 
 const useCollections = () => {
   const { data, error } = useSWR(
-    API_PATHS.COLLECTIONS,
+    API_PATHS.TEMP_URL,
     (url) =>
       apiClient(url).then((res) => {
         return res.data.data.tokenContracts

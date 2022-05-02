@@ -26,8 +26,7 @@ body,
 }
 
 .body-bg {
-  background: url('../public/background.svg');
-  background-color: #000;
+  background-color: #1B1A20;
   background-repeat: repeat-y;
 }
 
