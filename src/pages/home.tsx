@@ -1,26 +1,23 @@
-import React from 'react'
+import React, {useState} from 'react'
 import DashHero from '../components/DashHero'
 import DashActive from '../components/DashActive'
 import DashMintList from '../components/DashMintList'
-import useCollections from '../hooks/useCollections'
+import useTestActiveProject from '../hooks/useTestActiveProject'
 
 const Home: React.FC<{}> = () => {
-  const { data, error } = useCollections()
-  if (!data && !error) {
-      return null
+  const data = useTestActiveProject()
+  if (!data) {
+    return null
   }
 
-  const currCollection = data[0]
 
   return (
     <div className="w-full mx-auto h-full flex flex-col">
-       <DashHero earnings={"5.00"}/>
+       <DashHero collection={data}/>
        <br></br>
-       {
-         currCollection ? <DashActive collection={currCollection}/> : <div>Hello</div>
-       }
+       <DashActive collection={data}/>
        <br></br>
-       <DashMintList collection={currCollection}/>
+       <DashMintList collection={data}/>
     </div>
   )
 }

@@ -14,17 +14,24 @@ export type Token = {
   id: string
   tokenURI: string
   tokenID: string
-  mintTime: number
+  whitelist: Array<Owner>
   owner: Owner
+  claimed: boolean
 }
 
 export type Collection = {
   id: string
   name: string
+  tokenType: string
   numTokens: number
+  numMinted: number
   numOwners: number
   supportsEIP721Metadata: boolean
   tokens: Array<Token>
+  floor_price: number,
+  balance: number
+  chain: string
+  creationTime: string
 
   // address: string
   // symbol: string

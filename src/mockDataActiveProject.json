@@ -1,0 +1,54 @@
+{
+    "activeProject": 
+    {
+        "id": "0x0cbaf296e31878fbad48b0d16fcad8d8c3dbf443",
+        "name": "KLMT",
+        "tokenType": "ERC-721",
+        "numTokens": 2,
+        "numMinted": 1,
+        "numOwners": 1,
+        "supportsEIP721Metadata": true,
+        "tokens": [
+            {
+                "id": "0",
+                "tokenURI": "{\"name\":\"KLMT\",\"description\":\"Gustav Klimt was an Austrian symbolist painter and one of the most prominent members of the Vienna Secession movement.\",\"image\":\"https://medici-test.mypinata.cloud/ipfs/QmeKdWwkhyYVHi3zf3hNhvnhBiwMYFLwr1QJMfpiPfDEjY\"}0",
+                "tokenId": "0",
+                "whitelist": [
+                    {
+                        "id": "TestAddress1"
+                    },
+                    {
+                        "id": "TestAddress2"
+                    }
+                ],
+                "owner": 
+                {
+                    "id": null
+                },
+                "claimed": false
+            },
+            {
+                "id": "1",
+                "tokenURI": "{\"name\":\"KLMT\",\"description\":\"Gustav Klimt was an Austrian symbolist painter and one of the most prominent members of the Vienna Secession movement.\",\"image\":\"https://medici-test.mypinata.cloud/ipfs/QmeKdWwkhyYVHi3zf3hNhvnhBiwMYFLwr1QJMfpiPfDEjY\"}0",
+                "tokenId": "1",
+                "whitelist": [
+                    {
+                        "id": "TestAddress1"
+                    },
+                    {
+                        "id": "TestAddress2"
+                    }
+                ],
+                "owner" : 
+                {
+                    "id": "TestAddress2"
+                },
+                "claimed": true
+            }
+        ],
+        "floor_price": 0.05,
+        "balance": 0.05,
+        "chain": "Optimism",
+        "creationTime": "1636709990"
+    }
+}

@@ -9,12 +9,16 @@ const HeroCollectionCard: React.FC<{ collection: Collection }> = ({
   collection,
 }) => {
   const { id, tokens } = collection
-  const tokenURIJson = 
-    tokens?.length > 0
-    ? tokens[0].tokenURI.substring(0, tokens[0].tokenURI.length) : null
+  const tokenURIJson =
+  tokens?.length > 0
+    ? JSON.parse(
+        tokens[0].tokenURI.substring(0, tokens[0].tokenURI.length - 1)
+      )
+    : null
 
   const name = collection.name
-  const collectionImage  = tokenURIJson
+  const collectionImage  = tokenURIJson.image
+  console.log(collectionImage)
 
   return (
     <Link

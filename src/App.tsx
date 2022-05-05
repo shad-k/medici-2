@@ -4,10 +4,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/home'
 import Collection from './pages/collection'
 import Asset from './pages/asset'
+import Create from './pages/create'
 import Header from './components/Header'
+import Footer from './components/Footer'
 import AllCollectionsPage from './pages/collections'
 import WalletContextProvider from './components/WalletContextProvider'
-import Footer from './components/Footer'
 import Background from './components/Background'
 
 const App: React.FC<{}> = () => {
@@ -20,12 +21,13 @@ const App: React.FC<{}> = () => {
             <Header />
             <div className="z-1 relative">
               <Routes>
-                <Route path="/collections" element={<AllCollectionsPage />} />
+                {/* <Route path="/collections" element={<AllCollectionsPage />} />
                 <Route path="/collection/:id" element={<Collection />} />
                 <Route
                   path="/asset/:collectionId/:tokenId"
                   element={<Asset />}
-                />
+                /> */}
+                <Route path="/create" element={<Create/>}/>
                 <Route path="/" element={<Home />} />
               </Routes>
             </div>
