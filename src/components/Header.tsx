@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { MdSearch } from 'react-icons/md'
-import { RiShoppingCartLine } from 'react-icons/ri'
+// import { MdSearch } from 'react-icons/md'
+// import { RiShoppingCartLine } from 'react-icons/ri'
+import { ethers } from 'ethers'
 
 import useWallet from '../hooks/useWallet'
 
@@ -9,6 +10,26 @@ const Header: React.FC<{}> = () => {
   const { wallet, connecting, connect } = useWallet()
 
   const connectedWallet = wallet?.accounts[0]
+  const [isSignedIn, setIsSignedIn] = React.useState<boolean>(
+    Boolean(localStorage.getItem('signature'))
+  )
+
+  const signIn = async () => {
+    if (wallet) {
+      try {
+        const provider = new ethers.providers.Web3Provider(wallet.provider)
+        const signer = await provider.getSigner()
+        const signature = await signer.signMessage(
+          'Sign this message to access. Nonce: 1'
+        )
+        console.log('signature', signature)
+        localStorage.setItem('signature', JSON.stringify(true))
+        setIsSignedIn(true)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 
   return (
     <header className="h-16 w-full px-2 lg:px-0 py-4 fixed top-0 left-0 bg-black/10 border-t border-transparent z-10">
@@ -34,13 +55,23 @@ const Header: React.FC<{}> = () => {
             />
           </div> */}
           {connectedWallet ? (
-            <div className="px-5 py-2 rounded-2xl text-sm bg-white text-medici-purple">
-              {connectedWallet?.ens?.name ??
-                `${connectedWallet?.address.slice(
-                  0,
-                  6
-                )}...${connectedWallet?.address.slice(-6)}`}
-            </div>
+            isSignedIn ? (
+              <div className="px-5 py-2 rounded-2xl text-sm bg-white text-medici-purple">
+                {connectedWallet?.ens?.name ??
+                  `${connectedWallet?.address.slice(
+                    0,
+                    6
+                  )}...${connectedWallet?.address.slice(-6)}`}
+              </div>
+            ) : (
+              <button
+                className="px-5 py-2 rounded-2xl text-sm bg-white text-medici-purple disabled:cursor-not-allowed"
+                onClick={signIn}
+                disabled={connecting}
+              >
+                Sign In
+              </button>
+            )
           ) : (
             <button
               className="px-5 py-2 rounded-2xl text-sm bg-white text-medici-purple disabled:cursor-not-allowed"
