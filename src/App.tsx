@@ -8,6 +8,7 @@ import Header from './components/Header'
 import AllCollectionsPage from './pages/collections'
 import WalletContextProvider from './components/WalletContextProvider'
 import Background from './components/Background'
+import ErrorBoundary from './components/ErrorBoundary'
 
 const App: React.FC<{}> = () => {
   return (
@@ -18,15 +19,17 @@ const App: React.FC<{}> = () => {
             <Background />
             <Header />
             <div className="z-1 relative">
-              <Routes>
-                <Route path="/collections" element={<AllCollectionsPage />} />
-                <Route path="/collection/:id" element={<Collection />} />
-                <Route
-                  path="/asset/:collectionId/:tokenId"
-                  element={<Asset />}
-                />
-                <Route path="/" element={<Home />} />
-              </Routes>
+              <ErrorBoundary>
+                <Routes>
+                  <Route path="/collections" element={<AllCollectionsPage />} />
+                  <Route path="/collection/:id" element={<Collection />} />
+                  <Route
+                    path="/asset/:collectionId/:tokenId"
+                    element={<Asset />}
+                  />
+                  <Route path="/" element={<Home />} />
+                </Routes>
+              </ErrorBoundary>
             </div>
           </main>
         </Router>
