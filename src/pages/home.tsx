@@ -17,7 +17,6 @@ const Home: React.FC<{}> = () => {
        <br></br>
        <DashActive collection={data}/>
        <br></br>
-       <DashMintList collection={data}/>
     </div>
   )
 }

@@ -46,8 +46,8 @@
                 "claimed": true
             }
         ],
-        "floor_price": 0.05,
-        "balance": 0.05,
+        "floor_price": 1000000000,
+        "balance": 1000000000,
         "chain": "Optimism",
         "creationTime": "1636709990"
     }

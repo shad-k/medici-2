@@ -5,6 +5,7 @@ import Home from './pages/home'
 import Collection from './pages/collection'
 import Asset from './pages/asset'
 import Create from './pages/create'
+import DropEditor from './pages/dropeditor'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import AllCollectionsPage from './pages/collections'
@@ -28,6 +29,7 @@ const App: React.FC<{}> = () => {
                   element={<Asset />}
                 /> */}
                 <Route path="/create" element={<Create/>}/>
+                <Route path="/launch" element={<DropEditor/>}/>
                 <Route path="/" element={<Home />} />
               </Routes>
             </div>
