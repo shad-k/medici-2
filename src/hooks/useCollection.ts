@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 
-import { Collection } from '../types'
+import { Collection } from '../model/types'
 import apiClient from '../utils/apiClient'
 import { API_PATHS } from '../utils/config'
 

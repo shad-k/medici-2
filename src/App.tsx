@@ -9,12 +9,14 @@ import DropEditor from './pages/dropeditor'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import AllCollectionsPage from './pages/collections'
-import WalletContextProvider from './components/WalletContextProvider'
+import WalletContextProvider from './contexts/WalletContextProvider'
+import ProjectContextProvider from './contexts/ProjectContextProvider'
 import Background from './components/Background'
 
 const App: React.FC<{}> = () => {
   return (
     <WalletContextProvider>
+      <ProjectContextProvider>
       <div className="text-medici-primary relative overflow-auto min-h-full">
         <Router>
           <main className="font-sans mt-16 pb-6">
@@ -36,6 +38,7 @@ const App: React.FC<{}> = () => {
           </main>
         </Router>
       </div>
+      </ProjectContextProvider>
     </WalletContextProvider>
   )
 }

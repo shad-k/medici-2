@@ -2,7 +2,7 @@ import React from 'react'
 import { utils } from 'ethers'
 import numeral from 'numeral'
 
-import { Collection } from '../types'
+import { Collection } from '../model/types'
 import EthIcon from './svgComponents/EthIcon'
 
 const Stats: React.FC<{ collection: Collection }> = ({ collection }) => {

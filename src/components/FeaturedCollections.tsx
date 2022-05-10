@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { MdArrowForward } from 'react-icons/md'
 
-import { Collection } from '../types'
+import { Collection } from '../model/types'
 import useCollections from '../hooks/useCollections'
 import FeaturedCollectionCard from './FeaturedCollectionCard'
 

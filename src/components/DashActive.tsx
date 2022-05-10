@@ -1,20 +1,24 @@
 import React, { useState } from 'react'
 import HeroCollectionCard from './HeroCollectionCard'
-import { HiChevronDown } from 'react-icons/hi'
-import type { Collection } from '../types'
+import { utils } from 'ethers'
+import type { Collection } from '../model/types'
 import EthIcon from './svgComponents/EthIcon'
+import useTestActiveProject from '../hooks/useTestActiveProject'
 
-const DashActive: React.FC<{ collection?: Collection }> = ( { collection } ) => {
+
+const DashActive: React.FC<{}> = () => {
     // const { data, error } = useCollection(collection?.id as string)
     // if (!data && !error) {
     //     return null
     // }
 
     const [showFullAddress, setShowFullAddress] = useState(false)
+    const project = useTestActiveProject()
+    if (project === undefined) return null
 
-    if (!collection) {
-        return null
-    }
+    const collection = project.project;
+    if (collection === undefined) return null
+    if (collection === null) return null
 
     return (
         <section id="DashActiveBox" className="w-4/5 lg:w-3/5 m-auto flex flex-col md:flex-row items justify-between flex-1 items-center">
@@ -35,7 +39,7 @@ const DashActive: React.FC<{ collection?: Collection }> = ( { collection } ) => 
                         </span>
                     </div>
                     <div className="flex flex-row justify-between text-xs lg:text-sm mb-1 mt-4"><span className="font-italic"> Contract Type </span><span className="ml-6 font-monospace text-white">{collection.tokenType}</span></div>
-                    <div className="flex flex-row justify-between text-xs lg:text-sm mb-1 mt-4"><span className="font-italic"> Floor Price </span><span className="ml-6 font-monospace inline-flex text-white "><EthIcon/>{collection.floor_price}</span></div>
+                    <div className="flex flex-row justify-between text-xs lg:text-sm mb-1 mt-4"><span className="font-italic"> Floor Price </span><span className="ml-6 font-monospace inline-flex text-white "><EthIcon/>{parseFloat(utils.formatUnits(collection.floor_price, 'gwei')).toFixed(2)}</span></div>
                     <div className="flex flex-row justify-between text-xs lg:text-sm mb-1 mt-4"><span className="font-italic"> Blockchain </span><span className="ml-6 font-monospace text-white">{collection.chain}</span></div>
                     <div className="flex flex-row justify-between text-xs lg:text-sm mb-1 mt-4"><span className="font-italic"> Created On </span><span className="ml-6 font-monospace text-white">{collection.creationTime}</span></div>
                 </div>

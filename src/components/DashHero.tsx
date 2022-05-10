@@ -2,9 +2,16 @@
 import React from 'react'
 import { utils } from 'ethers'
 import Ethereum from './svgComponents/Ethereum';
-import { Collection } from '../types'
+import useTestActiveProject from '../hooks/useTestActiveProject';
+import { Collection } from '../model/types'
 
-const DashHero: React.FC<{ collection: Collection }> = ( { collection } ) => {
+const DashHero: React.FC<{}> = () => {
+    const project = useTestActiveProject()
+    if (project === undefined) return null
+
+    const collection = project.project;
+    if (collection === undefined) return null
+    if (collection === null) return null
 
     return (
         <section className="w-full lg:w-4/5 m-auto flex flex-col md:flex-row items-center justify-between flex-1 py-10 px-10 md:px-0 md:ml-50 gap-3 md:gap-20">

@@ -1,4 +1,4 @@
-import { Collection, Token } from '../types'
+import { Collection, Token } from '../model/types'
 
 type UseAssetReturn = {
   data?: Token

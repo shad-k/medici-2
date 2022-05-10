@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import numeral from 'numeral'
 import { utils } from 'ethers'
 
-import type { Collection } from '../types'
+import type { Collection } from '../model/types'
 import ImageFromIPFSMetadata from './ImageFromIPFSMetadata'
 import ImageFromBase64 from './ImageFromBase64'
 import EthIcon from './svgComponents/EthIcon'

@@ -2,7 +2,7 @@ import { utils } from 'ethers'
 import React from 'react'
 import { MdTimer } from 'react-icons/md'
 
-import { Collection, Token } from '../types'
+import { Collection, Token } from '../model/types'
 import ImageFromBase64 from './ImageFromBase64'
 import ImageFromIPFSMetadata from './ImageFromIPFSMetadata'
 import EthIcon from './svgComponents/EthIcon'

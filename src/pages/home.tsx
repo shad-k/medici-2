@@ -13,9 +13,9 @@ const Home: React.FC<{}> = () => {
 
   return (
     <div className="w-full mx-auto h-full flex flex-col">
-       <DashHero collection={data}/>
+       <DashHero/>
        <br></br>
-       <DashActive collection={data}/>
+       <DashActive/>
        <br></br>
     </div>
   )

@@ -2,7 +2,7 @@ import React from 'react'
 import useCollection from '../hooks/useCollection';
 
 
-import type { Collection } from '../types'
+import type { Collection } from '../model/types'
 
 const DashMintList: React.FC<{ collection: Collection }> = ( { collection } ) => {
     const { data, error } = useCollection(collection.id as string)

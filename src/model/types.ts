@@ -57,3 +57,7 @@ export type WalletContextReturn = {
   wallet: WalletState | null
   connecting: boolean
 }
+
+export type ProjectContextReturn = {
+  project: Collection | null | undefined
+}

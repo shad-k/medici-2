@@ -2,7 +2,7 @@ import { utils } from 'ethers'
 import React from 'react'
 import { HiOutlineCreditCard } from 'react-icons/hi'
 import useWallet from '../hooks/useWallet'
-import { Collection, Token } from '../types'
+import { Collection, Token } from '../model/types'
 import NFTImage from './NFTImage'
 import EthIcon from './svgComponents/EthIcon'
 

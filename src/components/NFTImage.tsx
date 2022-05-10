@@ -1,5 +1,5 @@
 import React from 'react'
-import { Collection, Token } from '../types'
+import { Collection, Token } from '../model/types'
 import ImageFromBase64 from './ImageFromBase64'
 import ImageFromIPFSMetadata from './ImageFromIPFSMetadata'
 

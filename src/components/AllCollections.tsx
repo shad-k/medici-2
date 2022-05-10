@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Collection } from '../types'
+import { Collection } from '../model/types'
 import useCollections from '../hooks/useCollections'
 import FeaturedCollectionCard from './FeaturedCollectionCard'
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import NFT from './NFT'
-import { Collection } from '../types'
+import { Collection } from '../model/types'
 
 const ListedNFTs: React.FC<{ collection: Collection }> = ({ collection }) => {
   const { tokens: nfts } = collection
