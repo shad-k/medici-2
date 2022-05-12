@@ -4,6 +4,7 @@ import { utils } from 'ethers'
 import Ethereum from './svgComponents/Ethereum';
 import useTestActiveProject from '../hooks/useTestActiveProject';
 import { Collection } from '../model/types'
+import { Link } from 'react-router-dom'
 
 const DashHero: React.FC<{}> = () => {
     const project = useTestActiveProject()
@@ -34,27 +35,30 @@ const DashHero: React.FC<{}> = () => {
                 </div>
             </div>
             <div className="grid grid-cols-1 xl:grid-cols-2 grid-rows-2 order-2 justify-between items-center w-4/5">
-                <button
-                    className="ml-8 sm:ml-28 md:ml-0 text-left px-4 py-4 w-72 md:w-4/5 lg:w-10/12 rounded-lg text-medici-primary text-xl mt-12 bg-[#2e2c38] hover:bg-gradient-to-l from-medici-purple to-medici-purple-dark drop-shadow-lg transition duration-500 hover:scale-110"
-                    onClick={()=>{ window.location.assign("/create")} }
+                <Link
+                to={`/create`}
+                className="ml-8 sm:ml-28 md:ml-0 text-left px-4 py-4 w-72 md:w-4/5 lg:w-10/12 rounded-lg text-medici-primary text-xl mt-12 bg-[#2e2c38] hover:bg-gradient-to-l from-medici-purple to-medici-purple-dark drop-shadow-lg transition duration-500 hover:scale-110"
                 >
                     <h1>Create</h1>
                     <h2 className="text-sm mt-1"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit </h2>
-                </button>
+                </Link>
                 
-                <button className="ml-8 sm:ml-28 md:ml-0 text-left px-4 py-4 lg:h-30 w-72 md:w-4/5 lg:w-10/12 rounded-lg text-medici-primary text-xl mt-12 bg-[#2e2c38] hover:bg-gradient-to-l from-medici-purple to-medici-purple-dark drop-shadow-lg transition duration-500 hover:scale-110"
+                <Link
+                to={`/`}
+                className="ml-8 sm:ml-28 md:ml-0 text-left px-4 py-4 w-72 md:w-4/5 lg:w-10/12 rounded-lg text-medici-primary text-xl mt-12 bg-[#2e2c38] hover:bg-gradient-to-l from-medici-purple to-medici-purple-dark drop-shadow-lg transition duration-500 hover:scale-110"
                 >
                     <h1>Withdraw</h1>
                     <h2 className="text-sm mt-1"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit </h2>
-                </button>
+                </Link>
                 
-                <button
-                    className="ml-8 sm:ml-28 md:ml-0 text-left px-4 py-4 h-30 w-72 md:w-4/5 lg:w-10/12 rounded-lg text-medici-primary text-xl mt-12 bg-[#2e2c38] hover:bg-gradient-to-l from-medici-purple to-medici-purple-dark drop-shadow-lg transition duration-500 hover:scale-110"
-                    onClick={()=>{ window.location.assign("/launch")} }
+                <Link
+                to={`/launch`}
+                className="ml-8 sm:ml-28 md:ml-0 text-left px-4 py-4 w-72 md:w-4/5 lg:w-10/12 rounded-lg text-medici-primary text-xl mt-12 bg-[#2e2c38] hover:bg-gradient-to-l from-medici-purple to-medici-purple-dark drop-shadow-lg transition duration-500 hover:scale-110"
                 >
-                    <h1>Launch Drop</h1>
+                    <h1>Launch</h1>
                     <h2 className="text-sm mt-1"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit </h2>
-                </button>
+                </Link>
+                
             </div>
         </section>
     );

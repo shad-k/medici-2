@@ -2,22 +2,21 @@ import React, {useState} from 'react'
 import DashHero from '../components/DashHero'
 import DashActive from '../components/DashActive'
 import DashMintList from '../components/DashMintList'
-import useTestActiveProject from '../hooks/useTestActiveProject'
+import useTestHook from '../hooks/useTestHook'
 
 const Home: React.FC<{}> = () => {
-  const data = useTestActiveProject()
+  const data = useTestHook()
   if (!data) {
     return null
   }
 
-
   return (
-    <div className="w-full mx-auto h-full flex flex-col">
-       <DashHero/>
+      <div className="w-full mx-auto h-full flex flex-col">
+      {data && <DashHero/>}
        <br></br>
-       <DashActive/>
-       <br></br>
-    </div>
+      {data && <DashActive/>}
+      <br></br>
+      </div> 
   )
 }
 

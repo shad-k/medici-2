@@ -1,11 +1,5 @@
 import type { ConnectOptions, WalletState } from '@web3-onboard/core'
 
-export type ListedNFT = {
-  owner: string
-  tokenId: number
-  image: string
-}
-
 export type Owner = {
   id: string
 }
@@ -22,6 +16,7 @@ export type Token = {
 export type Collection = {
   id: string
   name: string
+  symbol: string
   tokenType: string
   numTokens: number
   numMinted: number
@@ -59,5 +54,5 @@ export type WalletContextReturn = {
 }
 
 export type ProjectContextReturn = {
-  project: Collection | null | undefined
+  project: Collection | null
 }

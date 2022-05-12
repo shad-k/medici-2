@@ -6,14 +6,17 @@ const useTestHook = () => {
     const [ActiveProject, setActiveProject] = React.useState<Collection | null>()
 
     React.useEffect(() => {
-        if (mockData) {
+        if (mockData.activeProject) {
           setActiveProject((mockData as any).activeProject)
         }
-        else {
-          setActiveProject(null)
-        }
       }, [])
-      return ActiveProject
+      
+      if (ActiveProject) {
+        return ActiveProject;
+      } else {
+        return null;
+      }
+      
 }
 
 export default useTestHook

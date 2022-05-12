@@ -2,13 +2,11 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import Home from './pages/home'
-import Collection from './pages/collection'
-import Asset from './pages/asset'
 import Create from './pages/create'
 import DropEditor from './pages/dropeditor'
+import Demo from './pages/demo'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import AllCollectionsPage from './pages/collections'
 import WalletContextProvider from './contexts/WalletContextProvider'
 import ProjectContextProvider from './contexts/ProjectContextProvider'
 import Background from './components/Background'
@@ -24,12 +22,7 @@ const App: React.FC<{}> = () => {
             <Header />
             <div className="z-1 relative">
               <Routes>
-                {/* <Route path="/collections" element={<AllCollectionsPage />} />
-                <Route path="/collection/:id" element={<Collection />} />
-                <Route
-                  path="/asset/:collectionId/:tokenId"
-                  element={<Asset />}
-                /> */}
+                <Route path="/demo" element={<Demo/>}/>
                 <Route path="/create" element={<Create/>}/>
                 <Route path="/launch" element={<DropEditor/>}/>
                 <Route path="/" element={<Home />} />
