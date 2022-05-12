@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import type { WalletState } from '@web3-onboard/core'
-import ethers from 'ethers'
+import { ethers } from 'ethers'
 import { TEST_CONFIG, API_PATHS, API_ENDPOINT } from './config'
 import apiClient from './apiClient'
 
@@ -17,21 +17,12 @@ export const getMerkleRoot = async (whitelistAddresses: string[]) => {
     apiClient.post(API_PATHS.GET_MERKLE_ROOT, whitelistAddresses,
     ).then(function(response) {
         console.log(response)
-        return {
-            success: true,
-            merkleroot: 'success'
-        };
+        return ('success')
     }).catch(function(error) {
         console.log(error)
-        return {
-            success: false,
-            merkleroot: 'failure'
-        };
+        return ('failure')
     });
-    return {
-        success: false,
-        merkleroot: 'nothing'
-    }
+   return ('failure')
 }
 
 // async function generateContract(collection: Collection) {
