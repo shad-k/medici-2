@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import { parseData } from '../utils/parse'
 import { BigNumber, utils } from 'ethers'
-import { getMerkleRoot, generateContract } from '../utils/web3'
+import { getMerkleRoot, generateNewContract } from '../utils/web3'
 import useWallet from '../hooks/useWallet'
 
 const Demo: React.FC<{}> = () => {
   const { wallet, connecting, connect } = useWallet()
-  const connectedWallet = wallet?.accounts[0]
 
   const [CollectionTitle, setCollectionTitle] = useState<string>()
   const [CollectionSize, setCollectionSize] = useState<number>()
@@ -28,22 +27,26 @@ const Demo: React.FC<{}> = () => {
   async function generateSmartContract() {
     const [[parseResult, merkleResult]] = await Promise.all([
         (async () => {
-          // const { success, parseResult } = await parseData(whitelistStrData!);
           const parseResult = await parseData(WhitelistStrData!);
           const merkleResult = await getMerkleRoot(parseResult);
           return [parseResult, merkleResult];
         })(),
     ]);
+    return generateNewContract(wallet!, merkleResult);
 }
 
   async function handleSubmit() {
-      if (!AllFieldsValid) {
+      if (!WhitelistStrData) {
           alert("Missing some fields! Please double check your input")
       }
       else {
-          const result = await parseData(WhitelistStrData!);
-          console.log(result);
+          // const result = await parseData(WhitelistStrData!);
+          // console.log(result);
+        
+          // const merkle_result = await getMerkleRoot(result);
+          // console.log(merkle_result);
 
+          generateSmartContract();
           // if (!success) {
           //   console.log("error parsing!")
           // } else {
@@ -68,7 +71,7 @@ const Demo: React.FC<{}> = () => {
           <p> Floor Price </p>
             <input type="number" className="m-4 p-2 text-black" placeholder="0.001" onChange={(event) => setFloorPrice(utils.parseUnits(event.target.value, "ether"))}/>
             <br></br>
-          <p> MasterAddress </p>
+          <p> Master Address </p>
             <input type="text" className="m-4 p-2 text-black" onChange={(event) => {
               try {
                 const masterAddress = utils.getAddress(event.target.value)
@@ -81,7 +84,7 @@ const Demo: React.FC<{}> = () => {
            <p> CSV File </p>
             <input type="file" className="m-2 p-2" id="addressesCSV" onChange={(event) => setWhitelistStrData(event.target.files![0])}/>
         </form>
-        OR
+        OR CSV Upload
         <textarea className="text-black p-3 m-4" id="whitelistTextArea" placeholder="Copy paste addresses here!" onChange={(event) => setWhitelistStrData(event?.target.value)}>
         </textarea>
         <button id="SubmitButton" className="mt-10 order-3 px-5 py-2 w-1/5 rounded-2xl text-sm bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white disabled:cursor-not-allowed" onClick={handleSubmit}>Submit</button>
