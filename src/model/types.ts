@@ -1,4 +1,5 @@
 import type { ConnectOptions, WalletState } from '@web3-onboard/core'
+import type { BigNumber } from 'ethers'
 
 export type Owner = {
   id: string
@@ -55,4 +56,16 @@ export type WalletContextReturn = {
 
 export type ProjectContextReturn = {
   project: Collection | null
+}
+
+export interface ContractCreationProps {
+  callerWallet: WalletState,
+  merkleRoot: string,
+  name: string,
+  symbol: string,
+  baseuri: string,
+  maxSupply: number,
+  price: BigNumber,
+  maxMintsPerPerson: number,
+  masterAddress: string
 }

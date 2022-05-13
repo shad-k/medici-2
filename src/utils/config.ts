@@ -176,5 +176,5 @@ export const TEST_CONFIG = {
       "type": "function"
     }
   ],
-  "MASTER_ADDRESS": "0x00000000000000"
+  "MASTER_ADDRESS": "0x1908976aE1CDF070F282D678980731de7D5B9D54"
 }
