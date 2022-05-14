@@ -1,5 +1,5 @@
 import type { ConnectOptions, WalletState } from '@web3-onboard/core'
-import type { BigNumber } from 'ethers'
+import type { BigNumber, Wallet } from 'ethers'
 
 export type Owner = {
   id: string
@@ -68,4 +68,8 @@ export interface ContractCreationProps {
   price: BigNumber,
   maxMintsPerPerson: number,
   masterAddress: string
+}
+
+export interface WithdrawProps {
+  callerWallet: WalletState,
 }

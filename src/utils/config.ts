@@ -6,7 +6,8 @@ export enum API_PATHS {
   TEMP_URL = '/collections',
   TEMP_REGULUS_URL = '/testing',
   GET_MERKLE_ROOT = '/getMerkleRoot',
-  REGULUS_TEST = '/regulusTest'
+  REGULUS_TEST = '/regulusTest',
+  GET_NEW_LAUNCHED_CONTRACT = '/getNewLaunchedContract'
 }
 
 export const TEST_CONFIG = {
