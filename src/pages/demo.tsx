@@ -30,7 +30,7 @@ const Demo: React.FC<{}> = () => {
   const MAX_COLLECTION_SIZE = 1000
 
   useEffect(() => {
-    if (CollectionTitle && CollectionSymbol && CollectionSize && FloorPrice && MaxMintsPerPerson && MasterAddress && WhitelistStrData && wallet) {
+    if (CollectionTitle && CollectionSymbol && CollectionSize && FloorPrice && MaxMintsPerPerson && MasterAddress && WhitelistStrData) {
       setAllFieldsValid(true)
     } else {
       setAllFieldsValid(false)
@@ -61,8 +61,15 @@ const Demo: React.FC<{}> = () => {
     const [merkleResult] = await Promise.all([
         (async () => {
           const parseResult = await parseData(WhitelistStrData!);
-          const merkleResult = await getMerkleRoot(parseResult);
-          return merkleResult;
+          const { success, data } = await getMerkleRoot(parseResult);
+
+          if (success) {
+            return data;
+          } else {
+            console.log("failure, rejecting now")
+            return Promise.reject(data)
+          }
+          
         })(),
     ]);
     
@@ -83,7 +90,7 @@ const Demo: React.FC<{}> = () => {
 }
 
   async function handleSubmit() {
-      if (!WhitelistStrData) {
+      if (!AllFieldsValid || !wallet) {
           alert("Missing some fields! Please double check your input or make sure your wallet is connected.")
       }
       else {
