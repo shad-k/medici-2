@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from 'react'
 import { useReward } from 'react-rewards';
 
-import { getMerkleRoot, generateNewContract } from '../utils/web3'
+import { getMerkleRoot, generateNewContract, whitelist } from '../utils/web3'
 import { parseData } from '../utils/parse'
 
 import useWallet from '../hooks/useWallet'
 import { BigNumber, utils } from 'ethers'
-import { ContractCreationProps } from '../model/types'
+import { CONFIG } from '../utils/config';
 
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 
 const Demo: React.FC<{}> = () => {
-  const { wallet, connecting, connect } = useWallet()
+  const localenv = CONFIG.DEV;
+  const { wallet, connecting, connect, connectedChain, setChain } = useWallet()
 
   const [CollectionTitle, setCollectionTitle] = useState<string>()
   const [CollectionSymbol, setCollectionSymbol] = useState<string>()
@@ -20,7 +21,7 @@ const Demo: React.FC<{}> = () => {
   const [MaxMintsPerPerson, setMaxMintsPerPerson] = useState<number>()
   const [MasterAddress, setMasterAddress] = useState<string>()
   const [WhitelistStrData, setWhitelistStrData] = useState<string | File>()
-  
+
   const [AllFieldsValid, setAllFieldsValid] = useState<boolean>(false)
   const [isValidMasterAddress, setIsValidMasterAddress] = useState<boolean>(false)
   const [ContractCreationSuccess, setContractCreationSuccess] = useState<boolean>(false)
@@ -38,7 +39,14 @@ const Demo: React.FC<{}> = () => {
   }, [AllFieldsValid, setAllFieldsValid, CollectionTitle, CollectionSymbol, CollectionSize, FloorPrice, MaxMintsPerPerson, MasterAddress, WhitelistStrData])
 
 
-  function addressCheck(address: string) {
+const readyToTransact = async (): Promise<boolean> => {
+  if (!wallet) {
+      await connect({});
+  }
+  return setChain({ chainId: localenv.network.id })
+}
+
+const addressCheck = (address: string) => {
       try {
         const addressCheck = utils.getAddress(address);
         setMasterAddress(addressCheck);
@@ -49,6 +57,7 @@ const Demo: React.FC<{}> = () => {
       }
   }
 
+
   // useEffect(() => {
   //   if (ContractCreationSuccess) {
   //     reward();
@@ -58,48 +67,48 @@ const Demo: React.FC<{}> = () => {
   // })
 
   async function generateSmartContract() {
-    const [merkleResult] = await Promise.all([
-        (async () => {
-          const parseResult = await parseData(WhitelistStrData!);
-          const { success, data } = await getMerkleRoot(parseResult);
+      try {
+        const parsedData = await parseData(WhitelistStrData!)
+        const merkleRoot = await getMerkleRoot(parsedData)
+        console.log(merkleRoot)
+        if (await readyToTransact()) {
+          const result = await generateNewContract(
+            wallet,
+            merkleRoot,
+            { 
+              name: CollectionTitle!,
+              symbol: CollectionSymbol!,
+              baseuri: '{}',
+              maxSupply: CollectionSize!,
+              price: FloorPrice!,
+              maxMintsPerPerson: MaxMintsPerPerson!,
+              masterAddress: MasterAddress!
+            })
+        
+          await whitelist(
+          { 
+            "project": CollectionTitle!,
+            "symbol": CollectionSymbol!,
+            "ERC721Contract": result.instance,
+            "ownerAddress": MasterAddress!,
+            "whitelistedAddresses": parsedData,
+            "merkleRoot": merkleRoot
+          })
+        }
+      } catch {
+          console.log("Error")
+          alert("Something went wrong!")
+      }
+  }
 
-          if (success) {
-            return data;
-          } else {
-            console.log("failure, rejecting now")
-            return Promise.reject(data)
-          }
-          
-        })(),
-    ]);
-    
-    const newContractProps: ContractCreationProps = {
-      callerWallet: wallet!,
-      merkleRoot: merkleResult,
-      name: CollectionTitle!,
-      symbol: CollectionSymbol!,
-      baseuri: '{}',
-      maxSupply: CollectionSize!,
-      price: FloorPrice!,
-      maxMintsPerPerson: MaxMintsPerPerson!,
-      masterAddress: MasterAddress!
-    }
-
-    console.log(newContractProps)
-    return generateNewContract(newContractProps);
-}
 
   async function handleSubmit() {
       if (!AllFieldsValid || !wallet) {
           alert("Missing some fields! Please double check your input or make sure your wallet is connected.")
       }
       else {
-        try {
-          await generateSmartContract();
-          setContractCreationSuccess(true);
-        } catch {
-          alert("Something has gone wrong!")
-        }
+        await generateSmartContract();
+        setContractCreationSuccess(true);
       }
   }
 
@@ -109,7 +118,7 @@ const Demo: React.FC<{}> = () => {
         <br></br>
         <h2 className="text-lg">Thanks for trying Regulus by Medici Labs! Fill in the information below to create your project and generate a smart contract.</h2>
         <br></br>
-        <form>
+        <form id="DemoForm">
           <div className="grid md:grid-cols-3 mt-10 ml-10 md:ml-0 w-full">
             <div className="min-w-fit">
               <p>Title</p>

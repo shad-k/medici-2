@@ -1,20 +1,21 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import DashHero from '../components/DashHero'
 import DashActive from '../components/DashActive'
 import DashMintList from '../components/DashMintList'
-import useTestHook from '../hooks/useTestHook'
+import AllContracts from '../components/AllContracts'
+import useWallet from '../hooks/useWallet'
+import useAllLaunchedContracts from '../hooks/useAllLaunchedContracts'
 
 const Home: React.FC<{}> = () => {
-  const data = useTestHook()
-  if (!data) {
-    return null
-  }
+  const { wallet, connecting, connect, connectedChain, setChain } = useWallet()
 
   return (
       <div className="w-full mx-auto h-full flex flex-col">
-      {data && <DashHero/>}
+      {<DashHero/>}
        <br></br>
-      {data && <DashActive/>}
+      { wallet && <AllContracts masterAddress={wallet.accounts[0].address}/> }
+      {/* {data && <DashActive/>} */}
+      {/* {data.data} */}
       <br></br>
       </div> 
   )

@@ -1,4 +1,4 @@
-import type { ConnectOptions, WalletState } from '@web3-onboard/core'
+import type { ConnectOptions, WalletState, ConnectedChain } from '@web3-onboard/core'
 import type { BigNumber, Wallet } from 'ethers'
 
 export type Owner = {
@@ -28,39 +28,35 @@ export type Collection = {
   balance: number
   chain: string
   creationTime: string
+}
 
-  // address: string
-  // symbol: string
-  // total_supply: number
-  // unique_owners: number
-  // floor_price: number
-  // volume_traded: number
-  // royalty_per_mille: number
-  // payout_address: string
-  // verified: boolean
-  // profile_image: string
-  // cover_image: string | null
-  // slug: string
-  // description: string
-  // twitter_link: string
-  // discord_link: string
-  // site_link: string
-  // owner_list: Array<ListedNFT>
+export type Contract = {
+  name: string
+  symbol: string
+  masterAddress: string
+  contractAddress: string
 }
 
 export type WalletContextReturn = {
   connect: (options: ConnectOptions) => Promise<void>
   wallet: WalletState | null
   connecting: boolean
+  setChain: (options: {
+    chainId: string
+    chainNamespace?: string
+    wallet?: WalletState['label']
+  }) => Promise<boolean>
+  connectedChain: ConnectedChain | null
+  settingChain: boolean
 }
 
 export type ProjectContextReturn = {
   project: Collection | null
 }
 
-export interface ContractCreationProps {
-  callerWallet: WalletState,
-  merkleRoot: string,
+export type ContractCreationProps = {
+  // callerWallet: WalletState,
+  // merkleRoot: string,
   name: string,
   symbol: string,
   baseuri: string,
@@ -70,6 +66,19 @@ export interface ContractCreationProps {
   masterAddress: string
 }
 
-export interface WithdrawProps {
-  callerWallet: WalletState,
+export type ContractCreationReturn = {
+  name: string
+  symbol: string
+  instance: string
+  masterAddress: string
+}
+
+export type WhitelistProps = {
+  project: String
+  symbol: String
+  ERC721Contract: String
+  ownerAddress: String // FIXME: change to masterAddress
+  ownerEmail?: String
+  whitelistedAddresses: Array<String>
+  merkleRoot: string
 }

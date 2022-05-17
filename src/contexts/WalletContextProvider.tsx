@@ -1,6 +1,5 @@
 import React from 'react'
-import type { ConnectOptions } from '@web3-onboard/core'
-import { init, useConnectWallet } from '@web3-onboard/react'
+import { init, useConnectWallet, useSetChain } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
 
 import { WalletContextReturn } from '../model/types'
@@ -8,38 +7,54 @@ import { WalletContextReturn } from '../model/types'
 const injected = injectedModule()
 
 const initialValue: WalletContextReturn = {
-  connect: (options: ConnectOptions) => Promise.resolve(),
+  connect: (options) => Promise.resolve(),
   wallet: null,
   connecting: false,
+  connectedChain: null,
+  settingChain: false,
+  setChain: (options) => Promise.resolve(false),
 }
 
 export const WalletContext = React.createContext(initialValue)
 
-init({
-  wallets: [injected],
-  chains: [
+const onboard = init({
+wallets: [injected],
+chains: [
+  // {
+  //   id: '0xA',
+  //   token: 'ETH',
+  //   label: 'Optimistic Mainnet',
+  //   rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04'
+  // }
+    // {
+    // id: '0x1',
+    // token: 'ETH',
+    // label: 'Ethereum Mainnet',
+    // rpcUrl:
+    //      'https://eth-mainnet.alchemyapi.io/v2/HB8dFHS6vY1h_LX3yZgyUYAj8Stv9Ja3',
+    // },
     {
-      id: '0x1',
+      id: '0x2a',
       token: 'ETH',
-      label: 'Ethereum Mainnet',
-      rpcUrl:
-        'https://eth-mainnet.alchemyapi.io/v2/HB8dFHS6vY1h_LX3yZgyUYAj8Stv9Ja3',
-    },
-  ],
-  appMetadata: {
+      label: 'Kovan Testnet',
+      rpcUrl: 'https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD',
+    }
+],
+appMetadata: {
     name: 'Medici',
     icon: '<svg><svg/>',
-    description: 'NFT Marketplace',
+    description: 'Lyra',
     recommendedInjectedWallets: [
-      { name: 'MetaMask', url: 'https://metamask.io' },
+    { name: 'MetaMask', url: 'https://metamask.io' },
     ],
-  },
+},
 })
 
 const WalletContextProvider: React.FC<React.PropsWithChildren<{}>> = ({
   children,
 }) => {
-  const [{ wallet, connecting }, connect] = useConnectWallet()
+const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
+const [{ chains, connectedChain, settingChain }, setChain] = useSetChain()
 
   return (
     <WalletContext.Provider
@@ -47,6 +62,9 @@ const WalletContextProvider: React.FC<React.PropsWithChildren<{}>> = ({
         wallet,
         connect,
         connecting,
+        connectedChain,
+        setChain,
+        settingChain
       }}
     >
       {children}
