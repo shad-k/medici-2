@@ -11,7 +11,7 @@ const Header: React.FC<{}> = () => {
   const connectedWallet = wallet?.accounts[0]
 
   return (
-    <header className="h-16 w-full px-2 lg:px-0 py-4 fixed top-0 left-0 border-t border-transparent z-10 bg-gradient-to-r from-violet-500 to-fuchsia-500">
+    <header className="h-16 w-full px-2 lg:px-0 py-4 fixed top-0 left-0 border-t border-transparent z-10 header-bg">
       <div className="w-full md:w-4/5 mx-auto flex items-center justify-between h-full">
         <div className="flex items-center justify-center md:justify-between w-2/6">
           <Link to="/" className="flex align-center">
@@ -25,16 +25,8 @@ const Header: React.FC<{}> = () => {
           </Link> */}
         </div>
         <div className="flex items-center justify-end md:justify-end w-3/6">
-          {/* <div className="border border-medici-primary rounded-2xl flex items-center px-2 py-1 hidden md:flex">
-            <MdSearch size="25" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="border-none outline-none bg-transparent placeholder:text-medici-primary placeholder:text-sm ml-2"
-            />
-          </div> */}
           {connectedWallet ? (
-            <div className="px-5 py-2 rounded-2xl text-sm bg-white text-medici-purple">
+            <div className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white">
               {connectedWallet?.ens?.name ??
                 `${connectedWallet?.address.slice(
                   0,
@@ -43,7 +35,7 @@ const Header: React.FC<{}> = () => {
             </div>
           ) : (
             <button
-              className="px-5 py-2 rounded-2xl text-sm bg-white text-medici-purple disabled:cursor-not-allowed"
+              className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white disabled:cursor-not-allowed"
               onClick={() => connect({})}
               disabled={connecting}
             >

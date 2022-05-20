@@ -33,8 +33,8 @@ export type Collection = {
 export type Contract = {
   name: string
   symbol: string
-  masterAddress: string
-  contractAddress: string
+  masteraddress: string
+  contractaddress: string
 }
 
 export type WalletContextReturn = {

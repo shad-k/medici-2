@@ -2,8 +2,8 @@ import React from 'react'
 
 const Footer: React.FC<{}> = () => {
   return (
-    <footer className="w-full flex align-center justify-end bg-white">
-      <ul className="flex align-center justify-between w-28">
+    <footer className="w-full flex align-center justify-end">
+      <ul className="flex align-center justify-between w-28 mr-5">
         <li>
           <a href="https://twitter.com/">
             <svg

@@ -24,10 +24,11 @@ const useAllLaunchedContracts = (masterAddress: string): UseProjectsReturn  => {
         headers: { "Content-Type": "application/json"}
       }
       ).then((res) => {
+        // console.log(res)
         return res.data
       }),
     {
-      refreshInterval: 20,
+      refreshInterval: 100,
     }
   )
   return { data, error }

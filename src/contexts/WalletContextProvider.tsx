@@ -48,6 +48,12 @@ appMetadata: {
     { name: 'MetaMask', url: 'https://metamask.io' },
     ],
 },
+accountCenter: {
+  desktop: {
+      enabled: false,
+      position: 'topRight',
+  }
+}
 })
 
 const WalletContextProvider: React.FC<React.PropsWithChildren<{}>> = ({

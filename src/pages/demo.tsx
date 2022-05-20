@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useReward } from 'react-rewards';
 
-import { getMerkleRoot, generateNewContract, whitelist } from '../utils/web3'
+import { getMerkleRoot, generateNewContract, whitelist, getNewLaunchedContract } from '../utils/web3'
 import { parseData } from '../utils/parse'
 
 import useWallet from '../hooks/useWallet'
@@ -31,7 +31,7 @@ const Demo: React.FC<{}> = () => {
   const MAX_COLLECTION_SIZE = 1000
 
   useEffect(() => {
-    if (CollectionTitle && CollectionSymbol && CollectionSize && FloorPrice && MaxMintsPerPerson && MasterAddress && WhitelistStrData) {
+    if (CollectionTitle && CollectionSymbol && CollectionSize && (CollectionSize > 0) && FloorPrice && (FloorPrice.gte(0)) && MaxMintsPerPerson && (MaxMintsPerPerson > 0) && MasterAddress && WhitelistStrData) {
       setAllFieldsValid(true)
     } else {
       setAllFieldsValid(false)
@@ -72,7 +72,7 @@ const addressCheck = (address: string) => {
         const merkleRoot = await getMerkleRoot(parsedData)
         console.log(merkleRoot)
         if (await readyToTransact()) {
-          const result = await generateNewContract(
+          const contractCreationResult = await generateNewContract(
             wallet,
             merkleRoot,
             { 
@@ -84,19 +84,25 @@ const addressCheck = (address: string) => {
               maxMintsPerPerson: MaxMintsPerPerson!,
               masterAddress: MasterAddress!
             })
-        
+          console.log(contractCreationResult)
           await whitelist(
           { 
             "project": CollectionTitle!,
             "symbol": CollectionSymbol!,
-            "ERC721Contract": result.instance,
+            "ERC721Contract": contractCreationResult.instance,
             "ownerAddress": MasterAddress!,
             "whitelistedAddresses": parsedData,
             "merkleRoot": merkleRoot
           })
+
+          const getNewContractInstance = await getNewLaunchedContract(MasterAddress!, CollectionTitle!, CollectionSymbol!);
+          console.log(getNewContractInstance);
+          if (getNewContractInstance !== contractCreationResult.instance) {
+            throw new Error("Not matching")
+          }
         }
       } catch {
-          console.log("Error")
+          setContractCreationSuccess(false);
           alert("Something went wrong!")
       }
   }
@@ -128,7 +134,7 @@ const addressCheck = (address: string) => {
             </div>
             <div className="min-w-fit">
               <p> Collection Size </p>
-                <input type="number" className="rounded-sm my-2 p-2 text-black w-4/5 md:w-auto" placeholder="10" step="1" max={MAX_COLLECTION_SIZE} onChange={(event) => setCollectionSize(parseInt(event.target.value))}/>
+                <input type="number" className="rounded-sm my-2 p-2 text-black w-4/5 md:w-auto" placeholder="10" step="1" min="0" max={MAX_COLLECTION_SIZE} onChange={(event) => setCollectionSize(parseInt(event.target.value))}/>
               <p> Floor Price </p>
                 <div className="inline-flex w-full">
                 <input type="number" className="rounded-sm my-2 p-2 mr-2 text-black w-4/5 md:w-auto" placeholder="0.001" onChange={(event) => setFloorPrice(utils.parseUnits(event.target.value, "ether"))}/>
@@ -137,7 +143,7 @@ const addressCheck = (address: string) => {
             </div>
             <div className="min-w-fit">
               <p> Maximum Mints per Person </p>
-              <input type="number" className="rounded-sm my-2 p-2 text-black w-4/5 md:w-auto" placeholder="10" step ="1" max={CollectionSize} onChange={(event) => setMaxMintsPerPerson(parseInt(event.target.value))}/>
+              <input type="number" className="rounded-sm my-2 p-2 text-black w-4/5 md:w-auto" placeholder="10" step ="1" min="0" max={CollectionSize} onChange={(event) => setMaxMintsPerPerson(parseInt(event.target.value))}/>
               <p> Master Address </p>
                 <div className="inline-flex w-full">
                   <input type="text" className="rounded-sm my-2 p-2 mr-3 text-black w-4/5 md:w-auto" onChange={(event) => {addressCheck(event.target.value)}}/>

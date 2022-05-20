@@ -18,7 +18,27 @@ export const whitelist = async (props: WhitelistProps) => {
         console.log(error)
         return Promise.reject("Error doing whitelisting")
     });
+}
 
+export const getNewLaunchedContract = async (masterAddress: string, name: string, symbol: string): Promise<string> => {
+    const request_data = {
+        "masterAddress": masterAddress,
+        "name": name,
+        "symbol": symbol
+    }
+    
+    return apiClient.post(
+        localenv.api.paths.getNewLaunchedContract, request_data,
+        {
+            headers: {"Content-Type": "application/json"}
+        }
+    ).then(function(response) {
+        console.log(response.data)
+        return Promise.resolve(response.data)
+    }).catch(function(error) {
+        console.log(error)
+        return Promise.reject("Error fetching contract")
+    });
 }
 
 export const generateNewContract = (callerWallet: any, merkleRoot: string, props: ContractCreationProps): Promise<ContractCreationReturn> => {
@@ -92,8 +112,25 @@ export const getLatestLaunchedContract = async (masterAddress: string, name: str
 }
 
 
-export const withdrawBalance = async (callerWallet: any) => {
+export const withdrawBalance = async (callerWallet: any, contractAddress: any): Promise<any> => {
     const provider = new ethers.providers.Web3Provider(callerWallet.provider)
     const signer = provider.getSigner(callerWallet.accounts[0].address);
-
+    // needs bytecode or abi to call ethers contract
+    const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
+    await myContract.withdraw()
+    .then
+    ((response: any) => {
+        console.log(response)
+        return Promise.resolve({
+            success: true,
+            status: response
+        })
+    })
+    .catch
+    ((error: any) => {
+        return Promise.reject({
+            success: false,
+            status: error
+        })
+    })
 }

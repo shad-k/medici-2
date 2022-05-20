@@ -18,7 +18,8 @@ body,
 }
 
 .header-bg {
-  background: linear-gradient(to right, #281869 0%, #562469 100%);
+  background-color: #663dff;
+  background-image: linear-gradient(319deg, #663dff 0%, #aa00ff 37%, #cc4499 100%);
 }
 
 .header-bg-bottom {
@@ -26,8 +27,9 @@ body,
 }
 
 .body-bg {
-  background-color: #1B1A20;
-  background-repeat: repeat-y;
+  background-color: #1b1a1f;
+  background-size: 30%;
+  background-repeat: repeat;
 }
 
 .hero-collection {

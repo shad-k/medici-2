@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react'
 import DashHero from '../components/DashHero'
-import DashActive from '../components/DashActive'
-import DashMintList from '../components/DashMintList'
 import AllContracts from '../components/AllContracts'
 import useWallet from '../hooks/useWallet'
 import useAllLaunchedContracts from '../hooks/useAllLaunchedContracts'
