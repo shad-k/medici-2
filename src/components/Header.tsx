@@ -5,29 +5,87 @@ import { Link } from 'react-router-dom'
 import { ethers } from 'ethers'
 
 import useWallet from '../hooks/useWallet'
+import { API_ENDPOINT, API_PATHS } from '../utils/config'
 
 const Header: React.FC<{}> = () => {
   const { wallet, connecting, connect } = useWallet()
 
   const connectedWallet = wallet?.accounts[0]
   const [isSignedIn, setIsSignedIn] = React.useState<boolean>(
-    Boolean(localStorage.getItem('signature'))
+    Boolean(localStorage.getItem('token'))
   )
 
-  const signIn = async () => {
+  const signup = async () => {
     if (wallet) {
-      try {
-        const provider = new ethers.providers.Web3Provider(wallet.provider)
-        const signer = await provider.getSigner()
-        const signature = await signer.signMessage(
-          'Sign this message to access. Nonce: 1'
-        )
-        console.log('signature', signature)
-        localStorage.setItem('signature', JSON.stringify(true))
-        setIsSignedIn(true)
-      } catch (error) {
-        console.log(error)
-      }
+      await fetch(`${API_ENDPOINT}${API_PATHS.SIGNUP}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          address: wallet.accounts[0].address,
+        }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      })
+
+      getNonce()
+    }
+  }
+
+  const login = async (nonce: string) => {
+    if (wallet) {
+      const provider = new ethers.providers.Web3Provider(wallet.provider)
+      const signer = await provider.getSigner()
+      const signature = await signer.signMessage(nonce)
+
+      const loginResponse = await fetch(`${API_ENDPOINT}${API_PATHS.LOGIN}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          address: wallet.accounts[0].address,
+          signature,
+          nonce,
+        }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      }).then((res) => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          throw new Error('Something went wrong, please try again!')
+        }
+      })
+
+      localStorage.setItem('token', JSON.stringify(loginResponse.accessToken))
+      setIsSignedIn(true)
+    }
+  }
+
+  const getNonce = async () => {
+    if (wallet) {
+      const nonceResponse = await fetch(`${API_ENDPOINT}${API_PATHS.NONCE}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          address: wallet.accounts[0].address,
+        }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      })
+        .then((res) => {
+          console.log(res.status)
+          if (res.status === 401) {
+            throw new Error(res.statusText)
+          }
+          return res.json()
+        })
+        .catch(async (error) => {
+          signup()
+          throw new Error(error)
+        })
+      login(nonceResponse.nonce)
+    }
+    return null
+  }
+
+  const signIn = async () => {
+    try {
+      getNonce()
+    } catch (error) {
+      console.log(error)
     }
   }
 
