@@ -1,4 +1,4 @@
-export const API_ENDPOINT = 'https://athensgate.xyz'
+export const API_ENDPOINT = 'http://localhost:8145'
 
 export enum API_PATHS {
   GET_MERKLE_ROOT = '/getMerkleRoot',
@@ -843,7 +843,10 @@ export const CONFIG = {
         "whitelist": "/whitelist",
         "getNewLaunchedContract": "/getNewLaunchedContract",
         "getAllLaunchedContracts": "/getAllLaunchedContracts",
-        "test": "/regulusTest"
+        "test": "/regulusTest",
+        "uploadImageCover": "/upload/cover",
+        "uploadImageData": "/upload/collection",
+        "checkName": "/checkNameAvailability",
       }
     }
   },

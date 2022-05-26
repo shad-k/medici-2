@@ -3,7 +3,7 @@ import { API_ENDPOINT } from './config'
 
 const apiClient = axios.create({
   baseURL: API_ENDPOINT,
-  timeout: 10000,
+  timeout: 1000000,
 })
 
 export default apiClient

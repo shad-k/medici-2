@@ -1,22 +1,69 @@
-import React, {useState, useEffect} from 'react'
-import CollectionCreator from '../components/CollectionCreator'
+import React, { useState } from 'react'
+import InputDetails from '../components/CollectionCreator/InputDetails'
+import UploadFiles from '../components/CollectionCreator/UploadFiles'
 
 const Create: React.FC<{}> = () => {
+  const [step, setStep] = useState<number>(1);
 
-  return (
-    <section className="w-full lg:w-4/5 m-auto flex flex-col md:flex-row items-center justify-between flex-1 py-10 px-10 md:px-0 md:ml-50 gap-3 md:gap-20">
-    <div className="w-full md:w-8/12 order-1 text-center md:text-left flex flex-col items-center md:items-start md:ml-40 py-10">
-        <h1 className="text-3xl md:text-4xl font-semibold">
-            Create your Collection
-        </h1>
-        <br></br>
-        <span className="font-extralight text-lg text-zinc-500">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
-        </span>
-    <CollectionCreator/>
-    </div>
-    </section>
-  );
+  const [params, setParams] = useState<any>({
+    name: "",
+    symbol: "",
+    baseuri: "",
+    maxSupply: "",
+    price: "",
+    maxMintsPerPerson: 0,
+    masterAddress: "",
+    whitelistStrData: "",
+    coverImage: "",
+    imageData: ""
+  })
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const handleInputData = (input: any, value: string) => {
+    // input value from the form
+    console.log("Set " + input + " to " + value);
+      setParams((prevState: any) => ({
+        ...prevState,
+        [input]: value
+    })); 
+  }
+
+  switch(step) {
+    case 1:
+      return (
+        <div className="w-full flex flex-col p-10 items-center md:mt-36">
+            <h1 className="text-center text-4xl font-semibold">
+                Create your Collection
+            </h1>
+            <br></br>
+            <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
+            </span>
+            <InputDetails nextStep={nextStep} handleInputData={handleInputData} data={params}/>
+        </div>
+      );
+      case 2:
+        return (
+          <div className="w-full flex flex-col p-10 items-center md:mt-36">
+          <h1 className="text-center text-4xl font-semibold">
+          Create your Collection
+          </h1>
+          <br></br>
+          <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
+          </span>
+          <UploadFiles nextStep={nextStep} handleInputData={handleInputData} data={params}/>
+      </div>
+      );
+      default:
+      return (
+        <div className="App">
+        </div>
+      );
+  }
 }
 
 export default Create

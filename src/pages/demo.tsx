@@ -89,7 +89,7 @@ const addressCheck = (address: string) => {
           { 
             "project": CollectionTitle!,
             "symbol": CollectionSymbol!,
-            "ERC721Contract": contractCreationResult.instance,
+            "ERC721Contract": contractCreationResult.contractaddress,
             "ownerAddress": MasterAddress!,
             "whitelistedAddresses": parsedData,
             "merkleRoot": merkleRoot
@@ -97,7 +97,7 @@ const addressCheck = (address: string) => {
 
           const getNewContractInstance = await getNewLaunchedContract(MasterAddress!, CollectionTitle!, CollectionSymbol!);
           console.log(getNewContractInstance);
-          if (getNewContractInstance !== contractCreationResult.instance) {
+          if (getNewContractInstance !== contractCreationResult.contractaddress) {
             throw new Error("Not matching")
           }
         }

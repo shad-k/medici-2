@@ -66,12 +66,12 @@ export type ContractCreationProps = {
   masterAddress: string
 }
 
-export type ContractCreationReturn = {
-  name: string
-  symbol: string
-  instance: string
-  masterAddress: string
+export interface StepperFormProps {
+    nextStep: () => void
+    handleInputData: (input: any, value: any) => void
+    data: any
 }
+
 
 export type WhitelistProps = {
   project: String
@@ -82,3 +82,4 @@ export type WhitelistProps = {
   whitelistedAddresses: Array<String>
   merkleRoot: string
 }
+

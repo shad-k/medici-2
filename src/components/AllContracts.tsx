@@ -5,6 +5,7 @@ import ContractCard from './ContractCard';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Link } from 'react-router-dom';
 
 const AllContracts: React.FC<{masterAddress : string}> = ({masterAddress}) => {
 const { data: contracts, error } = useAllLaunchedContracts(masterAddress);
@@ -58,14 +59,17 @@ const { data: contracts, error } = useAllLaunchedContracts(masterAddress);
     <div className="w-4/5 md:w-11/12 max-w-[1200px] items-center md:items-start m-auto pb-20">
       <br></br>
       <Slider {...settings}>
-      {contracts.slice(1,5).map((contract: Contract, i) => (
+      {contracts.map((contract: Contract, i) => (
         <div className="flex justify-center p-1">
           <ContractCard contract={contract} colorVar={i} />
         </div>
       ))}
-      <div className="mt-1 ml-1 p-5 bg-black h-[300px] rounded-2xl">
-        NEW CONTRACT
+      <Link
+      to="/demo">
+      <div className="p-5 border-[1px] backdrop-blur-sm drop-shadow-lg h-[300px] overflow-clip rounded-2xl mt-1">
+        <h1 className="align-middle text-center">NEW CONTRACT</h1>
       </div>
+      </Link>
     </Slider>
     </div>
   );

@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from 'ethers'
-import { ContractCreationProps, WhitelistProps, ContractCreationReturn } from '../model/types'
+import { ContractCreationProps, WhitelistProps, Contract } from '../model/types'
 
 import { CONFIG } from './config'
 import apiClient from './apiClient'
@@ -44,7 +44,7 @@ export const getNewLaunchedContract = async (masterAddress: string, name: string
 }
 
 /* generate a new smart contract from user input */
-export const generateNewContract = (callerWallet: any, merkleRoot: string, props: ContractCreationProps): Promise<ContractCreationReturn> => {
+export const generateNewContract = (callerWallet: any, merkleRoot: string, props: ContractCreationProps): Promise<Contract> => {
     return new Promise( async (resolve, reject ) => {
         const provider = new ethers.providers.Web3Provider(callerWallet.provider)
         const signer = provider.getSigner(callerWallet.accounts[0].address);
@@ -68,8 +68,8 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
             resolve ({
                 "name": name,
                 "symbol": symbol,
-                "instance": instance,
-                "masterAddress": masterAddress
+                "contractaddress": instance,
+                "masteraddress": masterAddress
             })
         })
     })
@@ -94,82 +94,94 @@ export const getMerkleRoot = async (whitelistAddresses: string[]):Promise<string
     });
 }
 
+export const checkNameAvailability = async (name: string):Promise<boolean> => {
+    const request_data = {
+        "name": name
+    }
+    
+    return apiClient.post(
+        localenv.api.paths.checkName,
+        request_data,
+        {
+            headers: {"Content-Type": "application/json"}
+        }
+    ).then(function(response) {
+        console.log(response.data)
+        if (response.data === 'Available') {
+            return Promise.resolve(true)
+        } else {
+            return Promise.resolve(false)
+        }
+    }).catch(function(error) {
+        console.log(error);
+        return Promise.reject("Error checking name availability")
+    });
+}
+
+
+
 /* Master Address only Methods */
 
-/* withdraw */
-export const withdrawBalance = async (callerWallet: any, contractAddress: any): Promise<any> => {
+export const getContract = (callerWallet: any, contractAddress: string) => {
     const provider = new ethers.providers.Web3Provider(callerWallet.provider)
     const signer = provider.getSigner(callerWallet.accounts[0].address);
-    // needs bytecode or abi to call ethers contract
+
     const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
+    return myContract;
+}
+
+/* withdraw */
+export const withdrawBalance = async (callerWallet: any, contractAddress: string): Promise<any> => {
+    const myContract = getContract(callerWallet, contractAddress)
     await myContract.withdraw()
-    .then
-    ((response: any) => {
-        console.log(response)
-        return Promise.resolve({
-            success: true,
-            status: response
-        })
-    })
-    .catch
-    ((error: any) => {
-        return Promise.reject({
-            success: false,
-            status: error
-        })
-    })
 }
 
 /* begin claim period */
 export const startClaimPeriod = async (callerWallet: any, contractAddress: string) => {
-    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
-    const signer = provider.getSigner(callerWallet.accounts[0].address);
-
-    const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
-    myContract.turnOnClaimPeriod()
+    const myContract = getContract(callerWallet, contractAddress)
+    await myContract.turnOnClaimPeriod()
 }
 
 /* begin mint period */
 export const startMintPeriod = async (callerWallet: any, contractAddress: string) => {
-    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
-    const signer = provider.getSigner(callerWallet.accounts[0].address);
-
-    const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
-    myContract.turnOffClaimPeriodAndTurnOnMintPeriod()
+    const myContract = getContract(callerWallet, contractAddress)
+    await myContract.turnOffClaimPeriodAndTurnOnMintPeriod()
 }
 
 
 /* end mint period */
 export const endMintPeriod = async (callerWallet: any, contractAddress: string) => {
-    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
-    const signer = provider.getSigner(callerWallet.accounts[0].address);
-
-    const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
-    myContract.turnOffMintPeriod()
+    const myContract = getContract(callerWallet, contractAddress)
+    await myContract.turnOffMintPeriod()
 }
 
 export const changeBaseURI = async (callerWallet: any, contractAddress: string, newUri: string) => {
-    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
-    const signer = provider.getSigner(callerWallet.accounts[0].address);
-
-    const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
-    myContract.changeBaseUri(newUri)
+    const myContract = getContract(callerWallet, contractAddress)
+    await myContract.changeBaseUri(newUri)
 } 
 
 export const changePrice = async (callerWallet: any, contractAddress: string, newPrice: BigNumber) => {
-    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
-    const signer = provider.getSigner(callerWallet.accounts[0].address);
-
-    const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
-    myContract.changePrice(newPrice)
+    const myContract = await getContract(callerWallet, contractAddress)
+    await myContract.changePrice(newPrice)
 }
 
 export const changeMasterAddress = async (callerWallet: any, contractAddress: string, newMasterAddress: string) => {
-    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
-    const signer = provider.getSigner(callerWallet.accounts[0].address);
-
-    const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
-    myContract.transferOwnership(newMasterAddress);
+    const myContract = getContract(callerWallet, contractAddress)
+    await myContract.transferOwnership(newMasterAddress);
 
     /* need to change owner in regulus backend */
 } 
+
+export const getIsClaimPeriod = async (callerWallet: any, contractAddress: string) => {
+    const myContract = getContract(callerWallet, contractAddress);
+    console.log(myContract)
+    const result = await myContract.price();
+    return result;
+}
+
+// export const getBalance = async (callerWallet: any, contractAddress: string): Promise<any> => {
+//     const myContract = getContract(callerWallet, contractAddress);
+//     const balance = await myContract.balance();
+
+//     return balance;
+// }
