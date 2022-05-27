@@ -64,7 +64,7 @@ const InputDetails: React.FC<StepperFormProps> = ({
   // }
 
   return (
-    <div className="w-full md:w-3/5 md:text-left flex flex-col mt-10">
+    <div className="w-full md:w-2/5 md:text-left flex flex-col mt-10">
           <label htmlFor="input-name" className="block lg:text-2xl py-2">Collection Title</label>
           <input id="input-name" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none" onChange={event => handleInputData("name", event.target.value)}/>
           {/* {isNameAvailable ? <p>Name is available!</p> : <p>This name is not available, please try another name!</p>} */}
@@ -74,13 +74,11 @@ const InputDetails: React.FC<StepperFormProps> = ({
           <br></br>
             <label htmlFor="input-master" className="block lg:text-2xl py-2">Master Address</label>
               <div className="inline-flex gap-4 w-full">
-                <input id="input-master" type="text" className="text-white md:text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none" onChange={event => addressCheck(event.target.value)}/>
+                <input id="input-master" type="text" className="text-white md:text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none w-11/12" onChange={event => addressCheck(event.target.value)}/>
                 {isValidMasterAddress ? <BsFillCheckSquareFill className="mt-3" size="30px" color="green"/> : <BsFillXSquareFill className="mt-3" size="30px" color="#F47174"/>}
               </div>
-              <label htmlFor="input-floor-price" className="block lg:text-2xl py-2">Price</label>
-              <input id="input-floor-price" type="number" step="1" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none" onChange={event => handleInputData("price", event.target.value)}/>
           <br></br>
-          <div className="text-center">
+          <div className="text-center mt-10">
           <button className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={submitFormData}>Next</button>
           </div>
     </div>

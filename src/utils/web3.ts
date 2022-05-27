@@ -51,6 +51,7 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         const FactoryContract = new ethers.Contract(localenv.contract.factory_address, localenv.contract.factory_abi, signer);
         
         console.log("generating...")
+        console.log(props);
         await FactoryContract.createContract(
         props.name, // name
         props.symbol, // symbol
@@ -61,6 +62,7 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         props.maxMintsPerPerson, // max mint per person
         props.masterAddress // master address
         ).catch((error: Error) => {
+            console.log(error);
             reject(error.message);
         })
 
@@ -161,7 +163,7 @@ export const changeBaseURI = async (callerWallet: any, contractAddress: string, 
 } 
 
 export const changePrice = async (callerWallet: any, contractAddress: string, newPrice: BigNumber) => {
-    const myContract = await getContract(callerWallet, contractAddress)
+    const myContract = getContract(callerWallet, contractAddress)
     await myContract.changePrice(newPrice)
 }
 
