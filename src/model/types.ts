@@ -1,4 +1,8 @@
-import type { ConnectOptions, WalletState, ConnectedChain } from '@web3-onboard/core'
+import type {
+  ConnectOptions,
+  WalletState,
+  ConnectedChain,
+} from '@web3-onboard/core'
 import type { BigNumber, Wallet } from 'ethers'
 
 export type Owner = {
@@ -24,7 +28,7 @@ export type Collection = {
   numOwners: number
   supportsEIP721Metadata: boolean
   tokens: Array<Token>
-  floor_price: number,
+  floor_price: number
   balance: number
   chain: string
   creationTime: string
@@ -58,21 +62,20 @@ export type ProjectContextReturn = {
 export type ContractCreationProps = {
   // callerWallet: WalletState,
   // merkleRoot: string,
-  name: string,
-  symbol: string,
-  baseuri: string,
-  maxSupply: number,
-  price: BigNumber,
-  maxMintsPerPerson: number,
+  name: string
+  symbol: string
+  baseuri: string
+  maxSupply: number
+  price: BigNumber
+  maxMintsPerPerson: number
   masterAddress: string
 }
 
 export interface StepperFormProps {
-    nextStep: () => void
-    handleInputData: (input: any, value: any) => void
-    data: any
+  nextStep: () => void
+  handleInputData: (input: any, value: any) => void
+  data: any
 }
-
 
 export type WhitelistProps = {
   project: String
@@ -84,3 +87,20 @@ export type WhitelistProps = {
   merkleRoot: string
 }
 
+export enum TemplateTier {
+  FREE = 'free',
+}
+
+export type Claim = {
+  contract: string
+  tier: TemplateTier
+  font: string | null
+  primarycolor: string | null
+  secondarycolor: string | null
+  backgroundcolor: string | null
+  artist: string
+  description: string
+  collection_email: string | null
+  collection_twitter: string | null
+  collection_discord: string | null
+}

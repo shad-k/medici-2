@@ -11,7 +11,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import WalletContextProvider from './contexts/WalletContextProvider'
 import Background from './components/Background'
-
+import ClaimPage from './pages/claimPage'
 
 const App: React.FC<{}> = () => {
 
@@ -19,18 +19,16 @@ const App: React.FC<{}> = () => {
     <WalletContextProvider>
       <div className="text-medici-primary relative overflow-auto min-h-full">
         <Router>
-          <main className="font-sans mt-16 pb-6">
+          <main className="font-sans mt-16">
             <Background />
             <Header />
             <div className="z-1 relative">
               <Routes>
-                <Route path="/demo" element={<Demo/>}/>
-                <Route path="/create" element={<Create/>}/>
-                <Route path="/launch" element={<DropEditor/>}/>
-                <Route
-                  path="/project/:contractaddress"
-                  element={<Project />}
-                />
+                <Route path="/demo" element={<Demo />} />
+                <Route path="/create" element={<Create />} />
+                <Route path="/launch" element={<DropEditor />} />
+                <Route path="/page/:id" element={<ClaimPage />} />
+                <Route path="/project/:contractaddress" element={<Project />} />
                 <Route path="/" element={<Home />} />
               </Routes>
             </div>
