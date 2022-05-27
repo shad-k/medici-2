@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 import type { Collection } from '../model/types'
@@ -10,14 +10,14 @@ const HeroCollectionCard: React.FC<{ collection: Collection }> = ({
 }) => {
   const { id, tokens } = collection
   const tokenURIJson =
-  tokens?.length > 0
-    ? JSON.parse(
-        tokens[0].tokenURI.substring(0, tokens[0].tokenURI.length - 1)
-      )
-    : null
+    tokens?.length > 0
+      ? JSON.parse(
+          tokens[0].tokenURI.substring(0, tokens[0].tokenURI.length - 1)
+        )
+      : null
 
   const name = collection.name
-  const collectionImage  = tokenURIJson.image
+  const collectionImage = tokenURIJson.image
   console.log(collectionImage)
 
   return (
