@@ -73,7 +73,7 @@ const DropEditor: React.FC<{}> = () => {
             Launch a project
         </h1>
         <br></br>
-        <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
+        <span className="md:w-3/5 text-center font-extralight md:text-2xl">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
         </span>
         <br></br>
@@ -82,15 +82,15 @@ const DropEditor: React.FC<{}> = () => {
         <br></br>
         <form id="input-form" className="grid grid-cols-2">
             <label htmlFor="input-artist" className="block lg:text-2xl py-2">Artist</label>
-            <input id="input-artist" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none mb-10" onChange={event => handleInputData("artist", event.target.value)}/>
+            <input id="input-artist" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none mb-10" onChange={event => handleInputData("artist", event.target.value)}/>
             <label htmlFor="input-description" className="block lg:text-2xl py-2">Description</label>
-            <textarea id="input-description" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none mb-10" onChange={event => handleInputData("description", event.target.value)}/>
+            <textarea id="input-description" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none mb-10" onChange={event => handleInputData("description", event.target.value)}/>
             <label htmlFor="input-twitter" className="block lg:text-2xl py-2">Collection Twitter</label>
-            <input id="input-twitter" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none mb-10" onChange={event => handleInputData("collection_twitter", event.target.value)}/>
+            <input id="input-twitter" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none mb-10" onChange={event => handleInputData("collection_twitter", event.target.value)}/>
             <label htmlFor="input-discord" className="block lg:text-2xl py-2">Collection Discord</label>
-            <input id="input-discord" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none mb-10" onChange={event => handleInputData("collection_discord", event.target.value)}/>
+            <input id="input-discord" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none mb-10" onChange={event => handleInputData("collection_discord", event.target.value)}/>
             <label htmlFor="input-email" className="block lg:text-2xl py-2">Collection Email</label>
-            <input id="input-email" type="email" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none mb-10" onChange={event => handleInputData("collection_email", event.target.value)}/>
+            <input id="input-email" type="email" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2  outline-none mb-10" onChange={event => handleInputData("collection_email", event.target.value)}/>
         </form>
         <br></br>
             <div className="flex flex-row">

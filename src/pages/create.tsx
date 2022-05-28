@@ -43,6 +43,7 @@ const Create: React.FC<{}> = () => {
             <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
             </span>
+            <br></br>
             <InputDetails nextStep={nextStep} handleInputData={handleInputData} data={params}/>
         </div>
       );

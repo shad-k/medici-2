@@ -52,7 +52,11 @@ accountCenter: {
   desktop: {
       enabled: false,
       position: 'topRight',
-  }
+  },
+  mobile: {
+    enabled: false,
+    position: 'topRight',
+},
 }
 })
 

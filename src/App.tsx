@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import Home from './pages/home'
@@ -14,6 +14,7 @@ import Background from './components/Background'
 
 
 const App: React.FC<{}> = () => {
+
   return (
     <WalletContextProvider>
       <div className="text-medici-primary relative overflow-auto min-h-full">

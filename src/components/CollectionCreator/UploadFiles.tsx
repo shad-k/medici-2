@@ -124,11 +124,11 @@ const uploadImageData = async (file: File) => {
               <label htmlFor="ImageDataField">
               { ImageData ? 
               <div className="w-full h-[200px] rounded-2xl text-center flex flex-col items-center border-dotted border-2 border-zinc-100/100">
-                  <p>{ImageData.name}</p>
+                  <p className="align-middle">{ImageData.name}</p>
               </div>
               : 
-              <div className="w-full h-[200px] rounded-2xl border-dotted border-2 border-zinc-100/100">
-                  <span className="text-center">Upload a zip file</span>
+              <div className="w-full h-[200px] rounded-2xl border-2 border-zinc-100/100 flex flex-col items-center ">
+                  <span className="text-center mt-20">Upload a zip file</span>
               </div>
               }
               </label>
