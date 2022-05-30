@@ -28,6 +28,8 @@ export const getNewLaunchedContract = async (masterAddress: string, name: string
         "name": name,
         "symbol": symbol
     }
+
+    console.log(request_data)
     
     return apiClient.post(
         localenv.api.paths.getNewLaunchedContract, request_data,

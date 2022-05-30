@@ -3,9 +3,6 @@ import { StepperFormProps } from '../../model/types';
 import validator from 'validator';
 import apiClient from '../../utils/apiClient';
 import { CONFIG } from '../../utils/config';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 
 const UploadFiles: React.FC<StepperFormProps> = ({
   nextStep,
@@ -14,8 +11,9 @@ const UploadFiles: React.FC<StepperFormProps> = ({
 }) => {
   const [error, setError] = useState(false);
   const [CoverImage, setCoverImage] = useState<File>();
-  const [ImageData, setImageData] = useState<File>()
-  const [UploadProgress, setUploadProgress] = useState<any>()
+  const [CoverUploadSuccess, setCoverUploadSuccess] = useState<boolean>();
+  const [ImageData, setImageData] = useState<File>();
+  const [ImageDataUploadSuccess, setImageDataUploadSuccess] = useState<boolean>();
   const [ImageUrl, setImageUrl] = useState<string>();
 
   const localenv = CONFIG.DEV
@@ -29,11 +27,10 @@ const UploadFiles: React.FC<StepperFormProps> = ({
   // after form submit validating the form data using validator
   const submitFormData = (e: any) => {
     e.preventDefault();
-
-    // checking if value of first name and last name is empty show error else take to step 2
+ 
     if (
-      !ImageData ||
-      !CoverImage
+      !ImageDataUploadSuccess ||
+      !CoverUploadSuccess
     ) {
       setError(true);
       alert("Something went wrong!");
@@ -42,31 +39,32 @@ const UploadFiles: React.FC<StepperFormProps> = ({
     }
   };
 
-  const uploadCoverImage = async (file: File) => {
-    setCoverImage(file);
-    
-    const formdata = new FormData();
-    formdata.append("cover", file)
-    
-    apiClient.post(
-      localenv.api.paths.uploadImageCover,
-      formdata,
-      {
-        "headers": {"Content-Type": "form-data"},
-        "params": {"collection": data.name}
-      }
-      )
-      .then(function(response) {
-      console.log("Cover image " + file.name + " for collection " + data.name + " uploaded successfully" )
-      handleInputData("coverImage", file);
-      }).catch(function(error){
-      console.log("Error uploading cover image")
-      });
+const uploadCoverImage = async (file: File) => {
+  setCoverImage(file);
+  
+  const formdata = new FormData();
+  formdata.append("cover", file)
+  
+  apiClient.post(
+    localenv.api.paths.uploadImageCover,
+    formdata,
+    {
+      "headers": {"Content-Type": "form-data"},
+      "params": {"collection": data.name}
+    }
+    )
+    .then(function(response) {
+    console.log("Cover image " + file.name + " for collection " + data.name + " uploaded successfully" )
+    handleInputData("coverImage", file);
+    setCoverUploadSuccess(true);
+    }).catch(function(error){
+    console.log("Error uploading cover image")
+    setCoverUploadSuccess(false);
+    });
 }
 
 const uploadImageData = async (file: File) => {
   setImageData(file);
-
   const formdata = new FormData();
   formdata.append("images", file)
   
@@ -81,8 +79,10 @@ const uploadImageData = async (file: File) => {
     .then(function(response) {
     console.log(response)
     console.log("Image data " + file.name + " for collection " + data.name + " uploaded successfully" )
+    setImageDataUploadSuccess(true);
     }).catch(function(error){
     console.log("Error uploading collection image")
+    setImageDataUploadSuccess(false);
     });
 }
 
@@ -124,7 +124,7 @@ const uploadImageData = async (file: File) => {
               <label htmlFor="ImageDataField">
               { ImageData ? 
               <div className="w-full h-[200px] rounded-2xl text-center flex flex-col items-center border-dotted border-2 border-zinc-100/100">
-                  <p className="align-middle">{ImageData.name}</p>
+                  <p className="text-center mt-20">{ImageData.name}</p>
               </div>
               : 
               <div className="w-full h-[200px] rounded-2xl border-2 border-zinc-100/100 flex flex-col items-center ">
@@ -134,7 +134,7 @@ const uploadImageData = async (file: File) => {
               </label>
             </div>
           <div className="text-center order-3">
-            <button className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={submitFormData}>Next</button>
+            <button className="disabled:bg-zinc-500 bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" disabled={!ImageDataUploadSuccess} onClick={submitFormData}>Next</button>
           </div>
       </div>
   );

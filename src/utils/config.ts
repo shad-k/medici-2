@@ -1,4 +1,4 @@
-export const API_ENDPOINT = 'http://localhost:8145'
+export const API_ENDPOINT = 'https://athensgate.xyz'
 
 export enum API_PATHS {
   GET_MERKLE_ROOT = '/getMerkleRoot',
