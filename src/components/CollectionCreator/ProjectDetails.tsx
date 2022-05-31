@@ -50,6 +50,7 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
   async function generateSmartContract() {
     try {
       const parsedData = await parseData(WhitelistStrData!)
+      console.log(parsedData);
       const merkleRoot = await getMerkleRoot(parsedData)
       console.log("Merkle Root: " + merkleRoot)
 
@@ -102,7 +103,7 @@ async function handleSubmit() {
 }
 
   return (
-    <div className="w-full md:w-2/5 md:text-left flex flex-col mt-10">
+    <div className="w-full md:w-2/5 md:text-left flex flex-col mt-5">
           <label htmlFor="input-max-supply" className="block lg:text-2xl py-2">Max Supply</label>
           <input id="input-max-supply" type="number" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none" onChange={event => handleInputData("maxSupply", event.target.value)}/>
           <br></br>

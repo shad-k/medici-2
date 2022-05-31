@@ -23,7 +23,9 @@ export async function CSVtoArray( csv: File ): Promise<string[]> {
         },
         complete() {
             console.log("complete")
-            return resolve(parseResults.flat());
+            return resolve(parseResults.flat().filter((el) => {
+                return el !== null && typeof el !== 'undefined' && el !== '';
+            }));
         },
         error(error, csv) {
             console.log(error)
@@ -45,7 +47,9 @@ export async function strDataToArray( strData: string ): Promise<string[]> {
             },
             complete() {
                 console.log("complete");
-                return resolve(parseResults);
+                return resolve(parseResults.flat().filter((el) => {
+                    return el !== null && typeof el !== 'undefined' && el !== '';
+                }));
             },
             error(error: Error) {
                 console.log(error)

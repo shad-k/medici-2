@@ -12,8 +12,6 @@ import { RiUploadLine } from 'react-icons/ri';
 import { MdPriceChange } from 'react-icons/md';
 import clsx from 'clsx'
 
-
-
 const Create: React.FC<{}> = () => {
   const [step, setStep] = useState<number>(1);
 
@@ -95,7 +93,7 @@ const Create: React.FC<{}> = () => {
             <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
             </span>
-            <div className="p-10">
+            <div className="p-5">
             <Stepper activeStep={step-1}>
             {steps.map((label) => (
                <Step key={label}>
@@ -117,7 +115,7 @@ const Create: React.FC<{}> = () => {
           <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
           </span>
-          <div className="p-10">
+          <div className="p-5">
             <Stepper activeStep={step-1}>
             {steps.map((label) => (
                <Step key={label}>
@@ -140,7 +138,7 @@ const Create: React.FC<{}> = () => {
           <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
           </span>
-          <div className="p-10">
+          <div className="p-5">
             <Stepper activeStep={step-1}>
             {steps.map((label) => (
                <Step key={label}>

@@ -94,6 +94,7 @@ export const getMerkleRoot = async (whitelistAddresses: string[]):Promise<string
         console.log(response.data)
         return Promise.resolve(response.data)
     }).catch(function(error) {
+        console.log(error)
         return Promise.reject("Error getting merkle root")
     });
 }

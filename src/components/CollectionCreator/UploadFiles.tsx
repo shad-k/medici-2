@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import { StepperFormProps } from '../../model/types';
-import validator from 'validator';
 import apiClient from '../../utils/apiClient';
 import { CONFIG } from '../../utils/config';
+import { LinearProgress } from '@mui/material';
 
 const UploadFiles: React.FC<StepperFormProps> = ({
   nextStep,
@@ -13,6 +13,8 @@ const UploadFiles: React.FC<StepperFormProps> = ({
   const [CoverImage, setCoverImage] = useState<File>();
   const [CoverUploadSuccess, setCoverUploadSuccess] = useState<boolean>();
   const [ImageData, setImageData] = useState<File>();
+  const [ImageDataProgress, setImageDataProgress] = useState<any>();
+  const [showLoader, setShowLoader] = useState<boolean>();
   const [ImageDataUploadSuccess, setImageDataUploadSuccess] = useState<boolean>();
   const [ImageUrl, setImageUrl] = useState<string>();
 
@@ -50,7 +52,7 @@ const uploadCoverImage = async (file: File) => {
     formdata,
     {
       "headers": {"Content-Type": "form-data"},
-      "params": {"collection": data.name}
+      "params": {"collection": data.name},
     }
     )
     .then(function(response) {
@@ -67,19 +69,24 @@ const uploadImageData = async (file: File) => {
   setImageData(file);
   const formdata = new FormData();
   formdata.append("images", file)
+  setShowLoader(true)
   
   apiClient.post(
     localenv.api.paths.uploadImageData,
     formdata,
     {
       "headers": {"Content-Type": "form-data"},
-      "params": {"collection": data.name}
+      "params": {"collection": data.name},
+      "onUploadProgress": function(progressEvent) {
+        var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        console.log(percentCompleted)
+      }
     }
     )
     .then(function(response) {
     console.log(response)
-    console.log("Image data " + file.name + " for collection " + data.name + " uploaded successfully" )
     setImageDataUploadSuccess(true);
+    setShowLoader(false);
     }).catch(function(error){
     console.log("Error uploading collection image")
     setImageDataUploadSuccess(false);
@@ -87,7 +94,7 @@ const uploadImageData = async (file: File) => {
 }
 
   return (
-    <div className="w-full md:w-2/5 md:text-left flex flex-col mt-10 items-center">
+    <div className="w-full md:w-2/5 md:text-left flex flex-col items-center">
           <div className="flex flex-col items-center order-1 w-fit">
               <input
                   type="file"
@@ -129,12 +136,13 @@ const uploadImageData = async (file: File) => {
               : 
               <div className="w-full h-[200px] rounded-2xl border-2 border-zinc-100/100 flex flex-col items-center ">
                   <span className="text-center mt-20">Upload a zip file</span>
+                  {/* <LinearProgress id="progress-loader" variant="determinate" value={ImageDataProgress}/> */}
               </div>
               }
               </label>
             </div>
           <div className="text-center order-3">
-            <button className="disabled:bg-zinc-500 bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" disabled={!ImageDataUploadSuccess} onClick={submitFormData}>Next</button>
+            {(ImageDataUploadSuccess && CoverUploadSuccess) ? <button className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={submitFormData}>Next</button> : <button className="bg-zinc-500 p-3 rounded-3xl w-2/5 min-w-[100px]">Next</button>}
           </div>
       </div>
   );

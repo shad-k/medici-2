@@ -64,7 +64,7 @@ const InputDetails: React.FC<StepperFormProps> = ({
   // }
 
   return (
-    <div className="w-full md:w-2/5 md:text-left flex flex-col mt-10">
+    <div className="w-full md:w-2/5 md:text-left flex flex-col mt-3">
           <label htmlFor="input-name" className="block lg:text-2xl py-2">Collection Title</label>
           <input id="input-name" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none" onChange={event => handleInputData("name", event.target.value)}/>
           {/* {isNameAvailable ? <p>Name is available!</p> : <p>This name is not available, please try another name!</p>} */}
