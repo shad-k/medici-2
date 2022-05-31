@@ -19,8 +19,7 @@ export const CONFIG = {
     },
     "contract": {
     "factory_address": "0x0FeeC4D622577752C04B96e000FC454687AFc6BB",
-    "factory_abi": 
-    [
+    "factory_abi": [
       {
         "inputs": [
           {
@@ -848,7 +847,7 @@ export const CONFIG = {
         "uploadImageCover": "/upload/cover",
         "uploadImageData": "/upload/collection",
         "checkName": "/checkNameAvailability",
-        "launchClaim": "/claims"
+        "launchClaim": "/claims/setup"
       }
     }
   },
