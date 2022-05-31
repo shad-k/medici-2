@@ -14,7 +14,8 @@ export const CONFIG = {
       "label": "Kovan TestNet",
       "id": "0x2a",
       "token": "ETH",
-      "rpcUrl": "https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD"
+      "rpcUrl": "https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD",
+      "etherscanUrl": "https://kovan.etherscan.io/address/"
     },
     "contract": {
     "factory_address": "0x19962A35700c88Ae86F55b2FA27d66358B4768B5",

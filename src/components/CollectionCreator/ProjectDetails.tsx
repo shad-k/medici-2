@@ -8,6 +8,10 @@ import { parseData } from '../../utils/parse'
 
 import useWallet from '../../hooks/useWallet'
 import { BigNumber, utils } from 'ethers'
+import Modal from '@mui/material/Modal';
+import CircularProgress from '@mui/material/CircularProgress';
+
+import { Contract } from '../../model/types';
 import { CONFIG } from '../../utils/config';
 
 
@@ -18,10 +22,16 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
 }) => {
     
     const localenv = CONFIG.DEV;
-    const { wallet, connecting, connect, connectedChain, setChain } = useWallet()
+    const { wallet, connect, setChain } = useWallet()
     const [error, setError] = useState(false);
+    
+    const [ContractCreationResult, setContractCreationResult] = useState<Contract>()
     const [ContractCreationSuccess, setContractCreationSuccess] = useState<boolean>(false)
     const [WhitelistStrData, setWhitelistStrData] = useState<string | File>()
+
+    const [showModal, setShowModal] = useState(false);
+    const handleOpen = () => setShowModal(true);
+    const handleClose = () => setShowModal(false);
 
   // after form submit validating the form data using validator
   const submitFormData = (e: any) => {
@@ -49,6 +59,7 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
 
   async function generateSmartContract() {
     try {
+      setShowModal(true);
       const parsedData = await parseData(WhitelistStrData!)
       console.log(parsedData);
       const merkleRoot = await getMerkleRoot(parsedData)
@@ -69,6 +80,7 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
             masterAddress: data.masterAddress
           })
         console.log(contractCreationResult)
+        setContractCreationResult(contractCreationResult);
         await whitelist(
         { 
           "project": data.name,
@@ -91,12 +103,22 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
     }
 }
 
+useEffect(() => {
+  if (showModal) {
+    document.getElementById("modal-container")!.style.display = 'block'
+  } else {
+    document.getElementById("modal-container")!.style.display = 'none'
+  }
+
+},[showModal])
+
 
 async function handleSubmit() {
     if (!wallet) {
         alert("Missing some fields! Please double check your input or make sure your wallet is connected.")
     }
     else {
+      setShowModal(true);
       await generateSmartContract();
       setContractCreationSuccess(true);
     }
@@ -125,6 +147,20 @@ async function handleSubmit() {
           <div className="text-center mt-10">
           <button className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={handleSubmit}>Submit</button>
           </div>
+          <div id="modal-container" className="flex items-center justify-center text-center h-screen">
+          <Modal
+            open={showModal}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+          <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
+            <h1 className="text-center text-2xl">Generating your Smart Contract</h1>
+            <br></br>
+            { (ContractCreationSuccess && ContractCreationResult) ? <a href={localenv.network.etherscanUrl + "/" + ContractCreationResult!.contractaddress}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
+          </div>
+          </Modal>
+      </div>
     </div>
   );
 }

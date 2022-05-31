@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, Dispatch} from 'react'
 import { StepperFormProps } from '../../model/types';
 import apiClient from '../../utils/apiClient';
 import { CONFIG } from '../../utils/config';
@@ -13,7 +13,7 @@ const UploadFiles: React.FC<StepperFormProps> = ({
   const [CoverImage, setCoverImage] = useState<File>();
   const [CoverUploadSuccess, setCoverUploadSuccess] = useState<boolean>();
   const [ImageData, setImageData] = useState<File>();
-  const [ImageDataProgress, setImageDataProgress] = useState<any>();
+  const [ImageDataProgress, setImageDataProgress] = useState<number>(0);
   const [showLoader, setShowLoader] = useState<boolean>();
   const [ImageDataUploadSuccess, setImageDataUploadSuccess] = useState<boolean>();
   const [ImageUrl, setImageUrl] = useState<string>();
@@ -71,27 +71,49 @@ const uploadImageData = async (file: File) => {
   formdata.append("images", file)
   setShowLoader(true)
   
-  apiClient.post(
+  triggerUpload(formdata, (progressEvent: any) => {
+    const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+    console.log(progress);
+    setImageDataProgress(progress);
+  });
+
+  // .then(function(response: any) {
+  //   console.log(response)
+  //   setImageDataProgress(response);
+  //   console.log("image data progress " + ImageDataProgress);
+  //   setImageDataUploadSuccess(true);
+  //   setShowLoader(false);
+  //   })
+  // .catch(function(error: any){
+  //   console.log("Error uploading collection image")
+  //   setImageDataUploadSuccess(false);
+  //   });
+}
+
+
+useEffect(() => {
+  console.log("image data prog " + ImageDataProgress)
+
+}, [ImageDataProgress, setImageDataProgress])
+
+const triggerUpload = (
+  formdata: FormData,
+  onImageDataProgress: any) => {
+  return apiClient.post(
     localenv.api.paths.uploadImageData,
     formdata,
     {
       "headers": {"Content-Type": "form-data"},
       "params": {"collection": data.name},
-      "onUploadProgress": function(progressEvent) {
-        var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-        console.log(percentCompleted)
-      }
-    }
-    )
-    .then(function(response) {
-    console.log(response)
-    setImageDataUploadSuccess(true);
-    setShowLoader(false);
-    }).catch(function(error){
-    console.log("Error uploading collection image")
-    setImageDataUploadSuccess(false);
-    });
-}
+      "onUploadProgress": onImageDataProgress
+      // (progressEvent) => {
+        // const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        // console.log("initial: " + progress)
+        // onImageDataProgress(progress)
+        
+      },
+    );
+  }
 
   return (
     <div className="w-full md:w-2/5 md:text-left flex flex-col items-center">
@@ -136,13 +158,15 @@ const uploadImageData = async (file: File) => {
               : 
               <div className="w-full h-[200px] rounded-2xl border-2 border-zinc-100/100 flex flex-col items-center ">
                   <span className="text-center mt-20">Upload a zip file</span>
-                  {/* <LinearProgress id="progress-loader" variant="determinate" value={ImageDataProgress}/> */}
+                  <div className="w-4/5">
+                    <LinearProgress id="progress-loader" variant="determinate" value={ImageDataProgress!}/>
+                  </div>
               </div>
               }
               </label>
             </div>
           <div className="text-center order-3">
-            {(ImageDataUploadSuccess && CoverUploadSuccess) ? <button className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={submitFormData}>Next</button> : <button className="bg-zinc-500 p-3 rounded-3xl w-2/5 min-w-[100px]">Next</button>}
+            {(ImageDataUploadSuccess && CoverUploadSuccess) ? <button className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={submitFormData}>Next</button> : <button className="bg-zinc-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={nextStep}>Next</button>}
           </div>
       </div>
   );
