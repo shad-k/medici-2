@@ -18,7 +18,7 @@ export const CONFIG = {
       "etherscanUrl": "https://kovan.etherscan.io/address/"
     },
     "contract": {
-    "factory_address": "0x19962A35700c88Ae86F55b2FA27d66358B4768B5",
+    "factory_address": "0x0FeeC4D622577752C04B96e000FC454687AFc6BB",
     "factory_abi": 
     [
       {
