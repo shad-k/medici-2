@@ -26,8 +26,7 @@ const { data: contracts, error } = useAllLaunchedContracts(masterAddress);
   }
 
   return (
-    <div className="w-1/2 md:text-left flex flex-col mt-10">
-      <br></br>
+    <div className="w-1/2 md:text-left flex flex-col my-2">
       {
       <select className="h-[50px] text-2xl bg-transparent outline-none overflow-ellipsis" onChange={event => onSelectOption(event.target.value)}>
       {contracts.map((contract: Contract, i) => (

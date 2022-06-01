@@ -63,20 +63,19 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         props.price, // price
         props.maxMintsPerPerson, // max mint per person
         props.masterAddress // master address
-        ).then((response: any) => {
+        ).then(async (response: any) => {
             console.log(response);
+            const result = await getNewLaunchedContract(props.masterAddress, props.name, props.symbol);
+            return resolve({
+                "name": props.name,
+                "symbol": props.symbol,
+                "contractaddress": result,
+                "masteraddress": props.masterAddress
+            });
         })
         .catch((error: Error) => {
             console.log(error);
             return reject(error.message);
-        });
-
-        const result = await getNewLaunchedContract(props.masterAddress, props.name, props.symbol);
-        return resolve({
-            "name": props.name,
-            "symbol": props.symbol,
-            "contractaddress": result,
-            "masteraddress": props.masterAddress
         });
     })
 }
