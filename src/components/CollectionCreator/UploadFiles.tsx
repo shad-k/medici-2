@@ -14,7 +14,7 @@ const UploadFiles: React.FC<StepperFormProps> = ({
   const [CoverUploadSuccess, setCoverUploadSuccess] = useState<boolean>();
   const [ImageData, setImageData] = useState<File>();
   const [ImageDataProgress, setImageDataProgress] = useState<number>(0);
-  const [showLoader, setShowLoader] = useState<boolean>();
+  const [showLoader, setShowLoader] = useState<boolean>(false);
   const [ImageDataUploadSuccess, setImageDataUploadSuccess] = useState<boolean>();
   const [ImageUrl, setImageUrl] = useState<string>();
 
@@ -90,9 +90,9 @@ const uploadImageData = async (file: File) => {
   //   });
 }
 
-useEffect(() => {
-  console.log("image data prog " + ImageDataProgress)
-}, [ImageDataProgress, setImageDataProgress]);
+// useEffect(() => {
+//   console.log("image data prog " + ImageDataProgress)
+// }, [ImageDataProgress, setImageDataProgress]);
 
 const triggerUpload = async (
   formdata: FormData,
@@ -113,6 +113,7 @@ const triggerUpload = async (
     ).then((response)=> {
       console.log(response);
       setImageDataUploadSuccess(true);
+      setShowLoader(false);
     })
   }
 
@@ -160,7 +161,7 @@ const triggerUpload = async (
               <div className="w-full h-[200px] rounded-2xl border-2 border-zinc-100/100 flex flex-col items-center ">
                   <span className="text-center mt-20">Upload a zip file</span>
                   <div className="w-4/5">
-                    <LinearProgress id="progress-loader" variant="determinate" value={ImageDataProgress}/>
+                    {showLoader && <LinearProgress id="progress-loader" variant="indeterminate"/>}
                   </div>
               </div>
               }
