@@ -22,11 +22,9 @@ export const whitelist = async (props: WhitelistProps) => {
 }
 
 /* call to verify backend results */
-export const getNewLaunchedContract = async (masterAddress: string, name: string, symbol: string): Promise<string> => {
+export const getNewLaunchedContract = async (masterAddress: string): Promise<string> => {
     const request_data = {
         "masterAddress": masterAddress,
-        "name": name,
-        "symbol": symbol
     }
 
     console.log(request_data)
@@ -65,12 +63,12 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         props.masterAddress // master address
         ).then(async (response: any) => {
             console.log(response);
-            const result = await getNewLaunchedContract(props.masterAddress, props.name, props.symbol);
+            const result = await getNewLaunchedContract(props.masterAddress);
             return resolve({
                 "name": props.name,
                 "symbol": props.symbol,
                 "contractaddress": result,
-                "masteraddress": props.masterAddress
+                "masteraddress": props.masterAddress,
             });
         })
         .catch((error: Error) => {
