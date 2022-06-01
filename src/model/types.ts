@@ -35,6 +35,7 @@ export type Contract = {
   symbol: string
   masteraddress: string
   contractaddress: string
+  txhash: string
 }
 
 export type WalletContextReturn = {
