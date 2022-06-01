@@ -3,6 +3,7 @@ import { useReward } from 'react-rewards';
 import ContractsMenu from '../components/ContractsMenu'
 import '../css/dropeditor.css'
 import { ColorPicker } from 'material-ui-color';
+import FontPicker from 'font-picker-react'
 
 import useWallet from '../hooks/useWallet'
 import apiClient from '../utils/apiClient';
@@ -28,6 +29,7 @@ const DropEditor: React.FC<{}> = () => {
     const [primaryColor, setPrimaryColor] = useState<any>();
     const [secondaryColor, setSecondaryColor] = useState<any>();
     const [bgColor, setBgColor] = useState<any>();
+    const [activeFontFamily, setActiveFontFamily] = useState<string>("Open Sans");
     const [ClaimCreationSuccess, setClaimCreationSuccess] = useState(false);
 
     const { reward, isAnimating } = useReward('input-form', 'confetti');
@@ -43,9 +45,10 @@ const DropEditor: React.FC<{}> = () => {
 
     const onConfirm = async() => {
         try { 
-            handleInputData("primarycolor", primaryColor.hex)
-            handleInputData("secondarycolor", secondaryColor.hex)
-            handleInputData("bgcolor", bgColor.hex)
+            handleInputData("primarycolor", primaryColor.hex);
+            handleInputData("secondarycolor", secondaryColor.hex);
+            handleInputData("bgcolor", bgColor.hex);
+            handleInputData("font", activeFontFamily);
             console.log(params);
         } catch {
             alert("Error! Missing fields")
@@ -98,6 +101,16 @@ const DropEditor: React.FC<{}> = () => {
             <div>
             <label htmlFor="input-email" className="block lg:text-2xl py-2">Collection Email</label>
             <input id="input-email" type="email" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2  outline-none" onChange={event => handleInputData("collection_email", event.target.value)}/>
+            </div>
+            <div>
+            <FontPicker
+                    apiKey={process.env.REACT_APP_GOOGLE_FONTS_API_KEY!}
+                    activeFontFamily={activeFontFamily}
+                    onChange={(nextFont: any) =>
+                        setActiveFontFamily(nextFont.family)
+                    }
+                />
+                <p className="apply-font">The font will be applied to this text.</p>
             </div>
         </form>
         <br></br>

@@ -5,7 +5,7 @@ import ProjectDetails from '../components/CollectionCreator/ProjectDetails'
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import { makeStyles } from '@material-ui/core'
+// import { makeStyles } from '@mui/material/';
 
 import { IoMdCreate } from 'react-icons/io'
 import { RiUploadLine } from 'react-icons/ri';
@@ -46,41 +46,41 @@ const Create: React.FC<{}> = () => {
     'Set collection details'
   ]
 
-  const useStyles = makeStyles(() => ({
-    root: {
-      backgroundColor: '#2e2c38',
-      padding: 8,
-      borderRadius: '50%',
-      scale: '150%',
-      margin: '10px',
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    active: {
-      backgroundImage: 'linear-gradient(319deg, #663dff 0%, #aa00ff 37%, #cc4499 100%)',
-    },
-  }));
+  // const useStyles = makeStyles(() => ({
+  //   root: {
+  //     backgroundColor: '#2e2c38',
+  //     padding: 8,
+  //     borderRadius: '50%',
+  //     scale: '150%',
+  //     margin: '10px',
+  //     justifyContent: 'center',
+  //     alignItems: 'center'
+  //   },
+  //   active: {
+  //     backgroundImage: 'linear-gradient(319deg, #663dff 0%, #aa00ff 37%, #cc4499 100%)',
+  //   },
+  // }));
 
-  const CustomStepIcon = (props: any) => {
-    const classes = useStyles();
-    const { active, completed } = props;
+  // const CustomStepIcon = (props: any) => {
+  //   const classes = useStyles;
+  //   const { active, completed } = props;
 
-    const stepIcons:any = {
-      1: <IoMdCreate/>,
-      2: <RiUploadLine />,
-      3: <MdPriceChange />,
-    };
+  //   const stepIcons:any = {
+  //     1: <IoMdCreate/>,
+  //     2: <RiUploadLine />,
+  //     3: <MdPriceChange />,
+  //   };
   
-    return (
-      <div
-        className={clsx(classes.root, {
-          [classes.active]: active,
-        })}
-      >
-        {stepIcons[String(props.icon)]}
-      </div>
-    );
-  };
+  //   return (
+  //     <div
+  //       className={clsx(classes.root, {
+  //         [classes.active]: active,
+  //       })}
+  //     >
+  //       {stepIcons[String(props.icon)]}
+  //     </div>
+  //   );
+  // };
 
   switch(step) {
     case 1:
@@ -94,13 +94,13 @@ const Create: React.FC<{}> = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
             </span>
             <div className="p-3">
-            <Stepper activeStep={step-1}>
+            {/* <Stepper activeStep={step-1}>
             {steps.map((label) => (
                <Step key={label}>
                <StepLabel StepIconComponent={CustomStepIcon}><span className="text-white font-sans text-[12px]">{label}</span></StepLabel>
              </Step>
             ))}
-            </Stepper>
+            </Stepper> */}
             </div>
             <InputDetails nextStep={nextStep} handleInputData={handleInputData} data={params}/>
         </div>
@@ -116,13 +116,13 @@ const Create: React.FC<{}> = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
           </span>
           <div className="p-3">
-            <Stepper activeStep={step-1}>
+            {/* <Stepper activeStep={step-1}>
             {steps.map((label) => (
                <Step key={label}>
                <StepLabel StepIconComponent={CustomStepIcon}><span className="text-white font-sans text-[12px]">{label}</span></StepLabel>
              </Step>
             ))}
-            </Stepper>
+            </Stepper> */}
             </div>
           <br></br>
           <UploadFiles nextStep={nextStep} handleInputData={handleInputData} data={params}/>
@@ -139,13 +139,13 @@ const Create: React.FC<{}> = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
           </span>
           <div className="p-3">
-            <Stepper activeStep={step-1}>
+            {/* <Stepper activeStep={step-1}>
             {steps.map((label) => (
                <Step key={label}>
                <StepLabel StepIconComponent={CustomStepIcon}><span className="text-white font-sans text-[12px]">{label}</span></StepLabel>
              </Step>
             ))}
-            </Stepper>
+            </Stepper> */}
           </div>
           <ProjectDetails nextStep={nextStep} handleInputData={handleInputData} data={params}/>
       </div>
