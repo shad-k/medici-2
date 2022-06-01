@@ -15,7 +15,7 @@ export const CONFIG = {
       "id": "0x2a",
       "token": "ETH",
       "rpcUrl": "https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD",
-      "etherscanUrl": "https://kovan.etherscan.io/address/"
+      "txEtherscanUrl": "https://kovan.etherscan.io/tx/"
     },
     "contract": {
     "factory_address": "0x0FeeC4D622577752C04B96e000FC454687AFc6BB",
@@ -846,7 +846,7 @@ export const CONFIG = {
         "test": "/regulusTest",
         "uploadImageCover": "/upload/cover",
         "uploadImageData": "/upload/collection",
-        "checkName": "/checkNameAvailability",
+        "checkName": "/claims/checkNameAvailability",
         "launchClaim": "/claims/setup"
       }
     }

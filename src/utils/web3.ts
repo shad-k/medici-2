@@ -3,6 +3,7 @@ import { ContractCreationProps, WhitelistProps, Contract } from '../model/types'
 
 import { CONFIG } from './config'
 import apiClient from './apiClient'
+import { wait } from '@testing-library/react';
 const localenv = CONFIG.DEV;
 
 /* call when new contract is created to update backend */
@@ -22,7 +23,7 @@ export const whitelist = async (props: WhitelistProps) => {
 }
 
 /* call to verify backend results */
-export const getNewLaunchedContract = async (masterAddress: string): Promise<string> => {
+export const getNewLaunchedContract = async (masterAddress: string): Promise<Contract> => {
     const request_data = {
         "masterAddress": masterAddress,
     }
@@ -50,9 +51,7 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         const signer = provider.getSigner(callerWallet.accounts[0].address);
         const FactoryContract = new ethers.Contract(localenv.contract.factory_address, localenv.contract.factory_abi, signer);
 
-        console.log(FactoryContract);
-        
-        await FactoryContract.createContract(
+        const contract = FactoryContract.createContract(
         props.name, // name
         props.symbol, // symbol
         props.baseuri, // base URI
@@ -67,8 +66,9 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
             return resolve({
                 "name": props.name,
                 "symbol": props.symbol,
-                "contractaddress": result,
+                "contractaddress": result.contractaddress,
                 "masteraddress": props.masterAddress,
+                "txhash": result.txhash 
             });
         })
         .catch((error: Error) => {
@@ -98,7 +98,7 @@ export const getMerkleRoot = async (whitelistAddresses: string[]):Promise<string
     });
 }
 
-export const checkNameAvailability = async (name: string):Promise<boolean> => {
+export const checkNameAvailability = async (name: string) => {
     const request_data = {
         "name": name
     }
@@ -111,9 +111,11 @@ export const checkNameAvailability = async (name: string):Promise<boolean> => {
         }
     ).then(function(response) {
         console.log(response.data)
-        if (response.data === 'Available') {
+        if (response.data.value === true) {
+            console.log("returning true")
             return Promise.resolve(true)
         } else {
+            console.log("returning false")
             return Promise.resolve(false)
         }
     }).catch(function(error) {

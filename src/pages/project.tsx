@@ -51,7 +51,7 @@ const Project: React.FC<{}> = () => {
         }
     }
 
-    const onClaim = async () => {
+    const onStartClaim = async () => {
         const ready = await readyToTransact();
         if (ready) {
             try {
@@ -67,10 +67,13 @@ const Project: React.FC<{}> = () => {
         }
     }
 
-    const onMint = async () => {
+    const onStartMint = async () => {
         const ready = await readyToTransact();
-        if (ready && claimPeriodStart) {
+        if (ready) {
             try {
+                if (!claimPeriodStart) {
+                    throw new Error();
+                }
                 await startMintPeriod(wallet, contractaddress)
                 setClaimPeriodStart(false);
                 setMintPeriodStart(true);
@@ -98,8 +101,8 @@ const Project: React.FC<{}> = () => {
         <h1 className="text-1xl">{contractaddress}</h1>
         <div className="grid grid-cols-2 gap-10 py-4">
         <button className="bg-medici-purple px-2 py-2 rounded-2xl" onClick={onWithdraw}>Withdraw</button>
-        <button className="bg-medici-purple px-2 py-2 rounded-2xl" onClick={onClaim}>Start Claim Period</button>
-        <button className="bg-medici-purple px-2 py-2 rounded-2xl" onClick={onMint}>Start Mint Period</button>
+        <button className="bg-medici-purple px-2 py-2 rounded-2xl" onClick={onStartClaim}>Start Claim Period</button>
+        <button className="bg-medici-purple px-2 py-2 rounded-2xl" onClick={onStartMint}>Start Mint Period</button>
         <button className="bg-medici-purple px-2 py-2 rounded-2xl" onClick={onGetStatus}>Transfer Ownership</button>
         <button className="bg-medici-purple px-2 py-2 rounded-2xl" >Change Price</button>
         <button className="bg-medici-purple px-2 py-2 rounded-2xl" >Change Base URI</button>

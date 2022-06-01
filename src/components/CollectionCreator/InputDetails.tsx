@@ -12,8 +12,8 @@ const InputDetails: React.FC<StepperFormProps> = ({
 }) => {
   const [error, setError] = useState(false);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
-  const [showNameLoader, setShowNameLoader] = useState(false);
   const [isValidMasterAddress, setIsValidMasterAddress] = useState(false);
+  const [timer, setTimer] = useState<any>(null)
 
   // after form submit validating the form data using validator
   const submitFormData = (e: any) => {
@@ -45,29 +45,39 @@ const InputDetails: React.FC<StepperFormProps> = ({
     }
   }
 
-  /* FIX NAME VALIDATION LATER */
-  
-  // const nameCheck = async (name: string) => {
-  //   try {
-  //     console.log("Checking name availability for " + name)
-  //     const isNameAvailable = await checkNameAvailability(name);
-  //     if (isNameAvailable) {
-  //       handleInputData("name", name);
-  //       setIsNameAvailable(true);
-  //     } else {
-  //       setIsNameAvailable(false);
-  //     }
-  //   } catch {
-  //     setError(true)
-  //     alert("There was an error")
-  //   }
-  // }
+  const nameCheck = async (event: any) => {
+    if (event.target.value === "") {
+    setIsNameAvailable(false);
+    return;
+    }
+    try {
+      console.log("Checking name availability for " + event.target.value)
+      clearTimeout(timer);
+      
+      const newTimer = setTimeout( async () => {
+        const isNameAvailable = await checkNameAvailability(event.target.value);
+        if (isNameAvailable) {
+          handleInputData("name", event.target.value);
+          setIsNameAvailable(true);
+          return;
+        } else {
+          setIsNameAvailable(false);
+          return;
+        }
+      }, 500)
+
+      setTimer(newTimer);
+    } catch {
+      setError(true)
+      alert("There was an error")
+    }
+  }
 
   return (
     <div className="w-full md:w-2/5 md:text-left flex flex-col mt-3">
           <label htmlFor="input-name" className="block lg:text-2xl py-2">Collection Title</label>
-          <input id="input-name" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none" onChange={event => handleInputData("name", event.target.value)}/>
-          {/* {isNameAvailable ? <p>Name is available!</p> : <p>This name is not available, please try another name!</p>} */}
+          <input id="input-name" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none" onChange={nameCheck}/>
+          {isNameAvailable ? <p className="text-green-500">Name is available!</p> : <p className="text-[#F47174]">This name is not available, please try another name!</p>}
           <br></br>
               <label htmlFor="input-symbol" className="block lg:text-2xl py-2">Symbol</label>
               <input id="input-symbol" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none" onChange={event => handleInputData("symbol", event.target.value)}/>

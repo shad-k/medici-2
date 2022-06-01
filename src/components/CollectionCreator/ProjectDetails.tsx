@@ -79,8 +79,6 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
             maxMintsPerPerson: data.maxMintsPerPerson,
             masterAddress: data.masterAddress
           })
-        console.log("Contract creation result: " + contractCreationResult)
-        setContractCreationResult(contractCreationResult);
         await whitelist(
         { 
           "project": data.name,
@@ -90,7 +88,7 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
           "whitelistedAddresses": parsedData,
           "merkleRoot": merkleRoot
         })
-
+        setContractCreationResult(contractCreationResult);
       }
     } catch {
         setContractCreationSuccess(false);
@@ -152,7 +150,7 @@ async function handleSubmit() {
           <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
             <h1 className="text-center text-2xl">Generating your Smart Contract</h1>
             <br></br>
-            { (ContractCreationSuccess && ContractCreationResult) ? <a href={localenv.network.etherscanUrl + "/" + ContractCreationResult!.contractaddress}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
+            { (ContractCreationSuccess && ContractCreationResult) ? <a href={localenv.network.txEtherscanUrl + ContractCreationResult.txhash}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
           </div>
           </Modal>
       </div>
