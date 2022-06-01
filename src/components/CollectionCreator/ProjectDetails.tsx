@@ -79,7 +79,7 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
             maxMintsPerPerson: data.maxMintsPerPerson,
             masterAddress: data.masterAddress
           })
-        console.log(contractCreationResult)
+        console.log("Contract creation result: " + contractCreationResult)
         setContractCreationResult(contractCreationResult);
         await whitelist(
         { 
@@ -91,11 +91,6 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
           "merkleRoot": merkleRoot
         })
 
-        const getNewContractInstance = await getNewLaunchedContract(data.masterAddress!, data.name!, data.symbol!);
-        console.log(getNewContractInstance);
-        if (getNewContractInstance !== contractCreationResult.contractaddress) {
-          throw new Error("Not matching")
-        }
       }
     } catch {
         setContractCreationSuccess(false);

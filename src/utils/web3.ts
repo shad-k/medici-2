@@ -51,9 +51,9 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         const provider = new ethers.providers.Web3Provider(callerWallet.provider)
         const signer = provider.getSigner(callerWallet.accounts[0].address);
         const FactoryContract = new ethers.Contract(localenv.contract.factory_address, localenv.contract.factory_abi, signer);
+
+        console.log(FactoryContract);
         
-        console.log("generating...")
-        console.log(props);
         await FactoryContract.createContract(
         props.name, // name
         props.symbol, // symbol
@@ -63,19 +63,21 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         props.price, // price
         props.maxMintsPerPerson, // max mint per person
         props.masterAddress // master address
-        ).catch((error: Error) => {
+        ).then((response: any) => {
+            console.log(response);
+        })
+        .catch((error: Error) => {
             console.log(error);
-            reject(error.message);
-        })
+            return reject(error.message);
+        });
 
-        FactoryContract.on("ERC721RandomCreated", (name: string, symbol: string, instance: any, masterAddress: any) => {
-            resolve ({
-                "name": name,
-                "symbol": symbol,
-                "contractaddress": instance,
-                "masteraddress": masterAddress
-            })
-        })
+        const result = await getNewLaunchedContract(props.masterAddress, props.name, props.symbol);
+        return resolve({
+            "name": props.name,
+            "symbol": props.symbol,
+            "contractaddress": result,
+            "masteraddress": props.masterAddress
+        });
     })
 }
 

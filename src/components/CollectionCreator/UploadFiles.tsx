@@ -90,13 +90,11 @@ const uploadImageData = async (file: File) => {
   //   });
 }
 
-
 useEffect(() => {
   console.log("image data prog " + ImageDataProgress)
+}, [ImageDataProgress, setImageDataProgress]);
 
-}, [ImageDataProgress, setImageDataProgress])
-
-const triggerUpload = (
+const triggerUpload = async (
   formdata: FormData,
   onImageDataProgress: any) => {
   return apiClient.post(
@@ -112,7 +110,10 @@ const triggerUpload = (
         // onImageDataProgress(progress)
         
       },
-    );
+    ).then((response)=> {
+      console.log(response);
+      setImageDataUploadSuccess(true);
+    })
   }
 
   return (
@@ -141,7 +142,7 @@ const triggerUpload = (
               }
               </label>
           </div>
-          <div className="w-full order-2 my-10">
+          <div className="w-full order-2 my-5">
               <input
                   type="file"
                   name="ImageData"
@@ -159,14 +160,14 @@ const triggerUpload = (
               <div className="w-full h-[200px] rounded-2xl border-2 border-zinc-100/100 flex flex-col items-center ">
                   <span className="text-center mt-20">Upload a zip file</span>
                   <div className="w-4/5">
-                    <LinearProgress id="progress-loader" variant="determinate" value={ImageDataProgress!}/>
+                    <LinearProgress id="progress-loader" variant="determinate" value={ImageDataProgress}/>
                   </div>
               </div>
               }
               </label>
             </div>
           <div className="text-center order-3">
-            {(ImageDataUploadSuccess && CoverUploadSuccess) ? <button className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={submitFormData}>Next</button> : <button className="bg-zinc-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={nextStep}>Next</button>}
+            {(ImageDataUploadSuccess && CoverUploadSuccess) ? <button className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={submitFormData}>Next</button> : <button className="bg-zinc-500 p-3 rounded-3xl w-2/5 min-w-[100px]">Next</button>}
           </div>
       </div>
   );

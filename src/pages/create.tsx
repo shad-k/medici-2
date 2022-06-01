@@ -85,7 +85,7 @@ const Create: React.FC<{}> = () => {
   switch(step) {
     case 1:
       return (
-        <div className="w-full flex flex-col p-10 items-center md:mt-36">
+        <div className="w-full flex flex-col p-10 items-center md:mt-10">
             <h1 className="text-center text-4xl font-semibold">
                 Create your Collection
             </h1>
@@ -93,7 +93,7 @@ const Create: React.FC<{}> = () => {
             <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
             </span>
-            <div className="p-5">
+            <div className="p-3">
             <Stepper activeStep={step-1}>
             {steps.map((label) => (
                <Step key={label}>
@@ -107,7 +107,7 @@ const Create: React.FC<{}> = () => {
       );
       case 2:
         return (
-          <div className="w-full flex flex-col p-10 items-center md:mt-36">
+          <div className="w-full flex flex-col p-10 items-center md:mt-10">
           <h1 className="text-center text-4xl font-semibold">
           Create your Collection
           </h1>
@@ -115,7 +115,7 @@ const Create: React.FC<{}> = () => {
           <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
           </span>
-          <div className="p-5">
+          <div className="p-3">
             <Stepper activeStep={step-1}>
             {steps.map((label) => (
                <Step key={label}>
@@ -130,7 +130,7 @@ const Create: React.FC<{}> = () => {
       );
       case 3:
         return (
-          <div className="w-full flex flex-col p-10 items-center md:mt-36">
+          <div className="w-full flex flex-col p-10 items-center md:mt-10">
           <h1 className="text-center text-4xl font-semibold">
           Create your Collection
           </h1>
@@ -138,7 +138,7 @@ const Create: React.FC<{}> = () => {
           <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
           </span>
-          <div className="p-5">
+          <div className="p-3">
             <Stepper activeStep={step-1}>
             {steps.map((label) => (
                <Step key={label}>
