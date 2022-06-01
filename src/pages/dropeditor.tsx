@@ -14,47 +14,48 @@ const DropEditor: React.FC<{}> = () => {
     const localenv = CONFIG.DEV
 
     const { wallet, connecting, connect, connectedChain, setChain } = useWallet();
-    const [ params, setParams ] = useState({
-        address: "",
-        font: "",
-        primarycolor: "",
-        secondarycolor: "",
-        backgroundcolor: "",
-        artist: "",
-        description: "",
-        collection_email: "",
-        collection_twitter: "",
-        collection_discord: ""
-    })
+    const [contract, setContract] = useState<string>();
+    const [artist, setArtist] = useState<string>();
+    const [description, setDescription] = useState<string>();
+    const [twitter, setTwitter] = useState<string>();
+    const [discord, setDiscord] = useState<string>();
+    const [email, setEmail] = useState<string>();
     const [primaryColor, setPrimaryColor] = useState<any>();
     const [secondaryColor, setSecondaryColor] = useState<any>();
     const [bgColor, setBgColor] = useState<any>();
     const [activeFontFamily, setActiveFontFamily] = useState<string>("Open Sans");
+    const [AllFieldsValid, setAllFieldsValid] = useState<boolean>(false);
     const [ClaimCreationSuccess, setClaimCreationSuccess] = useState(false);
 
     const { reward, isAnimating } = useReward('input-form', 'confetti');
 
-    const handleInputData = (input: any, value: string) => {
-        // input value from the form
-        console.log("Set " + input + " to " + value);
-          setParams((prevState: any) => ({
-            ...prevState,
-            [input]: value
-        })); 
-    }
-
-    const onConfirm = async() => {
-        try { 
-            handleInputData("primarycolor", primaryColor.hex);
-            handleInputData("secondarycolor", secondaryColor.hex);
-            handleInputData("bgcolor", bgColor.hex);
-            handleInputData("font", activeFontFamily);
-            console.log(params);
-        } catch {
-            alert("Error! Missing fields")
-            return
+    useEffect(() => {
+        if (contract && artist && description && twitter && email && discord && primaryColor && secondaryColor && bgColor && activeFontFamily) {
+            setAllFieldsValid(true)
+        } else {
+            setAllFieldsValid(false)
         }
-        await apiClient.post(
+    }, [contract, artist, description, twitter, discord, email, primaryColor, secondaryColor, bgColor, activeFontFamily, AllFieldsValid, setAllFieldsValid])
+    
+    const onConfirm = async() => {
+
+        if (AllFieldsValid) {
+            const params = {
+                "contract": contract,
+                "font": activeFontFamily,
+                "primarycolor": primaryColor.hex,
+                "secondarycolor": secondaryColor.hex,
+                "backgroundcolor": bgColor.hex,
+                "artist": artist,
+                "description": description,
+                "email": email,
+                "twitter": twitter,
+                "discord": discord,        
+            }
+            console.log("valid")
+            console.log(params)
+
+        apiClient.post(
             localenv.api.paths.launchClaim,
             params,
             {
@@ -68,6 +69,9 @@ const DropEditor: React.FC<{}> = () => {
             console.log(error)
             setClaimCreationSuccess(false)
         });
+    } else {
+        alert("Missing some fields!")
+        }
     }
     
     return (
@@ -80,29 +84,29 @@ const DropEditor: React.FC<{}> = () => {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
         </span>
         <br></br>
-        { wallet ? <ContractsMenu masterAddress={wallet.accounts[0].address} handleInputData={handleInputData}/> : <p>Please connect your wallet to see all your available projects.</p>}
+        { wallet ? <ContractsMenu masterAddress={wallet.accounts[0].address} handleInputData={setContract}/> : <p>Please connect your wallet to see all your available projects.</p>}
         <form id="input-form" className="grid md:grid-cols-2 gap-5">
             <div>
                 <label htmlFor="input-artist" className="block lg:text-2xl py-2">Artist</label>
-                <input id="input-artist" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none" onChange={event => handleInputData("artist", event.target.value)}/>
+                <input id="input-artist" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none" onChange={event => setArtist(event.target.value)}/>
             </div>
             <div>
             <label htmlFor="input-description" className="block lg:text-2xl py-2">Description</label>
-            <textarea id="input-description" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none" onChange={event => handleInputData("description", event.target.value)}/>
+            <textarea id="input-description" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none" onChange={event => setDescription(event.target.value)}/>
             </div>
             <div>
             <label htmlFor="input-twitter" className="block lg:text-2xl py-2">Collection Twitter</label>
-            <input id="input-twitter" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none" onChange={event => handleInputData("collection_twitter", event.target.value)}/>
+            <input id="input-twitter" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none" onChange={event => setTwitter(event.target.value)}/>
             </div>
             <div>
             <label htmlFor="input-discord" className="block lg:text-2xl py-2">Collection Discord</label>
-            <input id="input-discord" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none" onChange={event => handleInputData("collection_discord", event.target.value)}/>
+            <input id="input-discord" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none" onChange={event => setDiscord(event.target.value)}/>
             </div>
             <div>
             <label htmlFor="input-email" className="block lg:text-2xl py-2">Collection Email</label>
-            <input id="input-email" type="email" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2  outline-none" onChange={event => handleInputData("collection_email", event.target.value)}/>
+            <input id="input-email" type="email" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2  outline-none" onChange={event => setEmail(event.target.value)}/>
             </div>
-            <div>
+            <div className="text-black mt-10">
             <FontPicker
                     apiKey={process.env.REACT_APP_GOOGLE_FONTS_API_KEY!}
                     activeFontFamily={activeFontFamily}
@@ -110,7 +114,6 @@ const DropEditor: React.FC<{}> = () => {
                         setActiveFontFamily(nextFont.family)
                     }
                 />
-                <p className="apply-font">The font will be applied to this text.</p>
             </div>
         </form>
         <br></br>
@@ -133,7 +136,7 @@ const DropEditor: React.FC<{}> = () => {
                 </div>
             </div>
             <div className="text-center mt-10">
-                <button id="confirm-button" className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={onConfirm}>Confirm</button>
+                { AllFieldsValid ? <button id="confirm-button" className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={onConfirm}>Confirm</button> : <button className="bg-zinc-500 p-3 rounded-3xl w-2/5 min-w-[100px]">Confirm</button> }
             </div>
         </div>
     );
