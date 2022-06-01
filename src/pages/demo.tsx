@@ -95,11 +95,11 @@ const addressCheck = (address: string) => {
             "merkleRoot": merkleRoot
           })
 
-          const getNewContractInstance = await getNewLaunchedContract(MasterAddress!, CollectionTitle!, CollectionSymbol!);
-          console.log(getNewContractInstance);
-          if (getNewContractInstance !== contractCreationResult.contractaddress) {
-            throw new Error("Not matching")
-          }
+          // const getNewContractInstance = await getNewLaunchedContract(MasterAddress!);
+          // console.log(getNewContractInstance);
+          // if (getNewContractInstance !== contractCreationResult.contractaddress) {
+          //   throw new Error("Not matching")
+          // }
         }
       } catch {
           setContractCreationSuccess(false);
