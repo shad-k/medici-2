@@ -27,7 +27,7 @@ const App: React.FC<{}> = () => {
                 <Route path="/demo" element={<Demo />} />
                 <Route path="/create" element={<Create />} />
                 <Route path="/launch" element={<DropEditor />} />
-                <Route path="/page/:id" element={<ClaimPage />} />
+                <Route path="/page/:name" element={<ClaimPage />} />
                 <Route path="/project/:contractaddress" element={<Project />} />
                 <Route path="/" element={<Home />} />
               </Routes>
