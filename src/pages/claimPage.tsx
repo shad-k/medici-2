@@ -1,11 +1,13 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
+
 import FreeTier from '../components/templates/freetier'
 import { Claim, TemplateTier } from '../model/types'
 import { API_ENDPOINT, API_PATHS } from '../utils/config'
 
 // TODO: remove
 const mockData: Claim = {
-  contract: '0x4EC52Aaf9311F80637C6Bfc32a3c02CA90b3c0bC',
+  contract: '0x4B3f9c118e3840E9240778b27f411d5dbf839e9F',
   tier: TemplateTier.FREE,
   font: null,
   primarycolor: null,
@@ -17,16 +19,19 @@ const mockData: Claim = {
   collection_twitter: null,
   collection_discord: null,
 }
+
 const ClaimPage: React.FC<{}> = () => {
   const [claim, setClaim] = React.useState<Claim>()
   const { tier } = claim ?? {}
 
+  const { name: contractName } = useParams()
+
   React.useEffect(() => {
     ;(async () => {
-      const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM}`, {
+      const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM_FETCH}`, {
         method: 'POST',
         body: JSON.stringify({
-          artist: 'Sarah',
+          contractName,
         }),
       })
         .then((res) => {
@@ -42,16 +47,13 @@ const ClaimPage: React.FC<{}> = () => {
 
       if (res) {
         setClaim(res.data)
-      } else {
-        // TODO:
-        setClaim(mockData)
       }
     })()
-  }, [])
+  }, [contractName])
 
   switch (tier) {
     case TemplateTier.FREE:
-      return <FreeTier claim={mockData} />
+      return <FreeTier claim={mockData} contractName={contractName as string} />
     default:
       return null
   }
