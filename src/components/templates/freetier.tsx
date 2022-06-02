@@ -5,9 +5,11 @@ import { HiOutlineMail } from 'react-icons/hi'
 import { FaDiscord } from 'react-icons/fa'
 import { Claim } from '../../model/types'
 import useWallet from '../../hooks/useWallet'
+import { API_ENDPOINT, API_PATHS } from '../../utils/config'
 
 interface FreeTierProps {
   claim: Claim
+  contractName: string
 }
 const abi = [
   'function tokenURI(uint256 tokenId) public view returns (string memory)',
@@ -22,16 +24,14 @@ const provider = new ethers.providers.JsonRpcProvider(
   'https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD'
 )
 
-const FreeTier: React.FC<FreeTierProps> = ({ claim }) => {
+const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   const { wallet, connect } = useWallet()
 
   const connectedWallet = wallet?.accounts[0]
 
   const [name, setName] = React.useState<string>()
   const [masterAddress, setMasterAddress] = React.useState<string>()
-
-  const randomInt = (max: number, min: number) =>
-    Math.round(Math.random() * (max - min)) + min
+  const [cover, setCover] = React.useState()
 
   const getName = React.useCallback(async () => {
     const contract = new ethers.Contract(claim.contract, abi, provider)
@@ -45,22 +45,41 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim }) => {
     setMasterAddress(contractOwner)
   }, [claim])
 
-  const getTokenURI = React.useCallback(async () => {
-    const contract = new ethers.Contract(claim.contract, abi, provider)
-    const randomTokenID = randomInt(1, 20)
-    console.log(randomTokenID)
-    const tokenURI = await contract.tokenURI(randomTokenID)
-    console.log(randomTokenID, tokenURI)
-    // setMasterAddress(contractOwner)
-  }, [claim])
+  const getCoverImage = React.useCallback(async () => {
+    const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM_COVER}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        contractName,
+      }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          throw new Error(res.statusText)
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+
+    if (res) {
+      setCover(res.data)
+    }
+  }, [contractName])
 
   const mint = async () => {
     console.log('mint')
-    if (wallet) {
+    if (wallet && connectedWallet) {
       try {
-        const signer = provider.getSigner(wallet?.accounts[0].address)
+        const walletProvider = new ethers.providers.Web3Provider(
+          wallet.provider
+        )
+        const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, abi, signer)
-        const tx = await contract.mint(wallet?.accounts[0].address, 1)
+        const tx = await contract.mint(connectedWallet?.address, 1, {
+          gasLimit: 30000000,
+        })
         const mintResponse = await tx.wait()
         console.log(mintResponse)
       } catch (error) {
@@ -72,11 +91,11 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim }) => {
   React.useEffect(() => {
     getName()
     getContractOwner()
-    getTokenURI()
-  }, [getName, getContractOwner, getTokenURI])
+    getCoverImage()
+  }, [getName, getContractOwner, getCoverImage])
 
   return (
-    <div className="w-full min-h-[calc(100vh-64px)] flex flex-col md:flex-row items-center justify-center text-white relative md:overflow-hidden px-0 md:px-8">
+    <div className="w-full min-h-[100vh] -mt-16 flex flex-col md:flex-row items-center justify-center text-white relative md:overflow-hidden px-0 md:px-8">
       <div
         className="absolute z-0 min-h-full w-full left-0 top-0"
         style={{
@@ -150,9 +169,9 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim }) => {
           </table>
         </div>
       </div>
-      <div className="flex flex-col justify-center relative z-1 w-full md:w-1/2 h-[calc(100vh-64px)] p-8 pb-2 md:pb-8 bg-black/50">
+      <div className="flex flex-col justify-center relative z-1 w-full md:w-1/2 h-[100vh] p-8 pb-2 md:pb-8 bg-black/50">
         <img
-          src="/blue_smoke_web.png"
+          src={cover}
           alt=""
           className="h-[calc(100%-50px)] object-contain"
         />

@@ -5,7 +5,8 @@ export enum API_PATHS {
   REGULUS_TEST = '/regulusTest',
   GET_NEW_LAUNCHED_CONTRACT = '/getNewLaunchedContract',
   COLLECTION = '/collections',
-  CLAIM = '/claim',
+  CLAIM_FETCH = '/claims/fetch',
+  CLAIM_COVER = '/claims/cover',
 }
 
 export const CONFIG = {
