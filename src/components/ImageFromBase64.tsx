@@ -16,6 +16,7 @@ const ImageFromBase64: React.FC<ImageFromBase64Props> = ({
 
     return <img src={(metadata as any).image} {...restProps} />
   } catch (error) {
+    console.log(error)
     return null
   }
 }

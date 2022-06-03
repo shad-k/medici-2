@@ -847,7 +847,8 @@ export const CONFIG = {
         "uploadImageCover": "/upload/cover",
         "uploadImageData": "/upload/collection",
         "checkName": "/claims/checkNameAvailability",
-        "launchClaim": "/claims/setup"
+        "launchClaim": "/claims/setup",
+        "getCover": "/claims/cover"
       }
     }
   },
