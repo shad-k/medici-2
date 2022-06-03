@@ -5,7 +5,8 @@ import { HiOutlineMail } from 'react-icons/hi'
 import { FaDiscord } from 'react-icons/fa'
 import { Claim } from '../../model/types'
 import useWallet from '../../hooks/useWallet'
-import { API_ENDPOINT, API_PATHS } from '../../utils/config'
+import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
+const localenv = CONFIG.DEV
 
 interface FreeTierProps {
   claim: Claim
@@ -32,6 +33,8 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   const [name, setName] = React.useState<string>()
   const [masterAddress, setMasterAddress] = React.useState<string>()
   const [cover, setCover] = React.useState<string>()
+  const [minting, setMinting] = React.useState<boolean>(false)
+  const [txHash, setTxHash] = React.useState<string>()
 
   const getName = React.useCallback(async () => {
     const contract = new ethers.Contract(claim.contract, abi, provider)
@@ -74,6 +77,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
 
   const mint = async () => {
     if (wallet && connectedWallet) {
+      setMinting(true)
       try {
         const walletProvider = new ethers.providers.Web3Provider(
           wallet.provider
@@ -85,8 +89,15 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
         })
         const mintResponse = await tx.wait()
         console.log(mintResponse)
-      } catch (error) {
-        console.log(error)
+        setTxHash(mintResponse.transactionHash)
+      } catch (error: any) {
+        if (error.message) {
+          alert(error.message)
+        } else {
+          alert('Something went wrong, please try again!')
+        }
+      } finally {
+        setMinting(false)
       }
     }
   }
@@ -176,14 +187,26 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
         <img
           src={cover}
           alt=""
-          className="h-[calc(100%-50px)] object-contain"
+          className="h-[calc(100%-80px)] object-contain"
         />
-        <button
-          className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto mt-4"
-          onClick={connectedWallet ? () => mint() : () => connect({})}
-        >
-          {connectedWallet ? 'Mint Now' : 'Connect Wallet'}
-        </button>
+        {txHash ? (
+          <a
+            className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
+            href={`${localenv.network.txEtherscanUrl}${txHash}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Success: Check transaction
+          </a>
+        ) : (
+          <button
+            className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
+            onClick={connectedWallet ? () => mint() : () => connect({})}
+            disabled={minting}
+          >
+            {connectedWallet ? 'Mint Now' : 'Connect Wallet'}
+          </button>
+        )}
         <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">
           powered by{' '}
           <img src="/logo.png" alt="Medici logo" width={20} className="mx-1" />
