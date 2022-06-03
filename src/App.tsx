@@ -6,6 +6,7 @@ import Create from './pages/create'
 import DropEditor from './pages/dropeditor'
 import Demo from './pages/demo'
 import Project from './pages/project'
+import ProjectManager from './pages/project_manager'
 
 import Header from './components/Header'
 import Footer from './components/Footer'

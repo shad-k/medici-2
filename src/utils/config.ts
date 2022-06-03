@@ -833,18 +833,19 @@ export const CONFIG = {
       ],
     },
     api: {
-      endpoint: 'https://athensgate.xyz',
-      paths: {
-        getMerkleRoot: '/getMerkleRoot',
-        whitelist: '/whitelist',
-        getNewLaunchedContract: '/getNewLaunchedContract',
-        getAllLaunchedContracts: '/getAllLaunchedContracts',
-        test: '/regulusTest',
-        uploadImageCover: '/upload/cover',
-        uploadImageData: '/upload/collection',
-        checkName: '/claims/checkNameAvailability',
-        launchClaim: '/claims/setup',
-      },
+      "endpoint": "https://athensgate.xyz",
+      "paths": {
+        "getMerkleRoot": "/getMerkleRoot",
+        "whitelist": "/whitelist",
+        "getNewLaunchedContract": "/getNewLaunchedContract",
+        "getAllLaunchedContracts": "/getAllLaunchedContracts",
+        "test": "/regulusTest",
+        "uploadImageCover": "/upload/cover",
+        "uploadImageData": "/upload/collection",
+        "checkName": "/claims/checkNameAvailability",
+        "launchClaim": "/claims/setup",
+        "getCover": "/claims/cover"
+      }
     },
   },
 }
