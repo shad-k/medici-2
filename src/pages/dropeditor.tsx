@@ -77,10 +77,10 @@ const DropEditor: React.FC<{}> = () => {
     return (
         <div className="w-full flex flex-col p-10 items-center">
         <h1 className="text-center text-4xl font-semibold">
-            Launch a project
+            Launch Claim Site
         </h1>
         <br></br>
-        <span className="md:w-3/5 text-center font-extralight md:text-2xl">
+        <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
         </span>
         <br></br>

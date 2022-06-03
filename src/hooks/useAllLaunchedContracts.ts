@@ -27,9 +27,6 @@ const useAllLaunchedContracts = (masterAddress: string): UseProjectsReturn  => {
         // console.log(res)
         return res.data
       }),
-    {
-      refreshInterval: 100,
-    }
   )
   return { data, error }
 }

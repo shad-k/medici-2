@@ -47,29 +47,31 @@ const InputDetails: React.FC<StepperFormProps> = ({
 
   const nameCheck = async (event: any) => {
     if (event.target.value === "") {
-    setIsNameAvailable(false);
-    return;
+      setIsNameAvailable(false);
+      return;
     }
-    try {
-      console.log("Checking name availability for " + event.target.value)
-      clearTimeout(timer);
-      
-      const newTimer = setTimeout( async () => {
-        const isNameAvailable = await checkNameAvailability(event.target.value);
-        if (isNameAvailable) {
-          handleInputData("name", event.target.value);
-          setIsNameAvailable(true);
-          return;
-        } else {
-          setIsNameAvailable(false);
-          return;
-        }
-      }, 500)
+    else {
+      try {
+        console.log("Checking name availability for " + event.target.value)
+        clearTimeout(timer);
+        
+        const newTimer = setTimeout( async () => {
+          const isNameAvailable = await checkNameAvailability(event.target.value);
+          if (isNameAvailable) {
+            handleInputData("name", event.target.value);
+            setIsNameAvailable(true);
+            return;
+          } else {
+            setIsNameAvailable(false);
+            return;
+          }
+        }, 500)
 
-      setTimer(newTimer);
-    } catch {
-      setError(true)
-      alert("There was an error")
+        setTimer(newTimer);
+      } catch {
+        setError(true)
+        alert("There was an error")
+      }
     }
   }
 
