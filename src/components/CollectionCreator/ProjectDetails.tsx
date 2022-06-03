@@ -33,23 +33,6 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
     const handleOpen = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
 
-  // after form submit validating the form data using validator
-  const submitFormData = (e: any) => {
-    e.preventDefault();
-
-    // checking if value of first name and last name is empty show error else take to step 2
-    if (
-      validator.isEmpty(data.name) ||
-      validator.isEmpty(data.symbol) ||
-      validator.isEmpty(data.masterAddress)
-    ) {
-      setError(true);
-      alert("Please double check your input!");
-    } else {
-      nextStep();
-    }
-  };
-
   const readyToTransact = async (): Promise<boolean> => {
     if (!wallet) {
         await connect({});
