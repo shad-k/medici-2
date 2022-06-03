@@ -31,7 +31,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
 
   const [name, setName] = React.useState<string>()
   const [masterAddress, setMasterAddress] = React.useState<string>()
-  const [cover, setCover] = React.useState()
+  const [cover, setCover] = React.useState<string>()
 
   const getName = React.useCallback(async () => {
     const contract = new ethers.Contract(claim.contract, abi, provider)
@@ -46,15 +46,18 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   }, [claim])
 
   const getCoverImage = React.useCallback(async () => {
+    const headers = new Headers()
+    headers.set('Content-Type', 'application/json')
     const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM_COVER}`, {
       method: 'POST',
+      headers,
       body: JSON.stringify({
         contractName,
       }),
     })
       .then((res) => {
         if (res.status === 200) {
-          return res.json()
+          return res.blob()
         } else {
           throw new Error(res.statusText)
         }
@@ -64,12 +67,12 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
       })
 
     if (res) {
-      setCover(res.data)
+      const imageURl = URL.createObjectURL(res)
+      setCover(imageURl)
     }
   }, [contractName])
 
   const mint = async () => {
-    console.log('mint')
     if (wallet && connectedWallet) {
       try {
         const walletProvider = new ethers.providers.Web3Provider(
