@@ -67,7 +67,7 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
 
       console.log(data);
       if (await readyToTransact()) {
-        const contractCreationResult = await generateNewContract(
+        await generateNewContract(
           wallet,
           merkleRoot,
           { 
@@ -78,17 +78,19 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
             price: data.price,
             maxMintsPerPerson: data.maxMintsPerPerson,
             masterAddress: data.masterAddress
-          })
+          });
+        const result = await getNewLaunchedContract(data.masterAddress);
+        console.log(result);
         await whitelist(
         { 
           "project": data.name,
           "symbol": data.symbol,
-          "ERC721Contract": contractCreationResult.contractaddress,
+          "ERC721Contract": result.contractaddress,
           "ownerAddress": data.masterAddress,
           "whitelistedAddresses": parsedData,
           "merkleRoot": merkleRoot
         })
-        setContractCreationResult(contractCreationResult);
+        setContractCreationResult(result);
       }
     } catch {
         setContractCreationSuccess(false);
