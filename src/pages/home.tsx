@@ -1,17 +1,28 @@
-import React, {useEffect, useState} from 'react'
-import DashHero from '../components/DashHero'
-import AllContracts from '../components/AllContracts'
-import useWallet from '../hooks/useWallet'
-import useAllLaunchedContracts from '../hooks/useAllLaunchedContracts'
+import React from 'react'
+import HomeMenu from '../components/HomeMenu'
 
 const Home: React.FC<{}> = () => {
-  const { wallet, connecting, connect, connectedChain, setChain } = useWallet()
 
   return (
-      <div className="w-full mx-auto h-full flex flex-col">
-      {<DashHero/>}
+      <div className="w-full flex flex-col p-10 items-center md:mt-10">
+          <h1 className="text-center text-4xl font-semibold">
+              Welcome to Regulus
+          </h1>
+          <br></br>
+          <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
+          </span>
+          {/* <div className="md:mt-10 inline-flex">
+              <Ethereum/>
+              <h1 className="text-1xl md:text-3xl mr-4 ml-3"> {parseFloat(utils.formatUnits(collection.balance, 'gwei')).toFixed(2)}</h1>
+              <h1 className="text-1xl md:text-3xl text-zinc-500">| temp val usd</h1>
+          </div>
+          <div className="ml-6 sm:w-full md:w-3/5 text-1xl text-zinc-500">
+              earned on your most recent project
+          </div> */}
+      {<HomeMenu/>}
        <br></br>
-      { wallet && <AllContracts masterAddress={wallet.accounts[0].address}/> }
+     
       {/* {data && <DashActive/>} */}
       {/* {data.data} */}
       <br></br>
