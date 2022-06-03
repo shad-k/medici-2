@@ -28,8 +28,11 @@ const ClaimPage: React.FC<{}> = () => {
 
   React.useEffect(() => {
     ;(async () => {
+      const headers = new Headers()
+      headers.set('Content-Type', 'application/json')
       const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM_FETCH}`, {
         method: 'POST',
+        headers,
         body: JSON.stringify({
           contractName,
         }),
@@ -44,9 +47,8 @@ const ClaimPage: React.FC<{}> = () => {
         .catch((error) => {
           console.log(error)
         })
-
       if (res) {
-        setClaim(res.data)
+        setClaim(res[0])
       }
     })()
   }, [contractName])
