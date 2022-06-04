@@ -55,7 +55,8 @@ const ClaimPage: React.FC<{}> = () => {
 
   switch (tier) {
     case TemplateTier.FREE:
-      return <FreeTier claim={mockData} contractName={contractName as string} />
+      return claim ? <FreeTier claim={claim} contractName={contractName as string} /> :
+       <FreeTier claim={mockData} contractName={contractName as string} />
     default:
       return null
   }
