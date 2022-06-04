@@ -29,6 +29,7 @@ const App: React.FC<{}> = () => {
                 <Route path="/create" element={<Create />} />
                 <Route path="/launch" element={<DropEditor />} />
                 <Route path="/page/:name" element={<ClaimPage />} />
+                <Route path="/projects" element={<ProjectManager/>}/>
                 <Route path="/project/:contractaddress" element={<Project />} />
                 <Route path="/" element={<Home />} />
               </Routes>
