@@ -4,18 +4,21 @@ export enum API_PATHS {
   GET_MERKLE_ROOT = '/getMerkleRoot',
   REGULUS_TEST = '/regulusTest',
   GET_NEW_LAUNCHED_CONTRACT = '/getNewLaunchedContract',
-  COLLECTION = '/collections'
+  COLLECTION = '/collections',
+  CLAIM_FETCH = '/claims/fetch',
+  CLAIM_COVER = '/claims/cover',
 }
 
 export const CONFIG = {
-  "DEV": {
-    "env": "DEV",
-    "network": {
-      "label": "Kovan TestNet",
-      "id": "0x2a",
-      "token": "ETH",
-      "rpcUrl": "https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD",
-      "txEtherscanUrl": "https://kovan.etherscan.io/tx/"
+  DEV: {
+    env: 'DEV',
+    network: {
+      label: 'Kovan TestNet',
+      id: '0x2a',
+      token: 'ETH',
+      rpcUrl:
+        'https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD',
+      txEtherscanUrl: 'https://kovan.etherscan.io/tx/',
     },
     "contract": {
     "factory_address": "0x0FeeC4D622577752C04B96e000FC454687AFc6BB",
@@ -965,7 +968,7 @@ export const CONFIG = {
       }
     ]
     },
-    "api": {
+    api: {
       "endpoint": "https://athensgate.xyz",
       "paths": {
         "getMerkleRoot": "/getMerkleRoot",
@@ -979,6 +982,6 @@ export const CONFIG = {
         "launchClaim": "/claims/setup",
         "getCover": "/claims/cover"
       }
-    }
+    },
   },
 }
