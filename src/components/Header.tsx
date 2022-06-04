@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { MdSearch } from 'react-icons/md'
 import { RiShoppingCartLine } from 'react-icons/ri'
 
@@ -7,6 +7,11 @@ import useWallet from '../hooks/useWallet'
 
 const Header: React.FC<{}> = () => {
   const { wallet, connecting, connect } = useWallet()
+  const location = useLocation()
+
+  if (location.pathname.startsWith('/page/')) {
+    return null
+  }
 
   const connectedWallet = wallet?.accounts[0]
 
