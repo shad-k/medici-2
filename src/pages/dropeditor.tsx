@@ -21,18 +21,18 @@ const DropEditor: React.FC<{}> = () => {
     const [twitter, setTwitter] = useState<string>();
     const [discord, setDiscord] = useState<string>();
     const [email, setEmail] = useState<string>();
-    const [primaryColor, setPrimaryColor] = useState<any>();
-    const [secondaryColor, setSecondaryColor] = useState<any>();
-    const [bgColor, setBgColor] = useState<any>();
+    const [primaryColor, setPrimaryColor] = useState<string>();
+    const [secondaryColor, setSecondaryColor] = useState<string>();
+    const [bgColor, setBgColor] = useState<string>();
     const [activeFontFamily, setActiveFontFamily] = useState<string>("Open Sans");
-    const [claimTier, setClaimTier] = useState<any>();
+    const [claimTier, setClaimTier] = useState<any>("free");
     const [AllFieldsValid, setAllFieldsValid] = useState<boolean>(false);
     const [ClaimCreationSuccess, setClaimCreationSuccess] = useState(false);
 
     const { reward, isAnimating } = useReward('input-form', 'confetti');
 
     useEffect(() => {
-        if (contract && artist && description && twitter && email && discord && primaryColor && secondaryColor && bgColor && activeFontFamily) {
+        if (contract && artist && description && twitter && email && discord && (primaryColor != undefined) && (secondaryColor != undefined) && (bgColor != undefined) && activeFontFamily && claimTier) {
             setAllFieldsValid(true)
         } else {
             setAllFieldsValid(false)
@@ -47,16 +47,16 @@ const DropEditor: React.FC<{}> = () => {
                 const params = {
                     "contract": contract,
                     "font": activeFontFamily,
-                    "primarycolor": primaryColor.hex,
-                    "secondarycolor": secondaryColor.hex,
-                    "backgroundcolor": bgColor.hex,
+                    "primarycolor": primaryColor,
+                    "secondarycolor": secondaryColor,
+                    "backgroundcolor": bgColor,
                     "artist": artist,
                     "description": description,
                     "email": email,
                     "twitter": twitter,
                     "discord": discord,        
                 }
-
+                console.log(params)
             apiClient.post(
                 localenv.api.paths.launchClaim,
                 params,
@@ -132,19 +132,19 @@ const DropEditor: React.FC<{}> = () => {
             <div className="flex flex-row">
                 <div id="primary-color-picker" className="mx-6">
                 <label htmlFor="primary-color-picker" className="block lg:text-2xl py-2">Primary Color</label>
-                    <ColorPicker value={primaryColor} hideTextfield onChange={event => setPrimaryColor(event)} />
-                    { primaryColor && <p>#{primaryColor.hex}</p>}
+                    <ColorPicker value={primaryColor} hideTextfield onChange={event => setPrimaryColor("#"+event.hex)} />
+                    { primaryColor && <p>{primaryColor}</p>}
                 </div>
                 <br></br>
                 <div id="secondary-color-picker" className="mx-6">
                 <label htmlFor="secondary-color-picker" className="block lg:text-2xl py-2">Secondary Color</label>
-                    <ColorPicker value={secondaryColor} hideTextfield onChange={event => setSecondaryColor(event)} />
-                    { secondaryColor && <p>#{secondaryColor.hex}</p>}
+                    <ColorPicker value={secondaryColor} hideTextfield onChange={event => setSecondaryColor("#"+event.hex)} />
+                    { secondaryColor && <p>{secondaryColor}</p>}
                 </div>
                 <div id="bg-color-picker" className="mx-6">
                 <label htmlFor="bg-color-picker" className="block lg:text-2xl py-2">Background Color</label>
-                    <ColorPicker value={bgColor} hideTextfield onChange={event => setBgColor(event)} />
-                    { bgColor && <p>#{bgColor.hex}</p>}
+                    <ColorPicker value={bgColor} hideTextfield onChange={event => setBgColor("#"+event.hex)} />
+                    { bgColor && <p>{bgColor}</p>}
                 </div>
             </div>
             <div className="text-center mt-10">
