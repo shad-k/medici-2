@@ -835,6 +835,135 @@ export const CONFIG = {
         "type": "function"
       }
     ],
+    "claim_contract": "0x665374885c823B0EAeb9010e53888254B6588D00",
+    "claim_abi": [
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "low",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "mid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "high",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "_masterAddress",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "tier",
+            "type": "string"
+          },
+          {
+            "indexed": false,
+            "internalType": "address",
+            "name": "sender",
+            "type": "address"
+          }
+        ],
+        "name": "DepositReceived",
+        "type": "event"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "tier",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "newPrice",
+            "type": "uint256"
+          }
+        ],
+        "name": "changeTierPrice",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "tier",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          }
+        ],
+        "name": "depositForClaimsPage",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "getBalance",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "tier",
+            "type": "string"
+          }
+        ],
+        "name": "getPricing",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }
+    ]
     },
     "api": {
       "endpoint": "https://athensgate.xyz",

@@ -4,6 +4,7 @@ import { ContractCreationProps, WhitelistProps, Contract } from '../model/types'
 import { CONFIG } from './config'
 import apiClient from './apiClient'
 import { wait } from '@testing-library/react';
+import { parseUnits } from 'ethers/lib/utils';
 const localenv = CONFIG.DEV;
 
 /* call when new contract is created to update backend */
@@ -114,7 +115,25 @@ export const checkNameAvailability = async (name: string) => {
     });
 }
 
+export const claimsInit = async (callerWallet: any, contractAddress: string, tier: string): Promise<boolean>=> {
+    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
+    const signer = provider.getSigner(callerWallet.accounts[0].address);
+  
+    const claimsContract = new ethers.Contract(localenv.contract.claim_contract, localenv.contract.claim_abi, signer);
+    const pricing = await claimsContract.getPricing(tier).
+    then(function (response: any) {
+        console.log(response);
+    }).catch(function(error: any) {
+        console.log(error);
+    });
+    
+    const result_contract = await claimsContract.depositForClaimsPage(tier, contractAddress, {value: pricing})
+    console.log(result_contract);
+    await result_contract.wait(5);
+    
+    return Promise.resolve(true);
 
+}
 
 /* Master Address only Methods */
 
