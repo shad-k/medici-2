@@ -116,23 +116,27 @@ export const checkNameAvailability = async (name: string) => {
 }
 
 export const claimsInit = async (callerWallet: any, contractAddress: string, tier: string): Promise<boolean>=> {
-    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
-    const signer = provider.getSigner(callerWallet.accounts[0].address);
-  
-    const claimsContract = new ethers.Contract(localenv.contract.claim_contract, localenv.contract.claim_abi, signer);
-    const pricing = await claimsContract.getPricing(tier).
-    then(function (response: any) {
-        console.log(response);
-    }).catch(function(error: any) {
-        console.log(error);
-    });
+    console.log("Tier " + tier);
+    if (tier === "free") {
+        return Promise.resolve(true);
+    } else {
+        const provider = new ethers.providers.Web3Provider(callerWallet.provider)
+        const signer = provider.getSigner(callerWallet.accounts[0].address);
     
-    const result_contract = await claimsContract.depositForClaimsPage(tier, contractAddress, {value: pricing})
-    console.log(result_contract);
-    await result_contract.wait(5);
-    
-    return Promise.resolve(true);
-
+        const claimsContract = new ethers.Contract(localenv.contract.claim_contract, localenv.contract.claim_abi, signer);
+        const pricing = await claimsContract.getPricing(tier).
+        then(function (response: any) {
+            console.log(response);
+        }).catch(function(error: any) {
+            console.log(error);
+        });
+        
+        const result_contract = await claimsContract.depositForClaimsPage(tier, contractAddress, {value: pricing})
+        console.log(result_contract);
+        await result_contract.wait(5);
+        
+        return Promise.resolve(true);
+    }
 }
 
 /* Master Address only Methods */

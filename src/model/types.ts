@@ -89,6 +89,7 @@ export type WhitelistProps = {
 
 export enum TemplateTier {
   FREE = 'free',
+  LOW = 'low',
 }
 
 export type Claim = {
