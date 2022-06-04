@@ -33,23 +33,6 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
     const handleOpen = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
 
-  // after form submit validating the form data using validator
-  const submitFormData = (e: any) => {
-    e.preventDefault();
-
-    // checking if value of first name and last name is empty show error else take to step 2
-    if (
-      validator.isEmpty(data.name) ||
-      validator.isEmpty(data.symbol) ||
-      validator.isEmpty(data.masterAddress)
-    ) {
-      setError(true);
-      alert("Please double check your input!");
-    } else {
-      nextStep();
-    }
-  };
-
   const readyToTransact = async (): Promise<boolean> => {
     if (!wallet) {
         await connect({});
@@ -67,7 +50,7 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
 
       console.log(data);
       if (await readyToTransact()) {
-        const contractCreationResult = await generateNewContract(
+        await generateNewContract(
           wallet,
           merkleRoot,
           { 
@@ -78,17 +61,19 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
             price: data.price,
             maxMintsPerPerson: data.maxMintsPerPerson,
             masterAddress: data.masterAddress
-          })
+          });
+        const result = await getNewLaunchedContract(data.masterAddress);
+        console.log(result);
         await whitelist(
         { 
           "project": data.name,
           "symbol": data.symbol,
-          "ERC721Contract": contractCreationResult.contractaddress,
+          "ERC721Contract": result.contractaddress,
           "ownerAddress": data.masterAddress,
           "whitelistedAddresses": parsedData,
           "merkleRoot": merkleRoot
         })
-        setContractCreationResult(contractCreationResult);
+        setContractCreationResult(result);
       }
     } catch {
         setContractCreationSuccess(false);
