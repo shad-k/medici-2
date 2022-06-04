@@ -35,6 +35,11 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   const [cover, setCover] = React.useState<string>()
   const [minting, setMinting] = React.useState<boolean>(false)
   const [txHash, setTxHash] = React.useState<string>()
+  // const [primaryColor, setPrimaryColor] = React.useState<string>()
+  // const [secondaryColor, setSecondaryColor] = React.useState<string>()
+  // setPrimaryColor(claim.primarycolor as string)
+  // setSecondaryColor(claim.secondarycolor as string)
+  // let templateString
 
   const getName = React.useCallback(async () => {
     const contract = new ethers.Contract(claim.contract, abi, provider)
@@ -106,6 +111,8 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
     getName()
     getContractOwner()
     getCoverImage()
+    // getColorTemplateString()
+    // templateString = 
   }, [getName, getContractOwner, getCoverImage])
 
   return (
@@ -114,11 +121,11 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
         className="absolute z-0 min-h-full w-full left-0 top-0"
         style={{
           background:
-            'linear-gradient(180deg, rgba(36, 0, 255, 0.6) 0%, rgba(0, 255, 209, 0.6) 100%)',
+          `linear-gradient(180deg, ${claim.primarycolor} 0%, ${claim.secondarycolor} 100%)`,
           filter: 'blur(200px)',
         }}
       />
-      <div className="flex flex-col items-start relative z-1 w-full md:w-1/2 h-full py-20 px-2 md:px-12 scrollbar-hide md:overflow-auto">
+      <div className='font-${claim.font} flex flex-col items-start relative z-1 w-full md:w-1/2 h-full py-20 px-2 md:px-12 scrollbar-hide md:overflow-auto'>
         <h1 className="text-6xl mb-4 break-all">{name}</h1>
         <div className="flex items-center justify-between mb-12 w-full">
           <h6 className="uppercase text-xl">{claim.artist ?? ''}</h6>
