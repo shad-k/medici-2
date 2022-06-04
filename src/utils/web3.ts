@@ -131,11 +131,15 @@ export const claimsInit = async (callerWallet: any, contractAddress: string, tie
             console.log(error);
         });
         
+        try {
         const result_contract = await claimsContract.depositForClaimsPage(tier, contractAddress, {value: pricing})
         console.log(result_contract);
         await result_contract.wait(5);
-        
         return Promise.resolve(true);
+        } catch {
+        return Promise.resolve(false);
+        }
+        
     }
 }
 
