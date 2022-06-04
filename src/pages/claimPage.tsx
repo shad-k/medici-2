@@ -53,13 +53,6 @@ const ClaimPage: React.FC<{}> = () => {
     })()
   }, [contractName])
 
-  React.useEffect(() => {
-  if (claim) {
-    console.log(claim)
-  }
-  
-  })
-
   switch (tier) {
     case TemplateTier.FREE:
       return claim ? <FreeTier claim={claim} contractName={contractName as string} /> :
