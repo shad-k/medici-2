@@ -12,6 +12,7 @@ const ContractCardV2: React.FC<{ contract: Contract}> = ({contract}) => {
                 const data = await getContractCover(contract.name)
                 setCoverImage(data);
             } catch {
+                console.log("error getting cover")
                 return null;
             }
         }

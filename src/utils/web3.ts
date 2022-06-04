@@ -4,6 +4,7 @@ import { ContractCreationProps, WhitelistProps, Contract } from '../model/types'
 import { CONFIG } from './config'
 import apiClient from './apiClient'
 import { wait } from '@testing-library/react';
+import { parseUnits } from 'ethers/lib/utils';
 const localenv = CONFIG.DEV;
 
 /* call when new contract is created to update backend */
@@ -27,9 +28,6 @@ export const getNewLaunchedContract = async (masterAddress: string): Promise<Con
     const request_data = {
         "masterAddress": masterAddress,
     }
-
-    console.log(request_data)
-    
     return apiClient.post(
         localenv.api.paths.getNewLaunchedContract, request_data,
         {
@@ -45,36 +43,29 @@ export const getNewLaunchedContract = async (masterAddress: string): Promise<Con
 }
 
 /* generate a new smart contract from user input */
-export const generateNewContract = (callerWallet: any, merkleRoot: string, props: ContractCreationProps): Promise<Contract> => {
+export const generateNewContract = (callerWallet: any, merkleRoot: string, props: ContractCreationProps): any => {
     return new Promise( async (resolve, reject ) => {
         const provider = new ethers.providers.Web3Provider(callerWallet.provider)
         const signer = provider.getSigner(callerWallet.accounts[0].address);
         const FactoryContract = new ethers.Contract(localenv.contract.factory_address, localenv.contract.factory_abi, signer);
 
-        const contract = FactoryContract.createContract(
-        props.name, // name
-        props.symbol, // symbol
-        props.baseuri, // base URI
-        merkleRoot, // merkle root
-        props.maxSupply, // max supply
-        props.price, // price
-        props.maxMintsPerPerson, // max mint per person
-        props.masterAddress // master address
-        ).then(async (response: any) => {
-            console.log(response);
-            const result = await getNewLaunchedContract(props.masterAddress);
-            return resolve({
-                "name": props.name,
-                "symbol": props.symbol,
-                "contractaddress": result.contractaddress,
-                "masteraddress": props.masterAddress,
-                "txhash": result.txhash 
-            });
-        })
-        .catch((error: Error) => {
-            console.log(error);
-            return reject(error.message);
-        });
+        try {
+            const result_contract = await FactoryContract.createContract(
+            props.name, // name
+            props.symbol, // symbol
+            props.baseuri, // base URI
+            merkleRoot, // merkle root
+            props.maxSupply, // max supply
+            props.price, // price
+            props.maxMintsPerPerson, // max mint per person
+            props.masterAddress // master address
+            );
+            console.log(result_contract);
+            await result_contract.wait(5);
+            return resolve("Contract generation success");
+        } catch {
+            return reject("Error creating contract")
+        }
     })
 }
 
@@ -124,7 +115,25 @@ export const checkNameAvailability = async (name: string) => {
     });
 }
 
+export const claimsInit = async (callerWallet: any, contractAddress: string, tier: string): Promise<boolean>=> {
+    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
+    const signer = provider.getSigner(callerWallet.accounts[0].address);
+  
+    const claimsContract = new ethers.Contract(localenv.contract.claim_contract, localenv.contract.claim_abi, signer);
+    const pricing = await claimsContract.getPricing(tier).
+    then(function (response: any) {
+        console.log(response);
+    }).catch(function(error: any) {
+        console.log(error);
+    });
+    
+    const result_contract = await claimsContract.depositForClaimsPage(tier, contractAddress, {value: pricing})
+    console.log(result_contract);
+    await result_contract.wait(5);
+    
+    return Promise.resolve(true);
 
+}
 
 /* Master Address only Methods */
 

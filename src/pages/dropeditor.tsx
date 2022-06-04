@@ -8,6 +8,7 @@ import FontPicker from 'font-picker-react'
 import useWallet from '../hooks/useWallet'
 import apiClient from '../utils/apiClient';
 import { CONFIG } from '../utils/config';
+import { claimsInit } from '../utils/web3';
 
 
 const DropEditor: React.FC<{}> = () => {
@@ -24,6 +25,7 @@ const DropEditor: React.FC<{}> = () => {
     const [secondaryColor, setSecondaryColor] = useState<any>();
     const [bgColor, setBgColor] = useState<any>();
     const [activeFontFamily, setActiveFontFamily] = useState<string>("Open Sans");
+    const [claimTier, setClaimTier] = useState<any>();
     const [AllFieldsValid, setAllFieldsValid] = useState<boolean>(false);
     const [ClaimCreationSuccess, setClaimCreationSuccess] = useState(false);
 
@@ -36,43 +38,44 @@ const DropEditor: React.FC<{}> = () => {
             setAllFieldsValid(false)
         }
     }, [contract, artist, description, twitter, discord, email, primaryColor, secondaryColor, bgColor, activeFontFamily, AllFieldsValid, setAllFieldsValid])
-    
+
     const onConfirm = async() => {
-
         if (AllFieldsValid) {
-            const params = {
-                "contract": contract,
-                "font": activeFontFamily,
-                "primarycolor": primaryColor.hex,
-                "secondarycolor": secondaryColor.hex,
-                "backgroundcolor": bgColor.hex,
-                "artist": artist,
-                "description": description,
-                "email": email,
-                "twitter": twitter,
-                "discord": discord,        
-            }
-            console.log("valid")
-            console.log(params)
+            const claimReady = await claimsInit(wallet, contract!, claimTier);
 
-        apiClient.post(
-            localenv.api.paths.launchClaim,
-            params,
-            {
-                headers: {"Content-Type": "application/json"}
-            }
-        ).then(function(response) {
-            console.log(response)
-            setClaimCreationSuccess(true)
-            reward()
-        }).catch(function(error) {
-            console.log(error)
-            setClaimCreationSuccess(false)
-        });
+            if (claimReady) {
+                const params = {
+                    "contract": contract,
+                    "font": activeFontFamily,
+                    "primarycolor": primaryColor.hex,
+                    "secondarycolor": secondaryColor.hex,
+                    "backgroundcolor": bgColor.hex,
+                    "artist": artist,
+                    "description": description,
+                    "email": email,
+                    "twitter": twitter,
+                    "discord": discord,        
+                }
+
+            apiClient.post(
+                localenv.api.paths.launchClaim,
+                params,
+                {
+                    headers: {"Content-Type": "application/json"}
+                }
+            ).then(function(response) {
+                console.log(response)
+                setClaimCreationSuccess(true)
+                reward()
+            }).catch(function(error) {
+                console.log(error)
+                setClaimCreationSuccess(false)
+            });
+        }
     } else {
         alert("Missing some fields!")
-        }
     }
+}
     
     return (
         <div className="w-full flex flex-col p-10 items-center">
@@ -114,6 +117,15 @@ const DropEditor: React.FC<{}> = () => {
                         setActiveFontFamily(nextFont.family)
                     }
                 />
+            </div>
+            <div>
+            <label htmlFor="tier-select" className="block lg:text-2xl py-2">Tier </label>
+            <select id="tier-select" className="text-black w-full" onChange={event => setClaimTier(event.target.value)}>
+                <option>free</option>
+                <option>low</option>
+                <option disabled={true}>mid (coming soon!)</option>
+                <option disabled={true}>high (coming soon!)</option>
+            </select>
             </div>
         </form>
         <br></br>
