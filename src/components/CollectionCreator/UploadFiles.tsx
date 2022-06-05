@@ -56,12 +56,12 @@ const uploadCoverImage = async (file: File) => {
     }
     )
     .then(function(response) {
-    console.log("Cover image " + file.name + " for collection " + data.name + " uploaded successfully" )
-    handleInputData("coverImage", file);
-    setCoverUploadSuccess(true);
+      console.log("Cover image " + file.name + " for collection " + data.name + " uploaded successfully" )
+      handleInputData("coverImage", file);
+      setCoverUploadSuccess(true);
     }).catch(function(error){
-    console.log("Error uploading cover image")
-    setCoverUploadSuccess(false);
+      console.log("Error uploading cover image")
+      setCoverUploadSuccess(false);
     });
 }
 
@@ -112,6 +112,7 @@ const triggerUpload = async (
       },
     ).then((response)=> {
       console.log(response);
+      handleInputData("baseuri", response.data.baseURI);
       setImageDataUploadSuccess(true);
       setShowLoader(false);
     })

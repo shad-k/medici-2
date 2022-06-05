@@ -56,7 +56,7 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
           { 
             name: data.name,
             symbol: data.symbol,
-            baseuri: '{}',
+            baseuri: data.baseuri,
             maxSupply: data.maxSupply,
             price: data.price,
             maxMintsPerPerson: data.maxMintsPerPerson,
