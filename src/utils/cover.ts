@@ -17,12 +17,13 @@ export const getContractCover = async (contractName: string) => {
     ).then((res: any) => {
     const base64 = 'data:application/json;base64,' + btoa(
         new Uint8Array(res.data).reduce(
-        (data, byte) => data + String.fromCharCode(byte),
-        ''
+            (data, byte) => data + String.fromCharCode(byte),
+            ''
         )
     )
-    return Promise.resolve(base64)
+        return Promise.resolve(base64)
     }).catch((error) => {
-    return Promise.reject("error")
+        console.log(error);
+        return Promise.reject("error")
     });
 }
