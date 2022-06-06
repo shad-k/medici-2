@@ -4,10 +4,12 @@ import HomeMenu from '../components/HomeMenu'
 const Home: React.FC<{}> = () => {
 
   return (
-      <div className="w-full flex flex-col p-10 items-center md:mt-10">
-          <h1 className="text-center text-4xl font-semibold ">
-          ✨ <span className="tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500">Launch Your Project</span> ✨
-          </h1>
+      <div className="w-full flex flex-col p-5 md:p-10 items-center mt-24 md:mt-36">
+          <div className="whitespace-nowrap">
+            <h1 className="text-center text-4xl md:text-6xl font-semibold">
+            ✨ <span className="tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500">Launch Your Project</span> ✨
+            </h1>
+          </div>
           <br></br>
           <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
           Create customizable NFT smart contracts and claim pages! 
