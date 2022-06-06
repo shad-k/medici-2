@@ -50,7 +50,7 @@ const DropEditor: React.FC<{}> = () => {
       
 
     useEffect(() => {
-        if (contract && artist && description && twitter && email && discord && (primaryColor != undefined) && (secondaryColor != undefined) && (bgColor != undefined) && activeFontFamily && claimTier) {
+        if (contract && artist && description && twitter && email && discord && (primaryColor !== undefined) && (secondaryColor !== undefined) && (bgColor !== undefined) && activeFontFamily && claimTier) {
             setAllFieldsValid(true)
         } else {
             setAllFieldsValid(false)
