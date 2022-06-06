@@ -3,13 +3,15 @@ import { StepperFormProps } from '../../model/types';
 import validator from 'validator';
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 import { utils } from 'ethers'
-import { checkNameAvailability } from '../../utils/web3';
+import { checkNameAvailability } from '../../utils/claims';
+import useWallet from '../../hooks/useWallet';
 
 const InputDetails: React.FC<StepperFormProps> = ({
   nextStep,
   handleInputData,
   data
 }) => {
+  const { wallet } = useWallet()
   const [error, setError] = useState(false);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
   const [isValidMasterAddress, setIsValidMasterAddress] = useState(false);
@@ -45,6 +47,13 @@ const InputDetails: React.FC<StepperFormProps> = ({
     }
   }
 
+  useEffect(() => {
+    if (wallet) {
+      const address = (document.getElementById("input-master") as HTMLInputElement).value;
+      addressCheck(address);
+    }
+  }, [wallet])
+
   const nameCheck = async (event: any) => {
     if (event.target.value === "") {
       setIsNameAvailable(false);
@@ -52,7 +61,6 @@ const InputDetails: React.FC<StepperFormProps> = ({
     }
     else {
       try {
-        console.log("Checking name availability for " + event.target.value)
         clearTimeout(timer);
         
         const newTimer = setTimeout( async () => {
@@ -86,7 +94,7 @@ const InputDetails: React.FC<StepperFormProps> = ({
           <br></br>
             <label htmlFor="input-master" className="block lg:text-2xl py-2">Master Address</label>
               <div className="inline-flex gap-4 w-full">
-                <input id="input-master" type="text" className="text-white md:text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none w-11/12" onChange={event => addressCheck(event.target.value)}/>
+                <input id="input-master" type="text" defaultValue={wallet?.accounts[0].address} className="text-white md:text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none w-11/12" onChange={event => addressCheck(event.target.value)}/>
                 {isValidMasterAddress ? <BsFillCheckSquareFill className="mt-3" size="30px" color="green"/> : <BsFillXSquareFill className="mt-3" size="30px" color="#F47174"/>}
               </div>
           <br></br>

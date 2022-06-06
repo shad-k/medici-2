@@ -87,32 +87,6 @@ export const getMerkleRoot = async (whitelistAddresses: string[]):Promise<string
     });
 }
 
-export const checkNameAvailability = async (name: string) => {
-    const request_data = {
-        "name": name
-    }
-    
-    return apiClient.post(
-        localenv.api.paths.checkName,
-        request_data,
-        {
-            headers: {"Content-Type": "application/json"}
-        }
-    ).then(function(response) {
-        console.log(response.data)
-        if (response.data.value === true) {
-            console.log("returning true")
-            return Promise.resolve(true)
-        } else {
-            console.log("returning false")
-            return Promise.resolve(false)
-        }
-    }).catch(function(error) {
-        console.log(error);
-        return Promise.reject("Error checking name availability")
-    });
-}
-
 export const claimsInit = async (callerWallet: any, contractAddress: string, tier: string): Promise<boolean>=> {
     console.log("Tier " + tier);
     if (tier === "free") {
