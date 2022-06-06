@@ -6,11 +6,11 @@ const Home: React.FC<{}> = () => {
   return (
       <div className="w-full flex flex-col p-10 items-center md:mt-10">
           <h1 className="text-center text-4xl font-semibold">
-              Welcome to Regulus
+          ✨ Launch Your Project ✨
           </h1>
           <br></br>
           <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
+          Create customizable NFT smart contracts and claim pages! 
           </span>
           {/* <div className="md:mt-10 inline-flex">
               <Ethereum/>
