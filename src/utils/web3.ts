@@ -3,8 +3,6 @@ import { ContractCreationProps, WhitelistProps, Contract } from '../model/types'
 
 import { CONFIG } from './config'
 import apiClient from './apiClient'
-import { wait } from '@testing-library/react';
-import { parseUnits } from 'ethers/lib/utils';
 const localenv = CONFIG.DEV;
 
 /* call when new contract is created to update backend */
@@ -124,20 +122,14 @@ export const claimsInit = async (callerWallet: any, contractAddress: string, tie
         const signer = provider.getSigner(callerWallet.accounts[0].address);
     
         const claimsContract = new ethers.Contract(localenv.contract.claim_contract, localenv.contract.claim_abi, signer);
-        const pricing = await claimsContract.getPricing(tier).
-        then(function (response: any) {
-            console.log(response);
-        }).catch(function(error: any) {
-            console.log(error);
-        });
+        const pricing = await claimsContract.getPricing(tier);
         
         try {
-        const result_contract = await claimsContract.depositForClaimsPage(tier, contractAddress, {value: pricing})
-        console.log(result_contract);
-        await result_contract.wait(5);
-        return Promise.resolve(true);
+            const result_contract = await claimsContract.depositForClaimsPage(tier, contractAddress, {value: pricing})
+            await result_contract.wait(5);
+            return Promise.resolve(true);
         } catch {
-        return Promise.resolve(false);
+            return Promise.resolve(false);
         }
         
     }

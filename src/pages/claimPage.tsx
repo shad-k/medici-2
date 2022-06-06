@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 import FreeTier from '../components/templates/freetier'
@@ -52,6 +52,11 @@ const ClaimPage: React.FC<{}> = () => {
       }
     })()
   }, [contractName])
+
+  useEffect(() => {
+  if (claim) console.log(claim);
+  
+  })
 
   switch (tier) {
     case TemplateTier.FREE:

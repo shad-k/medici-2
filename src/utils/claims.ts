@@ -1,15 +1,14 @@
 import React from 'react'
-import apiClient from '../utils/apiClient'
-import { CONFIG } from '../utils/config'
+import apiClient from './apiClient'
+import { CONFIG } from './config'
 
 const localenv = CONFIG.DEV
 
-
-export const getContractCover = async (contractName: string) => {
-    console.log("Getting cover for " + contractName);
+export const getContractCover = async (contract: string) => {
+    console.log("Getting cover for " + contract);
     return apiClient.post
     (localenv.api.paths.getCover, 
-    { "contractName": contractName },
+    { "contractName": contract },
     { 
         headers: { "Content-Type": "application/json"},
         responseType: 'arraybuffer',
