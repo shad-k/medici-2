@@ -4,18 +4,22 @@ import ContractsMenu from '../components/ContractsMenu'
 import '../css/dropeditor.css'
 import { ColorPicker } from 'material-ui-color';
 import FontPicker from 'font-picker-react'
+import Modal from '@mui/material/Modal';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import useWallet from '../hooks/useWallet'
 import apiClient from '../utils/apiClient';
 import { CONFIG } from '../utils/config';
+import { Contract } from '../model/types'
 import { claimsInit } from '../utils/web3';
+import { types } from 'util';
 
 
 const DropEditor: React.FC<{}> = () => {
     const localenv = CONFIG.DEV
 
-    const { wallet, connecting, connect, connectedChain, setChain } = useWallet();
-    const [contract, setContract] = useState<string>();
+    const { wallet, setChain, connect } = useWallet();
+    const [contract, setContract] = useState<Contract>();
     const [artist, setArtist] = useState<string>();
     const [description, setDescription] = useState<string>();
     const [twitter, setTwitter] = useState<string>();
@@ -31,22 +35,44 @@ const DropEditor: React.FC<{}> = () => {
 
     const { reward, isAnimating } = useReward('input-form', 'confetti');
 
+    const [showModal, setShowModal] = useState(false);
+    const handleOpen = () => setShowModal(true);
+    const handleClose = () => setShowModal(false);
+
+    useEffect(() => {
+        if (showModal) {
+          document.getElementById("modal-container")!.style.display = 'block'
+        } else {
+          document.getElementById("modal-container")!.style.display = 'none'
+        }
+      
+    },[showModal])
+      
+
     useEffect(() => {
         if (contract && artist && description && twitter && email && discord && (primaryColor != undefined) && (secondaryColor != undefined) && (bgColor != undefined) && activeFontFamily && claimTier) {
             setAllFieldsValid(true)
         } else {
             setAllFieldsValid(false)
-            console.log()
         }
     }, [contract, artist, description, twitter, discord, email, primaryColor, secondaryColor, bgColor, activeFontFamily, AllFieldsValid, setAllFieldsValid])
 
+    const readyToTransact = async (): Promise<boolean> => {
+        if (!wallet) {
+            await connect({});
+        }
+        return setChain({ chainId: localenv.network.id })
+      }
+    
+    
     const onConfirm = async() => {
-        if (AllFieldsValid) {
-            const claimReady = await claimsInit(wallet, contract!, claimTier);
+        if (AllFieldsValid && await readyToTransact()) {
+            handleOpen();
+            const claimReady = await claimsInit(wallet, contract!.contractaddress, claimTier);
 
             if (claimReady) {
                 const params = {
-                    "contract": contract,
+                    "contract": contract!.contractaddress,
                     "font": activeFontFamily,
                     "primarycolor": primaryColor,
                     "secondarycolor": secondaryColor,
@@ -150,6 +176,20 @@ const DropEditor: React.FC<{}> = () => {
             <div className="text-center mt-10">
                 { AllFieldsValid ? <button id="confirm-button" className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={onConfirm}>Confirm</button> : <button className="bg-zinc-500 p-3 rounded-3xl w-2/5 min-w-[100px]">Confirm</button> }
             </div>
+            <div id="modal-container" className="flex items-center justify-center text-center h-screen">
+            <Modal
+                open={showModal}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+            <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
+                <h1 className="text-center text-2xl">Generating your Claim Page</h1>
+                <br></br>
+                { (ClaimCreationSuccess && contract) ? <a href={"/page/" + contract.name}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Claim page</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
+            </div>
+            </Modal>
+        </div>
         </div>
     );
 }
