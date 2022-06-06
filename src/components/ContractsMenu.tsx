@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from 'react-router-dom';
 
-const ContractsMenu: React.FC<{masterAddress : string, handleInputData: (input: string) => void}> = ({masterAddress, handleInputData}) => {
+const ContractsMenu: React.FC<{masterAddress : string, handleInputData: (input: any) => void}> = ({masterAddress, handleInputData}) => {
 const { data: contracts, error } = useAllLaunchedContracts(masterAddress);
 
   if (!contracts && !error) {
@@ -21,8 +21,7 @@ const { data: contracts, error } = useAllLaunchedContracts(masterAddress);
   const onSelectOption = async(contractSelected: string) => {
     const contractIdx = contractSelected.substring(.2)
     const selected = contracts[parseInt(contractIdx)-1];
-    console.log(selected);
-    handleInputData(selected.contractaddress);
+    handleInputData(selected);
   }
 
   return (

@@ -42,7 +42,6 @@ const ProjectDetails: React.FC<StepperFormProps> = ({
 
   async function generateSmartContract() {
     try {
-      setShowModal(true);
       const parsedData = await parseData(WhitelistStrData!)
       console.log(parsedData);
       const merkleRoot = await getMerkleRoot(parsedData)
@@ -96,7 +95,7 @@ async function handleSubmit() {
         alert("Missing some fields! Please double check your input or make sure your wallet is connected.")
     }
     else {
-      setShowModal(true);
+      handleOpen();
       await generateSmartContract();
       setContractCreationSuccess(true);
     }
