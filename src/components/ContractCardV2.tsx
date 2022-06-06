@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Contract } from '../model/types'
 import { Link } from 'react-router-dom'
-import { getContractCover } from '../utils/cover'
+import { getContractCover } from '../utils/claims'
 
 const ContractCardV2: React.FC<{ contract: Contract}> = ({contract}) => {
     const [CoverImage, setCoverImage] = useState<string>();

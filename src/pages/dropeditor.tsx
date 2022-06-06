@@ -36,6 +36,7 @@ const DropEditor: React.FC<{}> = () => {
             setAllFieldsValid(true)
         } else {
             setAllFieldsValid(false)
+            console.log()
         }
     }, [contract, artist, description, twitter, discord, email, primaryColor, secondaryColor, bgColor, activeFontFamily, AllFieldsValid, setAllFieldsValid])
 
@@ -56,13 +57,12 @@ const DropEditor: React.FC<{}> = () => {
                     "twitter": twitter,
                     "discord": discord,        
                 }
-                console.log(params)
-            apiClient.post(
-                localenv.api.paths.launchClaim,
-                params,
-                {
-                    headers: {"Content-Type": "application/json"}
-                }
+                apiClient.post(
+                    localenv.api.paths.launchClaim,
+                    params,
+                    {
+                        headers: {"Content-Type": "application/json"}
+                    }
             ).then(function(response) {
                 console.log(response)
                 setClaimCreationSuccess(true)
