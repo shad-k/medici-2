@@ -119,7 +119,7 @@ async function handleSubmit() {
           </div>
           <p className="ml-10 md:ml-0">OR Whitelist CSV Input</p>
           <div className="flex flex-col items-center md:items-start">
-            <textarea className="text-black p-3 mt-3 w-8/12 md:w-3/5 h-40 md:ml-0 rounded-sm" id="whitelistTextArea" placeholder="Copy paste addresses here!" onChange={(event) => setWhitelistStrData(event.target.value)}></textarea>
+            <textarea className="text-black p-3 mt-3 w-8/12 md:w-3/5 h-40 md:ml-0 rounded-sm resize-none" id="whitelistTextArea" placeholder="Copy paste addresses here!" onChange={(event) => setWhitelistStrData(event.target.value)}></textarea>
           </div>
           <div className="text-center mt-10">
           <button className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={handleSubmit}>Submit</button>
