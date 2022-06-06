@@ -4,6 +4,33 @@ import { CONFIG } from './config'
 
 const localenv = CONFIG.DEV
 
+export const checkNameAvailability = async (name: string) => {
+    if (name === "") {
+        return Promise.resolve(false);
+    }
+    const request_data = {
+        "name": name
+    }
+    
+    return apiClient.post(
+        localenv.api.paths.checkName,
+        request_data,
+        {
+            headers: {"Content-Type": "application/json"}
+        }
+    ).then(function(response) {
+        console.log(response.data)
+        if (response.data.value === true) {
+            return Promise.resolve(true)
+        } else {
+            return Promise.resolve(false)
+        }
+    }).catch(function(error) {
+        console.log(error);
+        return Promise.reject("Error checking name availability")
+    });
+}
+
 export const getContractCover = async (contract: string) => {
     console.log("Getting cover for " + contract);
     return apiClient.post
