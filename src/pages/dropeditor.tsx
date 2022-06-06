@@ -33,7 +33,7 @@ const DropEditor: React.FC<{}> = () => {
     const [AllFieldsValid, setAllFieldsValid] = useState<boolean>(false);
     const [ClaimCreationSuccess, setClaimCreationSuccess] = useState(false);
 
-    const { reward, isAnimating } = useReward('input-form', 'confetti');
+    const { reward, isAnimating } = useReward('claim-page-button', 'confetti', {elementCount: 200, elementSize:10});
 
     const [showModal, setShowModal] = useState(false);
     const handleOpen = () => setShowModal(true);
@@ -63,7 +63,6 @@ const DropEditor: React.FC<{}> = () => {
         }
         return setChain({ chainId: localenv.network.id })
       }
-    
     
     const onConfirm = async() => {
         if (AllFieldsValid && await readyToTransact()) {
@@ -183,10 +182,10 @@ const DropEditor: React.FC<{}> = () => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-            <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
-                <h1 className="text-center text-2xl">Generating your Claim Page</h1>
+            <div id="claim-modal" className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
+                { (ClaimCreationSuccess) ? <h1 className="text-center text-2xl">Congratulations!</h1> : <h1>Generating your claim page</h1>}
                 <br></br>
-                { (ClaimCreationSuccess && contract) ? <a href={"/page/" + contract.name}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Claim page</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
+                { (ClaimCreationSuccess && contract) ? <a href={"/page/" + contract.name}><span id="claim-page-button" className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Claim page</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
             </div>
             </Modal>
         </div>
