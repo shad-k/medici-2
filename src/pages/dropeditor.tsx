@@ -120,7 +120,7 @@ const DropEditor: React.FC<{}> = () => {
             </div>
             <div>
             <label htmlFor="input-description" className="block lg:text-2xl py-2">Description</label>
-            <textarea id="input-description" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none" onChange={event => setDescription(event.target.value)}/>
+            <textarea id="input-description" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 outline-none resize-none" onChange={event => setDescription(event.target.value)}/>
             </div>
             <div>
             <label htmlFor="input-twitter" className="block lg:text-2xl py-2">Collection Twitter</label>
