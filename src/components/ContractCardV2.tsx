@@ -32,7 +32,7 @@ const ContractCardV2: React.FC<{ contract: Contract}> = ({contract}) => {
                         <img src={CoverImage} alt={contract.name} className="w-full aspect-video rounded-2xl object-cover"/>
                     </div>
                     <div className="absolute h-full left-0 top-0 rounded-2xl right-0 p-5 group-hover:bg-medici-purple/60 bg-transparent transition-all ease-in">
-                        <h1 className="text-4xl font-bold text-center mt-[20%] text-white opacity-100 hidden group-hover:block">{contract.name}({contract.symbol})</h1>
+                        <h1 className="text-4xl font-bold text-center mt-[20%] text-white opacity-100">{contract.name}({contract.symbol})</h1>
                     </div>
                 </div>
             </div>
