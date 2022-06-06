@@ -35,7 +35,7 @@ const HomeMenu: React.FC<{}> = () => {
                 >
                     <IoMdRocket size={90} color="f72585" className="sm:hidden mt-[15%]"/>
                     <h1 className="text-2xl hidden sm:block">Launch</h1>
-                    <h2 className="text-sm hidden sm:block mt-2"> Launch a custom claim site for your minters. </h2>
+                    <h2 className="text-sm hidden sm:block mt-2"> Launch a custom claim site for your project. </h2>
                 </Link>
                 <Link
                 to={`/demo`}
