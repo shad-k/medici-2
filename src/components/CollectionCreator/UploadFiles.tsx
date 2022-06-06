@@ -3,6 +3,7 @@ import { StepperFormProps } from '../../model/types';
 import apiClient from '../../utils/apiClient';
 import { CONFIG } from '../../utils/config';
 import { LinearProgress } from '@mui/material';
+import ImageFromIPFSMetadata from '../ImageFromIPFSMetadata';
 
 const UploadFiles: React.FC<StepperFormProps> = ({
   nextStep,
@@ -12,11 +13,12 @@ const UploadFiles: React.FC<StepperFormProps> = ({
   const [error, setError] = useState(false);
   const [CoverImage, setCoverImage] = useState<File>();
   const [CoverUploadSuccess, setCoverUploadSuccess] = useState<boolean>();
+  const [ImageUrl, setImageUrl] = useState<string>();
+
   const [ImageData, setImageData] = useState<File>();
   const [ImageDataProgress, setImageDataProgress] = useState<number>(0);
   const [showLoader, setShowLoader] = useState<boolean>(false);
   const [ImageDataUploadSuccess, setImageDataUploadSuccess] = useState<boolean>();
-  const [ImageUrl, setImageUrl] = useState<string>();
 
   const localenv = CONFIG.DEV
 
@@ -66,6 +68,14 @@ const uploadCoverImage = async (file: File) => {
 }
 
 const uploadImageData = async (file: File) => {
+  setImageDataUploadSuccess(false);
+  setImageDataProgress(0);
+
+  if (file === null || file === undefined) {
+    setShowLoader(false);
+    return;
+  } else {
+
   setImageData(file);
   const formdata = new FormData();
   formdata.append("images", file)
@@ -73,26 +83,10 @@ const uploadImageData = async (file: File) => {
   
   triggerUpload(formdata, (progressEvent: any) => {
     const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-    console.log(progress);
     setImageDataProgress(progress);
   });
-
-  // .then(function(response: any) {
-  //   console.log(response)
-  //   setImageDataProgress(response);
-  //   console.log("image data progress " + ImageDataProgress);
-  //   setImageDataUploadSuccess(true);
-  //   setShowLoader(false);
-  //   })
-  // .catch(function(error: any){
-  //   console.log("Error uploading collection image")
-  //   setImageDataUploadSuccess(false);
-  //   });
+  }
 }
-
-// useEffect(() => {
-//   console.log("image data prog " + ImageDataProgress)
-// }, [ImageDataProgress, setImageDataProgress]);
 
 const triggerUpload = async (
   formdata: FormData,
@@ -104,12 +98,7 @@ const triggerUpload = async (
       "headers": {"Content-Type": "form-data"},
       "params": {"collection": data.name},
       "onUploadProgress": onImageDataProgress
-      // (progressEvent) => {
-        // const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-        // console.log("initial: " + progress)
-        // onImageDataProgress(progress)
-        
-      },
+    },
     ).then((response)=> {
       console.log(response);
       handleInputData("baseuri", response.data.baseURI);
@@ -153,20 +142,30 @@ const triggerUpload = async (
                   style={{'display': 'none'}}
                   onChange={(event) => uploadImageData(event.target.files![0])}
               />
-              <label htmlFor="ImageDataField">
-              { ImageData ? 
-              <div className="w-full h-[200px] rounded-2xl text-center flex flex-col items-center border-dotted border-2 border-zinc-100/100">
-                  <p className="text-center mt-20">{ImageData.name}</p>
+              <div className="group relative">
+                <label htmlFor="ImageDataField">
+                { (showLoader) && <LinearProgress
+                  id="progress-loader"
+                  variant="determinate"
+                  value={ImageDataProgress}
+                  sx={{backgroundColor: "#33313d", 
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: '#6618E4'
+                  }}}
+                />}
+                { ImageData ? 
+                <div className="w-full h-[200px] rounded-2xl text-center flex flex-col items-center border-dotted border-2 border-zinc-100/100">
+                    <p className="text-center mt-20">{ImageData.name}</p>
+                </div>
+                : 
+                <div className="w-full h-[200px] rounded-2xl border-2 border-zinc-100/100 flex flex-col items-center ">
+                    <span className="text-center mt-20">Upload a zip file</span>
+                    <div className="w-4/5">
+                    </div>
+                </div>
+                }
+                </label>
               </div>
-              : 
-              <div className="w-full h-[200px] rounded-2xl border-2 border-zinc-100/100 flex flex-col items-center ">
-                  <span className="text-center mt-20">Upload a zip file</span>
-                  <div className="w-4/5">
-                    {showLoader && <LinearProgress id="progress-loader" variant="indeterminate"/>}
-                  </div>
-              </div>
-              }
-              </label>
             </div>
           <div className="text-center order-3">
             {(ImageDataUploadSuccess && CoverUploadSuccess) ? <button className="bg-gradient-to-r from-fuchsia-500 to-blue-500 p-3 rounded-3xl w-2/5 min-w-[100px]" onClick={submitFormData}>Next</button> : <button className="bg-zinc-500 p-3 rounded-3xl w-2/5 min-w-[100px]">Next</button>}

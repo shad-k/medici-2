@@ -97,7 +97,7 @@ const addressCheck = (address: string) => {
 
           // const getNewContractInstance = await getNewLaunchedContract(MasterAddress!);
           // console.log(getNewContractInstance);
-          // if (getNewContractInstance !== contractCreationResult.contractaddress) {
+          // if (getNewContractInstance = contractCreationResult.contractaddress) {
           //   throw new Error("Not matching")
           // }
         }
