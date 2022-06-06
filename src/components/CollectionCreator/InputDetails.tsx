@@ -14,7 +14,7 @@ const InputDetails: React.FC<StepperFormProps> = ({
   const { wallet } = useWallet()
   const [error, setError] = useState(false);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
-  const [isValidMasterAddress, setIsValidMasterAddress] = useState(false);
+  const [isValidMasterAddress, setIsValidMasterAddress] = useState<boolean>();
   const [timer, setTimer] = useState<any>(null)
 
   // after form submit validating the form data using validator
@@ -87,7 +87,8 @@ const InputDetails: React.FC<StepperFormProps> = ({
     <div className="w-full md:w-2/5 md:text-left flex flex-col mt-3">
           <label htmlFor="input-name" className="block lg:text-2xl py-2">Collection Title</label>
           <input id="input-name" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none" onChange={nameCheck}/>
-          {isNameAvailable ? <p className="text-green-500">Name is available!</p> : <p className="text-[#F47174]">This name is not available, please try another name!</p>}
+          { data.name &&
+          ((isNameAvailable) ? <p className="text-green-500">Name is available!</p> : <p className="text-[#F47174]">This name is not available, please try another name!</p>)}
           <br></br>
               <label htmlFor="input-symbol" className="block lg:text-2xl py-2">Symbol</label>
               <input id="input-symbol" type="text" className="text-white text-2xl p-2 rounded-2xl bg-transparent border-2 border-zinc-500 outline-none" onChange={event => handleInputData("symbol", event.target.value)}/>
