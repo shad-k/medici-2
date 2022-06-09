@@ -31,6 +31,47 @@ export const checkNameAvailability = async (name: string) => {
     });
 }
 
+export const uploadCoverImage = async (name: string, file: File) => {
+    const formdata = new FormData();
+    formdata.append("cover", file)
+    
+    return apiClient.post(
+      localenv.api.paths.uploadImageCover,
+      formdata,
+      {
+        "headers": {"Content-Type": "form-data"},
+        "params": {"collection": name},
+      })
+      .then(function(response) {
+        return Promise.resolve(true);
+      }).catch(function(error){
+        return Promise.resolve(false);
+      });
+}
+
+export const triggerUploadImageData = async (
+    name: string,
+    formdata: FormData,
+    onImageDataProgress: any) => {
+    return apiClient.post(
+      localenv.api.paths.uploadImageData,
+      formdata,
+      {
+        "headers": {"Content-Type": "form-data"},
+        "params": {"collection": name},
+        "onUploadProgress": onImageDataProgress
+      },
+      ).then((response) => {
+        console.log(response);
+        // handleInputData("baseuri", response.data.baseURI);
+        // setImageDataUploadSuccess(true);
+        // setShowLoader(false);
+        return Promise.resolve(response.data.baseURI);
+      }).catch((error) => {
+        return Promise.reject("error");
+    })
+  }
+
 export const getContractCover = async (contract: string) => {
     console.log("Getting cover for " + contract);
     return apiClient.post
