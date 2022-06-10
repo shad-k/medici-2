@@ -39,9 +39,9 @@ const PageTwo: React.FC<StepperFormProps> = ({
     }
   }
 
-  const nameCheck = async (event: any) => {
+  const nameCheck = async (name: string) => {
     setNameChecked(true);
-    if (event.target.value === "") {
+    if (name === "") {
       setNameChecked(false);
       setIsNameAvailable(false);
       return;
@@ -51,9 +51,9 @@ const PageTwo: React.FC<StepperFormProps> = ({
         clearTimeout(timer);
         
         const newTimer = setTimeout( async () => {
-          const isNameAvailable = await checkNameAvailability(event.target.value);
+          const isNameAvailable = await checkNameAvailability(name);
           if (isNameAvailable) {
-            handleInputData("name", event.target.value);
+            handleInputData("name", name);
             setIsNameAvailable(true);
             return;
           } else {
