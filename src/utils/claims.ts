@@ -51,6 +51,7 @@ export const uploadCoverImage = async (name: string, file: File) => {
 
 export const triggerUploadImageData = async (
     name: string,
+    hasMetadata: boolean,
     formdata: FormData,
     onImageDataProgress: any) => {
     return apiClient.post(

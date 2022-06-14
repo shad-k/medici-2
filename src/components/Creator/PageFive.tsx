@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import Modal from '@mui/material/Modal';
-import apiClient from '../../utils/apiClient';
-import { CONFIG } from '../../utils/config';
+import { getMerkleRoot, generateNewContract, whitelist, getNewLaunchedContract } from '../../utils/web3'
+import { parseData } from '../../utils/parse'
 
 const PageFive: React.FC<StepperFormProps> = ({
     nextStep,
@@ -11,8 +10,19 @@ const PageFive: React.FC<StepperFormProps> = ({
 }) => {
     const [allowlistStrData, setAllowlistStrData] = useState<any>();
 
-    const onSubmit = () => {
-        nextStep();
+    const onSubmit = async () => {
+      if (allowlistStrData) {
+        try {
+          const parsedStrings = await parseData(allowlistStrData);
+          const merkleRoot = await getMerkleRoot(parsedStrings);
+          handleInputData("merkleRoot", merkleRoot);
+          nextStep();
+        } catch {
+          alert("Something went wrong!")
+        }
+      } else {
+        alert("Please check that you have either inputted or uploaded an allowlist!")
+      }
     }
 
     const onUploadAllowlist = () => {
