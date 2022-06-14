@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
 import Modal from '@mui/material/Modal';
-import apiClient from '../../utils/apiClient';
-import { CONFIG } from '../../utils/config';
 
 const PageThree: React.FC<StepperFormProps> = ({
     nextStep,
     handleInputData,
     data
 }) => {
-    const localenv = CONFIG.DEV
-
     const [showModal, setShowModal] = useState(false);
     const handleOpen = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
@@ -31,24 +27,8 @@ const PageThree: React.FC<StepperFormProps> = ({
 
     const uploadMetadata = async (file: File) => {
         setCollectionMetadata(file);
-        
-        const formdata = new FormData();
-        formdata.append("cover", file)
-        
-        apiClient.post(
-          localenv.api.paths.uploadImageCover,
-          formdata,
-          {
-            "headers": {"Content-Type": "form-data"},
-            "params": {"collection": data.name},
-          }
-          )
-          .then(function(response) {
-            console.log("Cover image " + file.name + " for collection " + data.name + " uploaded successfully" )
-            handleInputData("coverImage", file);
-          }).catch(function(error){
-            console.log("Error uploading cover image")
-          });
+        /* upload metadata here */
+        handleInputData("hasMetadata", true);
     }
     
     return (

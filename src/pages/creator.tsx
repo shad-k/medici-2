@@ -18,8 +18,6 @@ const Creator: React.FC<{}> = () => {
     maxMintsPerPerson: 0,
     masterAddress: "",
     merkleroot: "",
-    coverImage: "",
-    imageData: ""
   })
 
   const nextStep = () => {

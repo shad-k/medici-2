@@ -26,10 +26,11 @@ const PageFour: React.FC<StepperFormProps> = ({
             formdata.append("images", file)
             setShowLoader(true)
           
-            const res = triggerUploadImageData(data.name, formdata, (progressEvent: any) => {
+            const res = triggerUploadImageData(data.name, data.hasMetadata ,formdata, (progressEvent: any) => {
               const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
               setImageDataProgress(progress);
             });
+            /* FIXME: getting base uri from response from uploading collection data */
             console.log(res);
             setShowLoader(false);
           } catch {
