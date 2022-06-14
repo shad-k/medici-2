@@ -73,6 +73,31 @@ export const triggerUploadImageData = async (
     })
   }
 
+export const triggerUploadMetadata = async (
+name: string,
+hasMetadata: boolean,
+formdata: FormData,
+onImageDataProgress: any) => {
+return apiClient.post(
+    localenv.api.paths.uploadImageData,
+    formdata,
+    {
+    "headers": {"Content-Type": "form-data"},
+    "params": {"collection": name},
+    "onUploadProgress": onImageDataProgress
+    },
+    ).then((response) => {
+    console.log(response);
+    // handleInputData("baseuri", response.data.baseURI);
+    // setImageDataUploadSuccess(true);
+    // setShowLoader(false);
+    return Promise.resolve(response.data.baseURI);
+    }).catch((error) => {
+    return Promise.reject("error");
+})
+}
+
+
 export const getContractCover = async (contract: string) => {
     console.log("Getting cover for " + contract);
     return apiClient.post

@@ -1,6 +1,7 @@
 import React from 'react'
 import { StepperFormProps } from '../../model/types';
 
+/* FIXME: rename components */
 const PageOne: React.FC<StepperFormProps> = ({
     nextStep,
     handleInputData,
@@ -8,8 +9,8 @@ const PageOne: React.FC<StepperFormProps> = ({
 }) => {
 
 const onSubmit = () => {
+    
     nextStep();
-
 }
 
 return (
