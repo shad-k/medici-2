@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
+import { triggerUploadMetadata } from '../../utils/claims';
 import Modal from '@mui/material/Modal';
+import { LinearProgress } from '@mui/material';
 
 const PageThree: React.FC<StepperFormProps> = ({
     nextStep,
@@ -10,7 +12,8 @@ const PageThree: React.FC<StepperFormProps> = ({
     const [showModal, setShowModal] = useState(false);
     const handleOpen = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
-    const [collectionMetadata, setCollectionMetadata] = useState<File>();
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
+    const [showLoader, setShowLoader] = useState<boolean>(false);
 
     useEffect(() => {
       if (showModal) {
@@ -25,22 +28,47 @@ const PageThree: React.FC<StepperFormProps> = ({
         nextStep();
     }
 
+    // const uploadMetadata = async (file: File) => {
+    //     setCollectionMetadata(file);
+    //     /* upload metadata here */
+    //     handleInputData("hasMetadata", true);
+    // }
+
     const uploadMetadata = async (file: File) => {
-        setCollectionMetadata(file);
-        /* upload metadata here */
-        handleInputData("hasMetadata", true);
+      setUploadProgress(0);
+    
+      if (file === null || file === undefined) {
+        setShowLoader(false);
+        return;
+      } else {
+          try {
+            const formdata = new FormData();
+            formdata.append("images", file)
+            setShowLoader(true)
+          
+            // const res = triggerUploadMetadata(data.name, data.hasMetadata ,formdata, (progressEvent: any) => {
+            //   const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            //   setUploadProgress(progress);
+            // });
+            // console.log(res);
+            // setShowLoader(false);
+          } catch {
+            alert("Something went wrong!")
+            setShowLoader(false);
+          }
+      }
     }
     
     return (
     <div className="w-full flex flex-col items-center p-10 h-screen">
-        <div className="text-center w-4/5 mt-52">
+        <div className="text-center w-4/5 mt-10 md:mt-52">
             <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Just for fun: bring your own metadata!</h1>
             <h2 className="text-zinc-500">If you have custom metadata for your collection, please upload it now.</h2>
         </div>
         <div className="flex flex-col space-y-4 m-10 items-center">
-          <button className="bg-[#2e2c38] hover:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[500px]" onClick={handleOpen}>Yes</button>
-          <button className="bg-[#2e2c38] hover:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[500px]">No</button>
-          <button className="bg-[#2e2c38] hover:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[500px]">What's that?</button>
+          <button className="bg-[#2e2c38] hover:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={handleOpen}>Yes</button>
+          <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">No</button>
+          <button className="bg-[#2e2c38] hover:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">What's that?</button>
         </div>
         <div id="modal-container" className="flex items-center justify-center text-center h-screen">
           <Modal
@@ -57,15 +85,27 @@ const PageThree: React.FC<StepperFormProps> = ({
                 <input
                     type="file"
                     name="collectionMetadata"
-                    accept="image/png, image/gif, image/jpeg"
+                    accept=".zip"
                     id="collectionMetadataField"
                     style={{'display': 'none'}}
                     onChange={(event) => uploadMetadata(event.target.files![0])}
                 />
                 <label htmlFor="collectionMetadataField">
                     <div className="flex w-full h-2/5 items-center">
-                        <span className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl m-auto text-center whitespace-nowrap">Upload Collection</span>
+                        <span className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl m-auto text-center whitespace-nowrap">Upload Metadata</span>
                     </div>
+                    <br></br>
+                    { showLoader && <div className="w-full">
+                    <LinearProgress
+                    id="progress-loader"
+                    variant="determinate"
+                    value={uploadProgress}
+                    sx={{backgroundColor: "#33313d", 
+                    "& .MuiLinearProgress-bar": {
+                      backgroundColor: '#6618E4'}}}
+                  />
+                </div>
+                }
                 </label>
             </div>
         </div>

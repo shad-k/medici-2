@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, ethers, utils } from 'ethers'
 import { ContractCreationProps, WhitelistProps, Contract } from '../model/types'
 
 import { CONFIG } from './config'
@@ -108,6 +108,17 @@ export const claimsInit = async (callerWallet: any, contractAddress: string, tie
         
     }
 }
+
+export const isValidAddress = (address: string) => {
+    return utils.getAddress(address);
+}
+
+export const readyToTransact = async (callerWallet: any, connect: any, setChain: any): Promise<boolean> => {
+    if (!callerWallet) {
+        await connect({});
+    }
+    return setChain({ chainId: localenv.network.id })
+  }
 
 /* Master Address only Methods */
 

@@ -10,6 +10,8 @@ const Creator: React.FC<{}> = () => {
   const [step, setStep] = useState<number>(1);
 
   const [params, setParams] = useState<any>({
+    collection_type: "",
+    token_type: "",
     name: "",
     symbol: "",
     baseuri: "",

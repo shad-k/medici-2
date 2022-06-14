@@ -22,6 +22,10 @@ const PageTwo: React.FC<StepperFormProps> = ({
   }, [CoverImage]);
 
   const onSubmit = async () => {
+    console.log(CoverImage);
+    console.log(data.name);
+    console.log(data.symbol);
+
     if (CoverImage) {
       const res = await uploadCoverImage(data.name, CoverImage);
       
@@ -31,7 +35,7 @@ const PageTwo: React.FC<StepperFormProps> = ({
         alert("Something went wrong!")
       }
     } else {
-      if (data.name && data.symbol) {
+      if (!(validator.isEmpty(data.name)) && !(validator.isEmpty(data.symbol))) {
         nextStep();
       } else {
         alert("Something went wrong!")
@@ -40,13 +44,13 @@ const PageTwo: React.FC<StepperFormProps> = ({
   }
 
   const nameCheck = async (name: string) => {
-    setNameChecked(true);
     if (name === "") {
       setNameChecked(false);
       setIsNameAvailable(false);
       return;
     }
     else {
+      setNameChecked(true);
       try {
         clearTimeout(timer);
         
@@ -91,7 +95,7 @@ const PageTwo: React.FC<StepperFormProps> = ({
         </label>
       </div>
       <div className="text-center p-10 md:mt-20">
-        <div className="mb-10 space-y-10">
+        <div className="mb-10 space-y-5 md:space-y-10">
           <h1 className="text-3xl md:text-5xl bg-transparent inline w-fit text-center tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">What will you name your collection?</h1>
           <h2 className="text-zinc-400 text-md md:text-lg font-light">The name of your collection must be unique and cannot be changed from this point onwards, so pick a name you love!</h2> 
         <div className="text-left">
