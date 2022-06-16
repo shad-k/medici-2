@@ -5,6 +5,7 @@ import { triggerUploadImageData } from '../../utils/claims';
 import ImageFromIPFSMetadata from '../ImageFromIPFSMetadata';
 import Modal from '@mui/material/Modal';
 import LinearProgress from '@mui/material/LinearProgress';
+import { getGatewayURL } from '../../utils/parse';
 
 const PageFour: React.FC<StepperFormProps> = ({
     nextStep,
@@ -19,7 +20,8 @@ const PageFour: React.FC<StepperFormProps> = ({
     const [imageUploadResponse, setImageUploadResponse] = useState<any>();
 
     const onSubmit = () => {
-      handleOpen();
+      // handleOpen();
+      nextStep();
     }
 
     useEffect(() => {
@@ -38,7 +40,6 @@ const PageFour: React.FC<StepperFormProps> = ({
         setShowLoader(false);
         return;
       } else {
-          try {
             const formdata = new FormData();
             formdata.append("images", file)
             setShowLoader(true)
@@ -54,10 +55,6 @@ const PageFour: React.FC<StepperFormProps> = ({
               setShowLoader(false);
             })
             /* FIXME: getting base uri from response from uploading collection data */
-          } catch {
-            alert("Something went wrong!")
-            setShowLoader(false);
-          }
       }
     }
 
@@ -82,6 +79,9 @@ const PageFour: React.FC<StepperFormProps> = ({
             </div>
         </label>
       </div>
+      <div className="w-4/5">
+      {imageUploadResponse && <img className="w-full md:w-3/5 aspect-video object-cover" src={getGatewayURL(imageUploadResponse.randomImageURL)}/>}
+      </div>
       <div className="flex justify-end w-full absolute bottom-24 right-10">
         <button className="text-[#8E00FF] text-2xl" onClick={onSubmit}>Next</button>
       </div>
@@ -104,7 +104,7 @@ const PageFour: React.FC<StepperFormProps> = ({
         aria-describedby="modal-modal-description"
       >
       <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
-      {imageUploadResponse && <ImageFromIPFSMetadata src={imageUploadResponse.randomImageURL}/>}
+      {imageUploadResponse && <img src={imageUploadResponse.randomImageURL}/>}
       </div>
       </Modal>
       </div>
