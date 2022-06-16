@@ -1,5 +1,9 @@
 import Papa from 'papaparse'
 
+export const getGatewayURL = (url: string): string => {
+    return url.replace("https://gateway.pinata.cloud/ipfs/", "https://medici-test.mypinata.cloud/ipfs/")
+}
+
 export const parseData = async (whitelistStrData: File | string) => {
     if (whitelistStrData instanceof File ) {
         console.log("Parsing File Data");
