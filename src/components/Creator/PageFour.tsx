@@ -41,10 +41,12 @@ const PageFour: React.FC<StepperFormProps> = ({
         return;
       } else {
             const formdata = new FormData();
+            console.log("Uploading for collection " + data.name + " has metadata = " + data.isMetadataUploaded + " image data: " + file);
             formdata.append("images", file)
+            formdata.append("isMetadataUploaded", data.isMetadataUploaded);
             setShowLoader(true)
           
-            await triggerUploadImageData(data.name, data.isMetadataUploaded, formdata, (progressEvent: any) => {
+            await triggerUploadImageData(data.name, formdata, (progressEvent: any) => {
               const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
               setUploadProgress(progress);
             }).then(response => {
