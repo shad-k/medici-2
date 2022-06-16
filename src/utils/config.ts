@@ -21,7 +21,7 @@ export const CONFIG = {
       txEtherscanUrl: 'https://kovan.etherscan.io/tx/',
     },
     "contract": {
-    "factory_address": "0x0FeeC4D622577752C04B96e000FC454687AFc6BB",
+    "factory_address": "0x053e59FD6A01Ba3d30beacaEaF0f3504d65baA73",
     "factory_abi": [
       {
         "inputs": [
@@ -838,7 +838,7 @@ export const CONFIG = {
         "type": "function"
       }
     ],
-    "claim_contract": "0x665374885c823B0EAeb9010e53888254B6588D00",
+    "claim_contract": "0x1B4F93D2722a12e621cAC51DDDe63A97AB93580e",
     "claim_abi": [
       {
         "inputs": [
