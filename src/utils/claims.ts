@@ -51,9 +51,10 @@ export const uploadCoverImage = async (name: string, file: File) => {
 
 export const triggerUploadImageData = async (
     name: string,
-    hasMetadata: boolean,
     formdata: FormData,
     onImageDataProgress: any) => {
+
+        
     return apiClient.post(
       localenv.api.paths.uploadImageData,
       formdata,
@@ -72,6 +73,7 @@ export const triggerUploadImageData = async (
         }
         return Promise.resolve(res);
       }).catch((error) => {
+        console.log(error);
         return Promise.reject("error");
     })
   }
