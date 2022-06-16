@@ -29,9 +29,14 @@ const PageSix: React.FC<StepperFormProps> = ({
     
     
   const onSubmit = async () => {
-      await readyCheck();
       console.log(data);
-      handleOpen();
+      try {
+        await readyCheck();
+        handleOpen();
+        await generateSmartContract()
+      } catch {
+        alert("Something went wrong!")
+      }
   }
 
   const readyCheck = async () => {

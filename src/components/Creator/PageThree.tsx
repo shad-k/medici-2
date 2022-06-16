@@ -14,6 +14,7 @@ const PageThree: React.FC<StepperFormProps> = ({
     const handleClose = () => setShowModal(false);
     const [uploadProgress, setUploadProgress] = useState<number>(0);
     const [showLoader, setShowLoader] = useState<boolean>(false);
+    const [hasCustomMetadata, setHasCustomMetadata] = useState<boolean>(false);
 
     useEffect(() => {
       if (showModal) {
@@ -25,7 +26,13 @@ const PageThree: React.FC<StepperFormProps> = ({
     },[showModal])
 
     const onSubmit = () => {
-        nextStep();
+      if (hasCustomMetadata) {
+        handleInputData("isMetadataUploaded", true);
+      } else {
+        handleInputData("isMetadataUploaded", false);
+      }
+      console.log(data);
+      nextStep();
     }
 
     // const uploadMetadata = async (file: File) => {
@@ -43,15 +50,16 @@ const PageThree: React.FC<StepperFormProps> = ({
       } else {
           try {
             const formdata = new FormData();
-            formdata.append("images", file)
+            formdata.append("metadata", file)
             setShowLoader(true)
           
-            // const res = triggerUploadMetadata(data.name, data.hasMetadata ,formdata, (progressEvent: any) => {
-            //   const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            //   setUploadProgress(progress);
-            // });
-            // console.log(res);
-            // setShowLoader(false);
+            const res = triggerUploadMetadata(data.name, formdata, (progressEvent: any) => {
+              const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              setUploadProgress(progress);
+            });
+            console.log(res);
+            setHasCustomMetadata(true);
+            setShowLoader(false);
           } catch {
             alert("Something went wrong!")
             setShowLoader(false);
@@ -67,7 +75,7 @@ const PageThree: React.FC<StepperFormProps> = ({
         </div>
         <div className="flex flex-col space-y-4 m-10 items-center">
           <button className="bg-[#2e2c38] hover:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={handleOpen}>Yes</button>
-          <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">No</button>
+          <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={event => setHasCustomMetadata(false)}>No</button>
           <button className="bg-[#2e2c38] hover:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">What's that?</button>
         </div>
         <div id="modal-container" className="flex items-center justify-center text-center h-screen">
@@ -112,7 +120,7 @@ const PageThree: React.FC<StepperFormProps> = ({
         </Modal>
       </div>
       <div className="flex justify-end w-full absolute bottom-24 right-10">
-        <button className="text-[#8E00FF] text-2xl" onClick={nextStep}>Next</button>
+        <button className="text-[#8E00FF] text-2xl" onClick={onSubmit}>Next</button>
       </div>
     </div>
     );

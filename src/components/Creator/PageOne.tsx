@@ -9,7 +9,7 @@ const PageOne: React.FC<StepperFormProps> = ({
 }) => {
 
 const onSubmit = () => {
-    
+    console.log(data);
     nextStep();
 }
 
