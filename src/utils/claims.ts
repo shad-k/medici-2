@@ -64,10 +64,13 @@ export const triggerUploadImageData = async (
       },
       ).then((response) => {
         console.log(response);
-        // handleInputData("baseuri", response.data.baseURI);
-        // setImageDataUploadSuccess(true);
-        // setShowLoader(false);
-        return Promise.resolve(response.data.baseURI);
+        const res = {
+            baseURI: response.data.baseURI,
+            totalSupply: response.data.totalSupply,
+            randomImageURL: response.data.randomImageURL,
+            randomMetadataURL: response.data.randomMetadataURL
+        }
+        return Promise.resolve(res);
       }).catch((error) => {
         return Promise.reject("error");
     })
@@ -75,23 +78,19 @@ export const triggerUploadImageData = async (
 
 export const triggerUploadMetadata = async (
 name: string,
-hasMetadata: boolean,
 formdata: FormData,
-onImageDataProgress: any) => {
+onMetadataProgress: any) => {
 return apiClient.post(
-    localenv.api.paths.uploadImageData,
+    localenv.api.paths.uploadMetadata,
     formdata,
     {
     "headers": {"Content-Type": "form-data"},
     "params": {"collection": name},
-    "onUploadProgress": onImageDataProgress
+    "onUploadProgress": onMetadataProgress
     },
     ).then((response) => {
     console.log(response);
-    // handleInputData("baseuri", response.data.baseURI);
-    // setImageDataUploadSuccess(true);
-    // setShowLoader(false);
-    return Promise.resolve(response.data.baseURI);
+    return Promise.resolve("ok");
     }).catch((error) => {
     return Promise.reject("error");
 })

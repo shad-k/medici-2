@@ -17,6 +17,7 @@ const PageFive: React.FC<StepperFormProps> = ({
           handleInputData("whitelistedAddresses", parsedStrings);
           const merkleRoot = await getMerkleRoot(parsedStrings);
           handleInputData("merkleRoot", merkleRoot);
+          console.log(data);
           nextStep();
         } catch {
           alert("Something went wrong!")
@@ -71,7 +72,7 @@ const PageFive: React.FC<StepperFormProps> = ({
           </div>
         </div>
         <div className="flex justify-end w-full absolute bottom-24 right-10">
-          <button className="text-[#8E00FF] text-2xl" onClick={nextStep}>Next</button>
+          <button className="text-[#8E00FF] text-2xl" onClick={onSubmit}>Next</button>
         </div>
         <div id="back-button" className="hidden justify-start w-full absolute bottom-24 left-10">
           <button className="text-[#8E00FF] text-2xl" onClick={onBack}>Back</button>

@@ -978,6 +978,7 @@ export const CONFIG = {
         "test": "/regulusTest",
         "uploadImageCover": "/upload/cover",
         "uploadImageData": "/upload/collection",
+        "uploadMetadata": "upload/metadata",
         "checkName": "/claims/checkNameAvailability",
         "launchClaim": "/claims/setup",
         "getCover": "/claims/cover"

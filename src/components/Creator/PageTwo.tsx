@@ -22,16 +22,14 @@ const PageTwo: React.FC<StepperFormProps> = ({
   }, [CoverImage]);
 
   const onSubmit = async () => {
-    console.log(CoverImage);
-    console.log(data.name);
-    console.log(data.symbol);
-
     if (CoverImage) {
       const res = await uploadCoverImage(data.name, CoverImage);
       
       if (res && !(validator.isEmpty(data.name)) && !(validator.isEmpty(data.symbol))) {
+        console.log(data);
         nextStep();
       } else {
+        console.log(data);
         alert("Something went wrong!")
       }
     } else {
@@ -111,7 +109,7 @@ const PageTwo: React.FC<StepperFormProps> = ({
             <input id="input-symbol" type="text" className="w-full text-zinc-500 text-2xl p-2 rounded-lg bg-white border-2 border-zinc-300 outline-none" onChange={event => handleInputData("symbol", event.target.value)}/>
           </div>
         </div> 
-          <button className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl m-auto text-center w-[100px] mt-10" onClick={nextStep}>Next</button>
+          <button className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl m-auto text-center w-[100px] mt-10" onClick={onSubmit}>Next</button>
       </div>
     </div>
   );
