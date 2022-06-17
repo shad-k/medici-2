@@ -7,6 +7,7 @@ import DropEditor from './pages/dropeditor'
 import Demo from './pages/demo'
 import Project from './pages/project'
 import ProjectManager from './pages/project_manager'
+import Creator from './pages/creator'
 
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -25,8 +26,7 @@ const App: React.FC<{}> = () => {
             <Header />
             <div className="z-1 relative">
               <Routes>
-                <Route path="/demo" element={<Demo />} />
-                <Route path="/create" element={<Create />} />
+                <Route path="/create" element={<Creator />} />
                 <Route path="/launch" element={<DropEditor />} />
                 <Route path="/page/:name" element={<ClaimPage />} />
                 <Route path="/projects" element={<ProjectManager/>}/>
