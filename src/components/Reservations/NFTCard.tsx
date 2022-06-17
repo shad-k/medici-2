@@ -5,7 +5,7 @@ const NFTCard: React.FC<{collection: string, index: number, onSelect: any}> = ({
     return (
     <div className="p-2">
         <Card>
-            <img src={process.env.PUBLIC_URL + `/assets/${collection}/${index}.png`} alt={`${index}`} onClick={event => onSelect(index)}/>
+            <img loading="lazy" src={process.env.PUBLIC_URL + `/assets/${collection}/${index}.png`} alt={`${index}`} onClick={event => onSelect(index)}/>
         </Card>
     </div> 
   )
