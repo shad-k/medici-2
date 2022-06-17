@@ -24,6 +24,13 @@ const NFTPopup: React.FC<{showModal: boolean, handleClose: any, collection: stri
     document.getElementById(`reserve-input-${reserveMethodInput}`)!.style.display = 'block';
   }
 
+  const onBack = () => {
+    document.getElementById(`reserve-input-${reserveMethod}`)!.style.display = 'none';
+    setReserveDetails(undefined);
+    setReserveMethod(undefined);
+    document.getElementById("menu-options")!.style.display = 'flex';
+  }
+
   const onSubmit = async () => {
     document.getElementById(`reserve-input-${reserveMethod}`)!.style.display = 'none';
     
@@ -68,7 +75,7 @@ const NFTPopup: React.FC<{showModal: boolean, handleClose: any, collection: stri
         <label htmlFor="input-email" className="block py-2">Email address</label>
         <input id="input-email" type="email" className="w-full text-zinc-500 text-2xl p-1 rounded-lg bg-white border-2 border-zinc-300 outline-none" onChange={event => setReserveDetails(event.target.value)}/>
         <div className="flex justify-between gap-6 mt-5">
-          <button className="bg-medici-purple rounded-lg p-2">Back</button>
+          <button className="bg-medici-purple rounded-lg p-2" onClick={onBack}>Back</button>
           <button className="bg-medici-purple rounded-lg p-2" onClick={onSubmit}>Next</button>
         </div>
       </div>
@@ -76,7 +83,7 @@ const NFTPopup: React.FC<{showModal: boolean, handleClose: any, collection: stri
         <label htmlFor="input-address" className="block py-2">Wallet address</label>
         <input id="input-address" type="text" className="w-full text-zinc-500 text-2xl p-1 rounded-lg bg-white border-2 border-zinc-300 outline-none " defaultValue={wallet?.accounts[0].address} onChange={event => setReserveDetails(event.target.value)}/>
         <div className="flex justify-between gap-6 mt-5">
-          <button className="bg-medici-purple rounded-lg p-2">Back</button>
+          <button className="bg-medici-purple rounded-lg p-2" onClick={onBack}>Back</button>
           <button className="bg-medici-purple rounded-lg p-2" onClick={onSubmit}>Next</button>
         </div>
       </div>
@@ -84,7 +91,7 @@ const NFTPopup: React.FC<{showModal: boolean, handleClose: any, collection: stri
         <label htmlFor="input-ens" className="block py-2">ENS name</label>
         <input id="input-ens" type="text" className="w-full text-zinc-500 text-2xl p-1 rounded-lg bg-white border-2 border-zinc-300 outline-none" onChange={event => setReserveDetails(event.target.value)}/>
         <div className="flex justify-between gap-6 mt-5">
-          <button className="bg-medici-purple rounded-lg p-2">Back</button>
+          <button className="bg-medici-purple rounded-lg p-2" onClick={onBack}>Back</button>
           <button className="bg-medici-purple rounded-lg p-2" onClick={onSubmit}>Next</button>
         </div>
       </div>
