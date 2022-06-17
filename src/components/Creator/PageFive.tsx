@@ -11,7 +11,9 @@ const PageFive: React.FC<StepperFormProps> = ({
     const [allowlistStrData, setAllowlistStrData] = useState<any>();
 
     const onSubmit = async () => {
+      console.log("submit")
       if (allowlistStrData) {
+        console.log(allowlistStrData);
         try {
           const parsedStrings = await parseData(allowlistStrData);
           handleInputData("whitelistedAddresses", parsedStrings);
@@ -23,6 +25,7 @@ const PageFive: React.FC<StepperFormProps> = ({
           alert("Something went wrong!")
         }
       } else {
+        console.log("no allow list provided")
         nextStep();
       }
     }
@@ -54,13 +57,13 @@ const PageFive: React.FC<StepperFormProps> = ({
           <div id="allowlist-upload">
           <input
               type="file"
-              name="collectionImageData"
+              name="whitelistData"
               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-              id="collectionImageDataField"
+              id="whitelistData"
               style={{'display': 'none'}}
               onChange={(event) => setAllowlistStrData(event.target.files![0])}
           />
-          <label htmlFor="collectionImageDataField">
+          <label htmlFor="whitelistData">
               <div className="flex w-full h-2/5 items-center">
                   <span className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl m-auto text-center whitespace-nowrap">Upload Allowlist</span>
               </div>
@@ -75,7 +78,7 @@ const PageFive: React.FC<StepperFormProps> = ({
           <button className="text-[#8E00FF] text-2xl" onClick={onSubmit}>Next</button>
         </div>
         <div id="back-button" className="hidden justify-start w-full absolute bottom-24 left-10">
-          <button className="text-[#8E00FF] text-2xl" onClick={onBack}>Back</button>
+          <button className="text-[#8E00FF] text-2xl">Back</button>
         </div>
     </div>
     );

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
 import { triggerUploadImageData } from '../../utils/claims';
 
-import ImageFromIPFSMetadata from '../ImageFromIPFSMetadata';
 import Modal from '@mui/material/Modal';
 import LinearProgress from '@mui/material/LinearProgress';
-import { getGatewayURL } from '../../utils/parse';
+import { getGatewayURL, getMetadata } from '../../utils/metadata';
 
 const PageFour: React.FC<StepperFormProps> = ({
     nextStep,
@@ -18,9 +17,11 @@ const PageFour: React.FC<StepperFormProps> = ({
     const [uploadProgress, setUploadProgress] = useState<number>(0);
     const [showLoader, setShowLoader] = useState<boolean>(false);
     const [imageUploadResponse, setImageUploadResponse] = useState<any>();
+    const [metadataFromIPFS, setMetadataFromIPFS] = useState<string>();
 
     const onSubmit = () => {
       // handleOpen();
+      console.log(data)
       nextStep();
     }
 
@@ -40,21 +41,23 @@ const PageFour: React.FC<StepperFormProps> = ({
         setShowLoader(false);
         return;
       } else {
-            const formdata = new FormData();
-            formdata.append("images", file)
-            setShowLoader(true)
-          
-            await triggerUploadImageData(data.name, data.isMetadataUploaded, formdata, (progressEvent: any) => {
-              const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              setUploadProgress(progress);
-            }).then(response => {
-              console.log(response);
-              setImageUploadResponse(response);
-              handleInputData("baseURI", response.baseURI);
-              handleInputData("maxSupply", response.totalSupply);
-              setShowLoader(false);
-            })
-            /* FIXME: getting base uri from response from uploading collection data */
+        const formdata = new FormData();
+        formdata.append("images", file)
+        setShowLoader(true)
+  
+        await triggerUploadImageData(data.name, data.isMetadataUploaded, formdata, (progressEvent: any) => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          setUploadProgress(progress);
+        }).then(response => {
+          console.log(response);
+          setImageUploadResponse(response);
+          handleInputData("baseURI", response.baseURI);
+          handleInputData("maxSupply", response.totalSupply);
+          setShowLoader(false);
+          handleOpen()
+        });
+        const metadata = await getMetadata(imageUploadResponse.randomMetadataURL);
+        setMetadataFromIPFS(metadata);
       }
     }
 
@@ -79,9 +82,6 @@ const PageFour: React.FC<StepperFormProps> = ({
             </div>
         </label>
       </div>
-      <div className="w-4/5">
-      {imageUploadResponse && <img className="w-full md:w-3/5 aspect-video object-cover" src={getGatewayURL(imageUploadResponse.randomImageURL)}/>}
-      </div>
       <div className="flex justify-end w-full absolute bottom-24 right-10">
         <button className="text-[#8E00FF] text-2xl" onClick={onSubmit}>Next</button>
       </div>
@@ -103,8 +103,10 @@ const PageFour: React.FC<StepperFormProps> = ({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-      <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
-      {imageUploadResponse && <img src={imageUploadResponse.randomImageURL}/>}
+      <div className="relative top-[10%] mx-auto p-5 w-96 h-[700px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center outline-none">
+      {imageUploadResponse && <img src={getGatewayURL(imageUploadResponse.randomImageURL)}/>}
+      {imageUploadResponse && <p>{metadataFromIPFS}</p>}
+      {imageUploadResponse && <p>Total supply: {imageUploadResponse.totalSupply}</p>}
       </div>
       </Modal>
       </div>

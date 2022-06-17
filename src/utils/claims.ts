@@ -1,4 +1,3 @@
-import React from 'react'
 import apiClient from './apiClient'
 import { CONFIG } from './config'
 
