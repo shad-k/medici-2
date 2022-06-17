@@ -29,6 +29,7 @@ const NFTPopup: React.FC<{showModal: boolean, handleClose: any, collection: stri
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      disableScrollLock
     >
     <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center outline-none">
       <div className="w-10/12">
