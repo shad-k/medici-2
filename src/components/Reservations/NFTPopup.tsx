@@ -33,7 +33,7 @@ const NFTPopup: React.FC<{showModal: boolean, handleClose: any, collection: stri
     >
     <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center outline-none">
       <div className="w-10/12">
-      <h1 className="text-2xl text-transparent tracking-wide bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Reserving: {collection} #{selected}</h1>
+      <h1 className="text-2xl text-transparent tracking-wide bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Reserve: {collection} #{selected}</h1>
       <p>How would you like to reserve this NFT?</p>
       </div>
       <div id="menu-options" className="flex flex-col items-center w-3/5 space-y-2 mt-5">
