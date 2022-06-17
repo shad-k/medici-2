@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import React from 'react'
+import FontPicker from 'font-picker-react'
 import { BsTwitter } from 'react-icons/bs'
 import { HiOutlineMail } from 'react-icons/hi'
 import { FaDiscord } from 'react-icons/fa'
@@ -10,7 +11,7 @@ const localenv = CONFIG.DEV
 
 interface FreeTierProps {
   claim: Claim
-  contractName: string
+  contractName?: string
 }
 const abi = [
   'function tokenURI(uint256 tokenId) public view returns (string memory)',
@@ -22,7 +23,7 @@ const abi = [
 //   'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04'
 // )
 const provider = new ethers.providers.JsonRpcProvider(
-  'https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD'
+  'https://rpc.ankr.com/eth_goerli'
 )
 
 const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
@@ -103,18 +104,38 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   }
 
   React.useEffect(() => {
-    getName()
-    getContractOwner()
-    getCoverImage()
-  }, [getName, getContractOwner, getCoverImage])
+    if (contractName && !name && !masterAddress && !cover) {
+      getName()
+      getContractOwner()
+      getCoverImage()
+    }
+  }, [
+    getName,
+    getContractOwner,
+    getCoverImage,
+    contractName,
+    cover,
+    masterAddress,
+    name,
+  ])
+
+  console.log(
+    `linear-gradient(180deg, ${claim.primaryColor} 0%, ${claim.secondaryColor} 100%)`
+  )
 
   return (
-    <div className="w-full min-h-[100vh] -mt-16 flex flex-col md:flex-row items-center justify-center text-white relative md:overflow-hidden px-0 md:px-8">
+    <div className="w-full h-full flex flex-col md:flex-row items-center justify-center text-white relative md:overflow-hidden px-0 md:px-8 apply-font">
+      {/* Added so that the page is rendered using the font */}
+      <div className="hidden">
+        <FontPicker
+          activeFontFamily={claim.fontFamily as string}
+          apiKey={process.env.REACT_APP_GOOGLE_FONTS_API_KEY!}
+        />
+      </div>
       <div
         className="absolute z-0 min-h-full w-full left-0 top-0"
         style={{
-          background:
-          `linear-gradient(180deg, ${claim.primarycolor} 0%, ${claim.secondarycolor} 100%)`,
+          background: `linear-gradient(180deg, ${claim.primaryColor} 0%, ${claim.secondaryColor} 100%)`,
           filter: 'blur(200px)',
         }}
       />
@@ -123,27 +144,23 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
         <div className="flex items-center justify-between mb-12 w-full">
           <h6 className="uppercase text-xl">{claim.artist ?? ''}</h6>
           <div className="flex items-center space-x-2">
-            {claim.collection_discord && (
+            {claim.discord && (
               <a
-                href={claim.collection_discord}
+                href={claim.discord}
                 target="_blank"
                 rel="nofollow, noreferrer"
               >
                 <FaDiscord size="20" />
               </a>
             )}
-            {claim.collection_email && (
-              <a
-                href={claim.collection_email}
-                target="_blank"
-                rel="nofollow, noreferrer"
-              >
+            {claim.email && (
+              <a href={claim.email} target="_blank" rel="nofollow, noreferrer">
                 <HiOutlineMail size="20" />
               </a>
             )}
-            {claim.collection_twitter && (
+            {claim.twitter && (
               <a
-                href={claim.collection_twitter}
+                href={claim.twitter}
                 target="_blank"
                 rel="nofollow, noreferrer"
               >
@@ -158,32 +175,34 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
         <div className="flex flex-col justify-between leading-10 text-white/60 w-full">
           <h5 className="text-xl text-white mb-2">Details</h5>
           <table className="w-full">
-            <tr>
-              <td>Contract Address</td>
-              <td className="text-right text-white">
-                {claim.contract.slice(0, 6)}...{claim.contract.slice(-6)}
-              </td>
-            </tr>
-            <tr>
-              <td>Contract Type</td>
-              <td className="text-right">ERC-721</td>
-            </tr>
-            {masterAddress && (
+            <tbody>
               <tr>
-                <td>Contract Owner</td>
+                <td>Contract Address</td>
                 <td className="text-right text-white">
-                  {masterAddress.slice(0, 6)}...{masterAddress.slice(-6)}
+                  {claim?.contract?.slice(0, 6)}...{claim?.contract?.slice(-6)}
                 </td>
               </tr>
-            )}
-            <tr>
-              <td>Blockchain</td>
-              <td className="text-right">Optimism</td>
-            </tr>
+              <tr>
+                <td>Contract Type</td>
+                <td className="text-right">ERC-721</td>
+              </tr>
+              {masterAddress && (
+                <tr>
+                  <td>Contract Owner</td>
+                  <td className="text-right text-white">
+                    {masterAddress.slice(0, 6)}...{masterAddress.slice(-6)}
+                  </td>
+                </tr>
+              )}
+              <tr>
+                <td>Blockchain</td>
+                <td className="text-right">Optimism</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
-      <div className="flex flex-col justify-center relative z-1 w-full md:w-1/2 h-[100vh] p-8 pb-2 md:pb-8 bg-black/50">
+      <div className="flex flex-col justify-center relative z-1 w-full md:w-1/2 h-full p-8 pb-2 md:pb-8 bg-black/50">
         <img
           src={cover}
           alt=""
@@ -204,7 +223,11 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
             onClick={connectedWallet ? () => mint() : () => connect({})}
             disabled={minting}
           >
-            {connectedWallet ? 'Mint Now' : 'Connect Wallet'}
+            {connectedWallet
+              ? minting
+                ? 'Minting...'
+                : 'Mint Now'
+              : 'Connect Wallet'}
           </button>
         )}
         <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">

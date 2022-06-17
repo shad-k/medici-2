@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import Box from '@mui/material/Box'
 
 import FreeTier from '../components/templates/freetier'
 import { Claim, TemplateTier } from '../model/types'
@@ -9,20 +10,31 @@ import { API_ENDPOINT, API_PATHS } from '../utils/config'
 const mockData: Claim = {
   contract: '0x4B3f9c118e3840E9240778b27f411d5dbf839e9F',
   tier: TemplateTier.FREE,
-  font: null,
-  primarycolor: null,
-  secondarycolor: null,
-  backgroundcolor: null,
+  fontFamily: null,
+  primaryColor: null,
+  secondaryColor: null,
+  bgColor: null,
   artist: 'Sarah Meyohas',
   description: 'Good art',
-  collection_email: null,
-  collection_twitter: null,
-  collection_discord: null,
+  email: null,
+  twitter: null,
+  discord: null,
+}
+
+export const ClaimPageRenderer: React.FC<{
+  claim: Claim
+  contractName?: string
+}> = ({ claim, contractName }) => {
+  switch (claim.tier) {
+    case TemplateTier.LOW:
+      return <FreeTier claim={claim} contractName={contractName} />
+    default:
+      return <FreeTier claim={claim} contractName={contractName} />
+  }
 }
 
 const ClaimPage: React.FC<{}> = () => {
   const [claim, setClaim] = React.useState<Claim>()
-  const { tier } = claim ?? {}
 
   const { name: contractName } = useParams()
 
@@ -48,26 +60,43 @@ const ClaimPage: React.FC<{}> = () => {
           console.log(error)
         })
       if (res) {
-        setClaim(res[0])
+        const {
+          artist,
+          description,
+          backgroundcolor,
+          collection_discord,
+          collection_twitter,
+          collection_email,
+          contract,
+          font,
+          primarycolor,
+          secondarycolor,
+          tier,
+        } = res[0]
+        setClaim({
+          artist,
+          bgColor: backgroundcolor,
+          discord: collection_discord,
+          email: collection_email,
+          twitter: collection_twitter,
+          contract,
+          description,
+          fontFamily: font,
+          primaryColor: primarycolor,
+          secondaryColor: secondarycolor,
+          tier,
+        })
       }
     })()
   }, [contractName])
-
-  useEffect(() => {
-  if (claim) console.log(claim);
-  
-  })
-
-  switch (tier) {
-    case TemplateTier.FREE:
-      return claim ? <FreeTier claim={claim} contractName={contractName as string} /> :
-       <FreeTier claim={mockData} contractName={contractName as string} />
-    case TemplateTier.LOW:
-    return claim ? <FreeTier claim={claim} contractName={contractName as string} /> :
-      <FreeTier claim={mockData} contractName={contractName as string} />
-    default:
-      return null
+  if (!claim) {
+    return null
   }
+  return (
+    <Box sx={{ height: '100vh', marginTop: '-64px' }}>
+      <ClaimPageRenderer claim={claim} contractName={contractName as string} />
+    </Box>
+  )
 }
 
 export default ClaimPage
