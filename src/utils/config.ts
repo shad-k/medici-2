@@ -981,7 +981,9 @@ export const CONFIG = {
         "uploadMetadata": "upload/metadata",
         "checkName": "/claims/checkNameAvailability",
         "launchClaim": "/claims/setup",
-        "getCover": "/claims/cover"
+        "getCover": "/claims/cover",
+        "reserve": "/reservations/reserve",
+        "reservedStatus": "/reservations/status"
       }
     },
   },
