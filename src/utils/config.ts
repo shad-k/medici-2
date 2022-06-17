@@ -7,6 +7,8 @@ export enum API_PATHS {
   COLLECTION = '/collections',
   CLAIM_FETCH = '/claims/fetch',
   CLAIM_COVER = '/claims/cover',
+  RESERVE_NFT = '/reservations/reserve',
+  GET_RESERVED_NFTS = '/reservations/status'
 }
 
 export const CONFIG = {

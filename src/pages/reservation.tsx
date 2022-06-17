@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import useReservedNFTs from '../hooks/useReservedNFTs'
+
 import NFTCard from '../components/Reservations/NFTCard'
 import NFTPopup from '../components/Reservations/NFTPopup'
 
 const Reservation: React.FC<{}> = () => {
   const { name: contractName } = useParams()
+  const { data, error } = useReservedNFTs(contractName as string)
   const [allImages, setAllImages] = useState<Array<number>>();
   const [selectedNFT, setSelectedNFT] = useState<number>();
   const [showModal, setShowModal] = useState(false);
@@ -13,20 +16,29 @@ const Reservation: React.FC<{}> = () => {
 
   useEffect(() => {
     ;(async () => {
-      const collection_size = 559;
-      const arr = Array.from({length: collection_size}, (_, i) => i + 1)
-      setAllImages(arr);
+      setAllImages(data.open);
     })()
-  }, [contractName])
+  }, [data])
 
   useEffect(() => {
-    if (showModal) {
+    if (showModal && document.getElementById("modal-container") !== null) {
       document.getElementById("modal-container")!.style.display = 'block'
-    } else {
+    } else if (!showModal && document.getElementById("modal-container") !== null){
       document.getElementById("modal-container")!.style.display = 'none'
+    } else {
+      return;
     }
   },[showModal])
 
+
+  if (!data && !error) {
+    return null;
+  }
+
+  if (!data) {
+    return null;
+  }
+  
   const handleSelectNFT = (index: number) => {
       setSelectedNFT(index); 
       handleOpen();
@@ -37,8 +49,7 @@ const Reservation: React.FC<{}> = () => {
           <div className="grid grid-cols-3">
           {contractName && allImages && 
           allImages.map(i => 
-            <NFTCard collection={contractName} index={i} onSelect={handleSelectNFT}/>
-            )
+            <NFTCard collection={contractName} index={i} onSelect={handleSelectNFT}/>)
           }
           </div>
           <div id="modal-container" className="flex items-center justify-center text-center h-screen">
