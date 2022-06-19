@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { getMerkleRoot, generateNewContract, whitelist, getNewLaunchedContract } from '../../utils/web3'
+import { getMerkleRoot, readyToTransact } from '../../utils/web3'
 import { parseData } from '../../utils/parse'
+import useWallet from '../../hooks/useWallet'
 
 const PageFive: React.FC<StepperFormProps> = ({
     nextStep,
     handleInputData,
     data
 }) => {
+    const { wallet, connect, setChain } = useWallet();
     const [allowlistStrData, setAllowlistStrData] = useState<any>();
 
     const onSubmit = async () => {
       console.log("submit")
+
       if (allowlistStrData) {
         console.log(allowlistStrData);
         try {
           const parsedStrings = await parseData(allowlistStrData);
-          handleInputData("whitelistedAddresses", parsedStrings);
+          await handleInputData("whitelistedAddresses", parsedStrings);
           const merkleRoot = await getMerkleRoot(parsedStrings);
-          handleInputData("merkleRoot", merkleRoot);
+          await handleInputData("merkleRoot", merkleRoot);
           console.log(data);
           nextStep();
         } catch {
@@ -26,7 +29,14 @@ const PageFive: React.FC<StepperFormProps> = ({
         }
       } else {
         console.log("no allow list provided")
-        nextStep();
+        await readyToTransact(wallet, connect, setChain);
+        if (wallet) {
+          const parsedStrings = await parseData(wallet.accounts[0].address);
+          await handleInputData("whitelistedAddresses", parsedStrings);
+          const merkleRoot = await getMerkleRoot(parsedStrings);
+          await handleInputData("merkleRoot", merkleRoot);
+          nextStep();
+        }
       }
     }
 
@@ -74,11 +84,11 @@ const PageFive: React.FC<StepperFormProps> = ({
             <textarea className="text-black p-3 w-full h-60 rounded-xl resize-none" id="whitelistTextArea" placeholder="Copy paste addresses here!" onChange={(event) => setAllowlistStrData(event.target.value)}></textarea>
           </div>
         </div>
-        <div className="flex justify-end w-full absolute bottom-24 right-10">
+        <div className="flex justify-end absolute bottom-24 right-10">
           <button className="text-[#8E00FF] text-2xl" onClick={onSubmit}>Next</button>
         </div>
-        <div id="back-button" className="hidden justify-start w-full absolute bottom-24 left-10">
-          <button className="text-[#8E00FF] text-2xl">Back</button>
+        <div id="back-button" className="hidden justify-start absolute bottom-24 left-10">
+          <button className="text-[#8E00FF] text-2xl" onClick={onBack}>Back</button>
         </div>
     </div>
     );

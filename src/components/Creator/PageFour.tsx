@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { triggerUploadImageData } from '../../utils/claims';
+import { triggerUploadImageData } from '../../utils/upload';
 
 import Modal from '@mui/material/Modal';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -43,21 +43,36 @@ const PageFour: React.FC<StepperFormProps> = ({
       } else {
         const formdata = new FormData();
         formdata.append("images", file)
+        formdata.append("isMetadataUploaded", data.isMetadataUploaded)
         setShowLoader(true)
-  
-        await triggerUploadImageData(data.name, data.isMetadataUploaded, formdata, (progressEvent: any) => {
+
+        const res = await triggerUploadImageData(data.name, formdata, (progressEvent: any) => {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           setUploadProgress(progress);
-        }).then(response => {
-          console.log(response);
-          setImageUploadResponse(response);
-          handleInputData("baseURI", response.baseURI);
-          handleInputData("maxSupply", response.totalSupply);
-          setShowLoader(false);
-          handleOpen()
-        });
-        const metadata = await getMetadata(imageUploadResponse.randomMetadataURL);
-        setMetadataFromIPFS(metadata);
+        })
+
+        console.log(res)
+        setImageUploadResponse(res);
+        const metadata = await getMetadata(res.randomMetadataURL);
+        console.log("new metadata link " + metadata);
+        setMetadataFromIPFS(JSON.stringify(metadata));
+        await handleInputData("baseURI", res.baseURI);
+        await handleInputData("maxSupply", res.totalSupply);
+        setShowLoader(false);
+        handleOpen()
+  
+        // await triggerUploadImageData(data.name, formdata, (progressEvent: any) => {
+        //   const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        //   setUploadProgress(progress);
+        // }).then(response => {
+        //   console.log(response);
+        //   setImageUploadResponse(response);
+        //   handleInputData("baseURI", response.baseURI);
+        //   handleInputData("maxSupply", response.totalSupply);
+        //   setShowLoader(false);
+        //   handleOpen()
+        // });
+        
       }
     }
 

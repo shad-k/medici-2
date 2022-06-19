@@ -13,12 +13,12 @@ export const CONFIG = {
   DEV: {
     env: 'DEV',
     network: {
-      label: 'Kovan TestNet',
-      id: '0x2a',
+      label: 'GOERLI',
+      id: '0x5',
       token: 'ETH',
       rpcUrl:
-        'https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD',
-      txEtherscanUrl: 'https://kovan.etherscan.io/tx/',
+      'wss://eth-goerli.alchemyapi.io/v2/cgHuBwD5rDkESlnFr3ee92PLMp3pkfyE',
+      txEtherscanUrl: 'https://goerli.etherscan.io/tx/',
     },
     "contract": {
     "factory_address": "0x053e59FD6A01Ba3d30beacaEaF0f3504d65baA73",

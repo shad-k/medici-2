@@ -73,7 +73,7 @@ export type ContractCreationProps = {
 
 export interface StepperFormProps {
   nextStep: () => void
-  handleInputData: (input: any, value: any) => void
+  handleInputData: (input: any, value: any) => Promise<boolean>
   data: any
 }
 

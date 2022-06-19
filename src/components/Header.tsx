@@ -1,12 +1,11 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { MdSearch } from 'react-icons/md'
-import { RiShoppingCartLine } from 'react-icons/ri'
+import { readyToTransact } from '../utils/web3'
 
 import useWallet from '../hooks/useWallet'
 
 const Header: React.FC<{}> = () => {
-  const { wallet, connecting, connect } = useWallet()
+  const { wallet, connecting, connect, setChain } = useWallet()
   const location = useLocation()
 
   if (location.pathname.startsWith('/page/')) {
@@ -14,6 +13,12 @@ const Header: React.FC<{}> = () => {
   }
 
   const connectedWallet = wallet?.accounts[0]
+
+  const onConnect = async () => {
+    connect({});
+    await readyToTransact(connectedWallet, connect, setChain)
+  
+  }
 
   return (
     <header className="h-16 w-full px-2 lg:px-0 py-4 fixed top-0 left-0 border-t border-transparent z-10 header-bg">
@@ -41,7 +46,7 @@ const Header: React.FC<{}> = () => {
           ) : (
             <button
               className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white disabled:cursor-not-allowed"
-              onClick={() => connect({})}
+              onClick={() => onConnect()}
               disabled={connecting}
             >
               {connecting ? 'Connecting' : 'Connect Wallet'}

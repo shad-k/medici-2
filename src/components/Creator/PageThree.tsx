@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { triggerUploadMetadata } from '../../utils/claims';
+import { triggerUploadMetadata } from '../../utils/upload';
 import Modal from '@mui/material/Modal';
 import { LinearProgress } from '@mui/material';
 
@@ -25,11 +25,11 @@ const PageThree: React.FC<StepperFormProps> = ({
     
     },[showModal])
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
       if (hasCustomMetadata) {
-        handleInputData("isMetadataUploaded", true);
+        await handleInputData("isMetadataUploaded", true);
       } else {
-        handleInputData("isMetadataUploaded", false);
+        await handleInputData("isMetadataUploaded", false);
       }
       console.log(data);
       nextStep();
@@ -78,7 +78,7 @@ const PageThree: React.FC<StepperFormProps> = ({
           <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={event => setHasCustomMetadata(false)}>No</button>
           <button className="bg-[#2e2c38] hover:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">What's that?</button>
         </div>
-        <div id="modal-container" className="flex items-center justify-center text-center h-screen">
+        <div id="modal-container" className="hidden items-center justify-center text-center h-screen">
           <Modal
             open={showModal}
             onClose={handleClose}
@@ -99,9 +99,11 @@ const PageThree: React.FC<StepperFormProps> = ({
                     onChange={(event) => uploadMetadata(event.target.files![0])}
                 />
                 <label htmlFor="collectionMetadataField">
+                    { !hasCustomMetadata &&
                     <div className="flex w-full h-2/5 items-center">
                         <span className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl m-auto text-center whitespace-nowrap">Upload Metadata</span>
                     </div>
+                    }
                     <br></br>
                     { showLoader && <div className="w-full">
                     <LinearProgress
@@ -111,9 +113,12 @@ const PageThree: React.FC<StepperFormProps> = ({
                     sx={{backgroundColor: "#33313d", 
                     "& .MuiLinearProgress-bar": {
                       backgroundColor: '#6618E4'}}}
-                  />
-                </div>
-                }
+                    />
+                    </div>
+                    }
+                    {hasCustomMetadata &&
+                        <p>Metadata upload success!</p>
+                    }
                 </label>
             </div>
         </div>

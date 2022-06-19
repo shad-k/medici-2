@@ -27,12 +27,13 @@ const Creator: React.FC<{}> = () => {
     setStep(step + 1);
   };
 
-  const handleInputData = (input: any, value: string) => {
+  const handleInputData = async (input: any, value: string):Promise<boolean> => {
     // input value from the form
       setParams((prevState: any) => ({
         ...prevState,
         [input]: value
-    })); 
+      }));
+      return Promise.resolve(true);
   }
 
   switch(step) {

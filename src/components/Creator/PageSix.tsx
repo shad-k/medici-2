@@ -7,7 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { Contract } from '../../model/types';
 import { CONFIG } from '../../utils/config';
-import { isValidAddress, getMerkleRoot, generateNewContract, whitelist, getNewLaunchedContract, readyToTransact } from '../../utils/web3'
+import { isValidAddress, generateNewContract, whitelist, getNewLaunchedContract, readyToTransact } from '../../utils/web3'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 
 const PageSix: React.FC<StepperFormProps> = ({
@@ -53,14 +53,15 @@ const PageSix: React.FC<StepperFormProps> = ({
           { 
             name: data.name,
             symbol: data.symbol,
-            baseuri: data.baseuri,
+            baseuri: data.baseURI,
             maxSupply: data.maxSupply,
             price: data.price,
             maxMintsPerPerson: data.maxMintsPerPerson,
             masterAddress: data.masterAddress
           });
+        console.log("done generating! Getting new launched contract");
         const result = await getNewLaunchedContract(data.masterAddress);
-        console.log(result);
+        console.log("Get new launched contract " + result);
         await whitelist(
         { 
           "project": data.name,

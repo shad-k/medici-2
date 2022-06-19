@@ -55,7 +55,7 @@ const PageTwo: React.FC<StepperFormProps> = ({
         const newTimer = setTimeout( async () => {
           const isNameAvailable = await checkNameAvailability(name);
           if (isNameAvailable) {
-            handleInputData("name", name);
+            await handleInputData("name", name);
             setIsNameAvailable(true);
             return;
           } else {
