@@ -13,11 +13,12 @@ const Header: React.FC<{}> = () => {
   }
 
   const connectedWallet = wallet?.accounts[0]
-
+  
   const onConnect = async () => {
     connect({});
+    console.log("wallet connected")
     await readyToTransact(connectedWallet, connect, setChain)
-  
+    console.log("ready to transact")
   }
 
   return (

@@ -66,7 +66,7 @@ export type ContractCreationProps = {
   symbol: string
   baseuri: string
   maxSupply: number
-  price: BigNumber
+  price: string
   maxMintsPerPerson: number
   masterAddress: string
 }

@@ -18,9 +18,9 @@ const Creator: React.FC<{}> = () => {
     baseURI: "",
     maxSupply: "",
     price: "",
-    maxMintsPerPerson: 0,
+    maxMintsPerPerson: "",
     masterAddress: "",
-    merkleroot: "",
+    merkleRoot: "",
   })
 
   const nextStep = () => {

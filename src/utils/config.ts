@@ -17,7 +17,7 @@ export const CONFIG = {
       id: '0x5',
       token: 'ETH',
       rpcUrl:
-      'wss://eth-goerli.alchemyapi.io/v2/cgHuBwD5rDkESlnFr3ee92PLMp3pkfyE',
+      'https://eth-goerli.alchemyapi.io/v2/cgHuBwD5rDkESlnFr3ee92PLMp3pkfyE',
       txEtherscanUrl: 'https://goerli.etherscan.io/tx/',
     },
     "contract": {
