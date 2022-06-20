@@ -66,14 +66,14 @@ export type ContractCreationProps = {
   symbol: string
   baseuri: string
   maxSupply: number
-  price: BigNumber
+  price: string
   maxMintsPerPerson: number
   masterAddress: string
 }
 
 export interface StepperFormProps {
   nextStep: () => void
-  handleInputData: (input: any, value: any) => void
+  handleInputData: (input: any, value: any) => Promise<boolean>
   data: any
 }
 
