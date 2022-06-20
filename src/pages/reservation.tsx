@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import useReservedNFTs from '../hooks/useReservedNFTs'
+import { getThumbnails } from '../utils/reservations'
 
 import NFTCard from '../components/Reservations/NFTCard'
 import NFTPopup from '../components/Reservations/NFTPopup'
@@ -9,6 +10,7 @@ const Reservation: React.FC<{}> = () => {
   const { name: contractName } = useParams()
   const { data, error } = useReservedNFTs(contractName as string)
   const [allImages, setAllImages] = useState<Array<number>>();
+  const [allThumbnails, setAllThumbnails] = useState<Array<string>>();
   const [selectedNFT, setSelectedNFT] = useState<number>();
   const [showModal, setShowModal] = useState(false);
   const handleOpen = () => setShowModal(true);
@@ -16,7 +18,14 @@ const Reservation: React.FC<{}> = () => {
 
   useEffect(() => {
     ;(async () => {
+      if (data)
+      console.log("Got all images")
       setAllImages(data.open);
+      if (contractName) {
+        console.log("Getting thumbnails")
+        const thumbnails = await getThumbnails("cryptopups");
+        setAllThumbnails(thumbnails);
+      }
     })()
   }, [data])
 
@@ -69,11 +78,12 @@ const Reservation: React.FC<{}> = () => {
       <div className="w-full flex flex-col p-5 items-center">
           <div className="grid grid-cols-3">
           {
-            contractName && allImages && 
+            contractName && allImages && allThumbnails &&
             allImages.map(i => 
             // <NFTCard collection={contractName} index={i} onSelect={handleSelectNFT}/>)
             <div className="p-2">
-              <img className="lazy-loaded-image lazy" src="https://placeholder.pics/svg/300" data-src={process.env.PUBLIC_URL + `/assets/${contractName}/${i}.png`} alt={`${i}`} onClick={event => handleSelectNFT(i)}/>
+              {/* <img className="lazy-loaded-image lazy" src="https://placeholder.pics/svg/300" data-src={process.env.PUBLIC_URL + `/assets/${contractName}/${i}.png`} alt={`${i}`} onClick={event => handleSelectNFT(i)}/> */}
+              <img key={`${contractName}-${i}`} className="lazy-loaded-image lazy" src="https://placeholder.pics/svg/300" data-src={allThumbnails[i]} alt={`${i}`} onClick={event => handleSelectNFT(i)}/>
             </div>)
           }
           </div>

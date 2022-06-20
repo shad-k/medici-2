@@ -43,3 +43,23 @@ export const makeReservation = async (contractName: string, tokenID: number, con
   });
 
 }
+
+export const getThumbnails = async (contractName: string) => {
+    const request_data = {
+      "contractName": contractName
+    };
+  
+    return apiClient.post(
+      API_PATHS.RETRIEVE_THUMBNAILS,
+      request_data,
+      {
+          headers: {"Content-Type": "application/json"}
+      }
+    ).then(function(response) {
+        console.log(response.data)
+        return Promise.resolve(response.data)
+    }).catch(function(error) {
+        console.log(error);
+        return Promise.reject("Error making reservation")
+    });
+}
