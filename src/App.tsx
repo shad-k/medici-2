@@ -12,6 +12,7 @@ import Header from './components/Header'
 import WalletContextProvider from './contexts/WalletContextProvider'
 import Background from './components/Background'
 import ClaimPage from './pages/claimPage'
+import EmptyPage from './pages/emptyPage'
 import { createTheme, ThemeProvider } from '@mui/material'
 
 const customTheme = createTheme({
@@ -45,6 +46,7 @@ const App: React.FC<{}> = () => {
                   />
                   <Route path="/reservation/:name" element={<Reservation />} />
                   <Route path="/" element={<Home />} />
+                  <Route path="*" element={<EmptyPage />} />
                 </Routes>
               </div>
             </main>
