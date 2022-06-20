@@ -76,6 +76,7 @@ const Reservation: React.FC<{}> = () => {
 
   return (
       <div className="w-full flex flex-col p-5 items-center">
+      <h1 className="text-lg text-center m-3">Bitchcoin holders will be airdropped first Cryptopup of their choice</h1>
           <div className="grid grid-cols-3">
           {
             contractName && allImages && allThumbnails &&

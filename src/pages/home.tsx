@@ -1,10 +1,13 @@
 import React from 'react'
 import HomeMenu from '../components/HomeMenu'
+import AlphaBanner from '../components/AlphaBanner'
 
 const Home: React.FC<{}> = () => {
 
   return (
-      <div className="w-full flex flex-col p-5 md:p-10 items-center mt-24 md:mt-36">
+    <div>
+    <AlphaBanner/>
+      <div className="w-full flex flex-col p-5 items-center">
           <div className="whitespace-nowrap">
             <h1 className="text-center text-4xl md:text-6xl font-semibold">
             ✨ <span className="tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500">Launch Your Project</span> ✨
@@ -29,6 +32,7 @@ const Home: React.FC<{}> = () => {
       {/* {data.data} */}
       <br></br>
       </div> 
+      </div>
   )
 }
 

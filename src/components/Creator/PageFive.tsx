@@ -29,8 +29,11 @@ const PageFive: React.FC<StepperFormProps> = ({
         }
       } else {
         console.log("no allow list provided")
-        await readyToTransact(wallet, connect, setChain);
-        if (wallet) {
+        if (!wallet) {
+          alert("Please connect your wallet and try again!")
+          await readyToTransact(wallet, connect, setChain);
+        }
+        else {
           const parsedStrings = await parseData(wallet.accounts[0].address);
           await handleInputData("whitelistedAddresses", parsedStrings);
           const merkleRoot = await getMerkleRoot(parsedStrings);

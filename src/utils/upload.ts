@@ -16,7 +16,7 @@ export const triggerUploadImageData = async (
       "onUploadProgress": onImageDataProgress
     },
     ).then((response) => {
-      // console.log(response);
+      console.log(response);
       const res = {
           baseURI: response.data.baseURI,
           totalSupply: response.data.totalSupply,
