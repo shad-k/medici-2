@@ -3,9 +3,10 @@ import { Link, useLocation } from 'react-router-dom'
 import { readyToTransact } from '../utils/web3'
 
 import useWallet from '../hooks/useWallet'
+import NetworkIcon from './NetworkIcon'
 
 const Header: React.FC<{}> = () => {
-  const { wallet, connecting, connect, setChain } = useWallet()
+  const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
   const location = useLocation()
 
   if (location.pathname.startsWith('/page/')) {
@@ -35,8 +36,10 @@ const Header: React.FC<{}> = () => {
             About
           </Link> */}
         </div>
-        <div className="flex items-center justify-end md:justify-end w-3/6">
+        <div className="flex justify-end md:justify-end w-4/6">
           {connectedWallet ? (
+          <div className="flex flex-row gap-1">
+           <NetworkIcon/>
             <div className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white">
               {connectedWallet?.ens?.name ??
                 `${connectedWallet?.address.slice(
@@ -44,6 +47,7 @@ const Header: React.FC<{}> = () => {
                   6
                 )}...${connectedWallet?.address.slice(-6)}`}
             </div>
+          </div>
           ) : (
             <button
               className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white disabled:cursor-not-allowed"

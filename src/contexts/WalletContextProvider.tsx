@@ -22,12 +22,12 @@ export const WalletContext = React.createContext(initialValue)
 const onboard = init({
   wallets: [injected],
   chains: [
-    // {
-    //   id: '0xA',
-    //   token: 'ETH',
-    //   label: 'Optimistic Mainnet',
-    //   rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04'
-    // }
+    {
+      id: '0xA',
+      token: 'ETH',
+      label: 'Optimistic Mainnet',
+      rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04'
+    },
     // {
     // id: '0x1',
     // token: 'ETH',
@@ -43,11 +43,12 @@ const onboard = init({
     //     'https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD',
     // },
     {
-      id: localenv.network.id,
-      token: localenv.network.token,
-      label: localenv.network.label,
-      rpcUrl: localenv.network.rpcUrl,
-    }
+      label: 'GOERLI',
+      id: '0x5',
+      token: 'ETH',
+      rpcUrl:
+      'https://eth-goerli.alchemyapi.io/v2/cgHuBwD5rDkESlnFr3ee92PLMp3pkfyE',
+    },
 ],
 appMetadata: {
     name: 'Medici',
@@ -60,7 +61,7 @@ appMetadata: {
   accountCenter: {
     desktop: {
       enabled: false,
-      position: 'topRight',
+      position: 'topRight'
     },
     mobile: {
       enabled: false,

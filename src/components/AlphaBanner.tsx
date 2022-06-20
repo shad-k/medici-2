@@ -10,7 +10,7 @@ const AlphaBanner:React.FC<{}> = () => {
   return (
     <div className="p-10">
     <Collapse in={showAlert}>
-      <Alert severity="info" onClose={() => {handleClose()}} icon={false} sx={{backgroundColor: "#201F27", color: "#FFFFFF"}}>
+      <Alert severity="info" onClose={() => {handleClose()}} icon={false} sx={{backgroundColor: "#201F27", color: "#cacaca", boxShadow: "0.8"}}>
       <AlertTitle>Info!</AlertTitle>
       Caution: This is Alpha Software. Although Contracts have been tested rigorously, we do not have a formal audit yet and features may be in flux
       </Alert>
