@@ -47,14 +47,24 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         const signer = provider.getSigner(callerWallet.accounts[0].address);
         const FactoryContract = new ethers.Contract(localenv.contract.factory_address, localenv.contract.factory_abi, signer);
 
+        /*
+        string memory _name,
+        string memory _symbol,
+        string memory _baseuri,
+        bytes32 _merkleroot,
+        uint256 _maxSupply,
+        uint256 _price,
+        uint256 _maxMintPerPerson,
+        address _masterAddress
+        */
         try {
             const result_contract = await FactoryContract.createContract(
             props.name, // name
             props.symbol, // symbol
             props.baseuri, // base URI
             merkleRoot, // merkle root
+            utils.parseUnits(props.price, 'wei'), // price
             props.maxSupply, // max supply
-            props.price, // price
             props.maxMintsPerPerson, // max mint per person
             props.masterAddress // master address
             );

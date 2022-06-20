@@ -7,7 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { Contract } from '../../model/types';
 import { CONFIG } from '../../utils/config';
-import { isValidAddress, getMerkleRoot, generateNewContract, whitelist, getNewLaunchedContract, readyToTransact } from '../../utils/web3'
+import { isValidAddress, generateNewContract, whitelist, getNewLaunchedContract, readyToTransact } from '../../utils/web3'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 
 const PageSix: React.FC<StepperFormProps> = ({
@@ -53,23 +53,26 @@ const PageSix: React.FC<StepperFormProps> = ({
           { 
             name: data.name,
             symbol: data.symbol,
-            baseuri: data.baseuri,
+            baseuri: data.baseURI,
             maxSupply: data.maxSupply,
             price: data.price,
-            maxMintsPerPerson: data.maxMintsPerPerson,
+            maxMintsPerPerson: parseInt(data.maxMintsPerPerson),
             masterAddress: data.masterAddress
           });
+        console.log("done generating! Getting new launched contract");
         const result = await getNewLaunchedContract(data.masterAddress);
-        console.log(result);
+        console.log("Get new launched contract " + result.name);
         await whitelist(
         { 
           "project": data.name,
           "symbol": data.symbol,
           "ERC721Contract": result.contractaddress,
-          "ownerAddress": data.masterAddress,
+          "ownerAddress": result.masteraddress,
           "whitelistedAddresses": data.whitelistedAddresses,
-          "merkleRoot": data.merkleroot
+          "merkleRoot": data.merkleRoot
         })
+        console.log("Done setting whitelist!")
+        setContractCreationSuccess(true);
         setContractCreationResult(result);
       }
     } catch {
@@ -120,7 +123,7 @@ const PageSix: React.FC<StepperFormProps> = ({
           </div>
           <div className="text-left">
             <label htmlFor="input-max-per-wallet" className="block py-2 text-transparent tracking-wide bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Max # of Mints per Wallet</label>
-            <input id="input-max-per-wallet" type="number" className="w-full text-zinc-500 text-2xl p-2 rounded-lg bg-white border-2 border-zinc-300 outline-none" onChange={event => handleInputData("maxPerWallet", event.target.value)}/>
+            <input id="input-max-per-wallet" type="number" className="w-full text-zinc-500 text-2xl p-2 rounded-lg bg-white border-2 border-zinc-300 outline-none" onChange={event => handleInputData("maxMintsPerPerson", event.target.value)}/>
           </div>
           <div className="text-left">
             <label htmlFor="input-owner-address" className="block py-2 text-transparent tracking-wide bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Owner address</label>

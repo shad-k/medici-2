@@ -17,7 +17,7 @@ const Demo: React.FC<{}> = () => {
   const [CollectionTitle, setCollectionTitle] = useState<string>()
   const [CollectionSymbol, setCollectionSymbol] = useState<string>()
   const [CollectionSize, setCollectionSize] = useState<number>()
-  const [FloorPrice, setFloorPrice] = useState<BigNumber>()
+  const [FloorPrice, setFloorPrice] = useState<any>()
   const [MaxMintsPerPerson, setMaxMintsPerPerson] = useState<number>()
   const [MasterAddress, setMasterAddress] = useState<string>()
   const [WhitelistStrData, setWhitelistStrData] = useState<string | File>()

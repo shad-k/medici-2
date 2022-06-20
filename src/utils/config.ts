@@ -7,16 +7,24 @@ export enum API_PATHS {
   COLLECTION = '/collections',
   CLAIM_FETCH = '/claims/fetch',
   CLAIM_COVER = '/claims/cover',
+  RESERVE_NFT = '/reservations/reserve',
+  GET_RESERVED_NFTS = '/reservations/status',
+  RETRIEVE_THUMBNAILS = '/retrieve/thumbnails'
 }
 
 export const CONFIG = {
   DEV: {
     env: 'DEV',
     network: {
-      label: 'Goerli TestNet',
+//       label: 'Goerli TestNet',
+//       id: '0x5',
+//       token: 'ETH',
+//       rpcUrl: 'https://rpc.ankr.com/eth_goerli',
+      label: 'GOERLI',
       id: '0x5',
       token: 'ETH',
-      rpcUrl: 'https://rpc.ankr.com/eth_goerli',
+      rpcUrl:
+      'https://eth-goerli.alchemyapi.io/v2/cgHuBwD5rDkESlnFr3ee92PLMp3pkfyE',
       txEtherscanUrl: 'https://goerli.etherscan.io/tx/',
     },
     contract: {
@@ -968,20 +976,22 @@ export const CONFIG = {
       ],
     },
     api: {
-      endpoint: 'https://athensgate.xyz',
-      paths: {
-        getMerkleRoot: '/getMerkleRoot',
-        whitelist: '/whitelist',
-        getNewLaunchedContract: '/getNewLaunchedContract',
-        getAllLaunchedContracts: '/getAllLaunchedContracts',
-        test: '/regulusTest',
-        uploadImageCover: '/upload/cover',
-        uploadImageData: '/upload/collection',
-        uploadMetadata: 'upload/metadata',
-        checkName: '/claims/checkNameAvailability',
-        launchClaim: '/claims/setup',
-        getCover: '/claims/cover',
-      },
+      "endpoint": "https://athensgate.xyz",
+      "paths": {
+        "getMerkleRoot": "/getMerkleRoot",
+        "whitelist": "/whitelist",
+        "getNewLaunchedContract": "/getNewLaunchedContract",
+        "getAllLaunchedContracts": "/getAllLaunchedContracts",
+        "test": "/regulusTest",
+        "uploadImageCover": "/upload/cover",
+        "uploadImageData": "/upload/collection",
+        "uploadMetadata": "upload/metadata",
+        "checkName": "/claims/checkNameAvailability",
+        "launchClaim": "/claims/setup",
+        "getCover": "/claims/cover",
+        "reserve": "/reservations/reserve",
+        "reservedStatus": "/reservations/status"
+      }
     },
   },
 }

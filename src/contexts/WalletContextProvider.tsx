@@ -1,9 +1,11 @@
 import React from 'react'
 import { init, useConnectWallet, useSetChain } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
+import { CONFIG } from '../utils/config'
 
 import { WalletContextReturn } from '../model/types'
 
+const localenv = CONFIG.DEV;
 const injected = injectedModule()
 
 const initialValue: WalletContextReturn = {
@@ -41,13 +43,13 @@ const onboard = init({
     //     'https://eth-kovan.alchemyapi.io/v2/Nhwt0isGKmoL-652jwR15xcJgvUy59CD',
     // },
     {
-      id: '0x5',
-      token: 'ETH',
-      label: 'Goerli Testnet',
-      rpcUrl: 'https://rpc.ankr.com/eth_goerli',
-    },
-  ],
-  appMetadata: {
+      id: localenv.network.id,
+      token: localenv.network.token,
+      label: localenv.network.label,
+      rpcUrl: localenv.network.rpcUrl,
+    }
+],
+appMetadata: {
     name: 'Medici',
     icon: '<svg><svg/>',
     description: 'Lyra',
