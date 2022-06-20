@@ -1,14 +1,29 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React from 'react'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+
 import { Contract } from '../model/types'
 import useAllLaunchedContracts from '../hooks/useAllLaunchedContracts'
-import ContractCard from './ContractCard';
-import Slider from 'react-slick';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { Link } from 'react-router-dom';
 
-const ContractsMenu: React.FC<{masterAddress : string, handleInputData: (input: any) => void}> = ({masterAddress, handleInputData}) => {
-const { data: contracts, error } = useAllLaunchedContracts(masterAddress);
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+}
+
+const ContractsMenu: React.FC<{
+  masterAddress: string
+  selectProject: (input: any) => void
+}> = ({ masterAddress, selectProject }) => {
+  const { data: contracts, error } = useAllLaunchedContracts(masterAddress)
 
   if (!contracts && !error) {
     return null
@@ -18,23 +33,32 @@ const { data: contracts, error } = useAllLaunchedContracts(masterAddress);
     return null
   }
 
-  const onSelectOption = async(contractSelected: string) => {
-    const contractIdx = contractSelected.substring(.2)
-    const selected = contracts[parseInt(contractIdx)-1];
-    handleInputData(selected);
+  const onSelectOption = async (contractIndex: string) => {
+    const selected = contracts[parseInt(contractIndex) - 1]
+    selectProject(selected)
   }
 
   return (
     <div className="w-1/2 md:text-left flex flex-col my-2">
-      {
-      <select className="h-[50px] text-2xl bg-transparent outline-none overflow-ellipsis" onChange={event => onSelectOption(event.target.value)}>
-      {contracts.map((contract: Contract, i) => (
-        <option>{i+1}. {contract.name} ({contract.symbol})</option>
-      ))}
-      </select>
-      }
+      <FormControl sx={{ m: 1, width: 300, borderColor: 'white' }}>
+        <InputLabel id="contract-name">Project Name</InputLabel>
+        <Select
+          labelId="contract-name"
+          id="contract"
+          onChange={(event) => onSelectOption(event.target.value)}
+          input={<OutlinedInput label="Contract name" />}
+          MenuProps={MenuProps}
+          defaultValue={''}
+        >
+          {contracts.map((contract: Contract, i) => (
+            <MenuItem value={i + 1} key={contract.name}>
+              {contract.name} ({contract.symbol})
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </div>
-  );
+  )
 }
 
 export default ContractsMenu

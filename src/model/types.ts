@@ -94,14 +94,36 @@ export enum TemplateTier {
 
 export type Claim = {
   contract: string
-  tier: TemplateTier
-  font: string | null
-  primarycolor: string | null
-  secondarycolor: string | null
-  backgroundcolor: string | null
+  tier: TemplateTier | null
+  fontFamily: string | null
+  primaryColor: string | null
+  secondaryColor: string | null
+  bgColor: string | null
   artist: string
   description: string
-  collection_email: string | null
-  collection_twitter: string | null
-  collection_discord: string | null
+  email: string | null
+  twitter: string | null
+  discord: string | null
+}
+
+export enum Accordions {
+  DETAIL = 'detail',
+  SOCIAL = 'social',
+  FONT = 'font',
+  TIER = 'tier',
+  COLORS = 'colors',
+}
+
+export type FormState = {
+  contract: string
+  artist: string
+  description: string
+  twitter: string
+  discord: string
+  email: string
+  primaryColor: string
+  secondaryColor: string
+  bgColor: string
+  fontFamily: string
+  tier: TemplateTier | null
 }
