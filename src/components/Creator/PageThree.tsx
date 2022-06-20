@@ -14,7 +14,7 @@ const PageThree: React.FC<StepperFormProps> = ({
     const handleClose = () => setShowModal(false);
     const [uploadProgress, setUploadProgress] = useState<number>(0);
     const [showLoader, setShowLoader] = useState<boolean>(false);
-    const [hasCustomMetadata, setHasCustomMetadata] = useState<boolean>(false);
+    const [hasCustomMetadata, setHasCustomMetadata] = useState<boolean>();
 
     useEffect(() => {
       if (showModal) {
@@ -26,13 +26,17 @@ const PageThree: React.FC<StepperFormProps> = ({
     },[showModal])
 
     const onSubmit = async () => {
-      if (hasCustomMetadata) {
+      if (hasCustomMetadata === undefined) {
+        alert("Please select an option!")
+      } else {
+      if (hasCustomMetadata === true) {
         await handleInputData("isMetadataUploaded", true);
       } else {
         await handleInputData("isMetadataUploaded", false);
-      }
+      } 
       console.log(data);
       nextStep();
+      }
     }
 
     // const uploadMetadata = async (file: File) => {
@@ -70,8 +74,8 @@ const PageThree: React.FC<StepperFormProps> = ({
     return (
     <div className="w-full flex flex-col items-center p-10 h-screen">
         <div className="text-center w-4/5 mt-10 md:mt-52">
-            <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Just for fun: bring your own metadata!</h1>
-            <h2 className="text-zinc-500">If you have custom metadata for your collection, please upload it now.</h2>
+            <h1 className="text-[50px]">✨<span className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Bring Your Own Metadata</span>✨</h1>
+            <h2 className="text-zinc-500">If you have custom metadata for your project, please upload it now.</h2>
         </div>
         <div className="flex flex-col space-y-4 m-10 items-center">
           <button className="bg-[#2e2c38] hover:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={handleOpen}>Yes</button>
@@ -87,7 +91,7 @@ const PageThree: React.FC<StepperFormProps> = ({
           >
         <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
           <h1 className="text-center text-2xl">Upload your metadata</h1>
-          <h2 className="text-zinc-500"> We accept zip files only! </h2>
+          <h2 className="text-zinc-500">We accept zip files only!</h2>
           <br></br>
             <div>
                 <input
