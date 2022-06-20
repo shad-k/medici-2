@@ -7,6 +7,9 @@ export enum API_PATHS {
   COLLECTION = '/collections',
   CLAIM_FETCH = '/claims/fetch',
   CLAIM_COVER = '/claims/cover',
+  RESERVE_NFT = '/reservations/reserve',
+  GET_RESERVED_NFTS = '/reservations/status',
+  RETRIEVE_THUMBNAILS = '/retrieve/thumbnails'
 }
 
 export const CONFIG = {
@@ -981,7 +984,9 @@ export const CONFIG = {
         "uploadMetadata": "upload/metadata",
         "checkName": "/claims/checkNameAvailability",
         "launchClaim": "/claims/setup",
-        "getCover": "/claims/cover"
+        "getCover": "/claims/cover",
+        "reserve": "/reservations/reserve",
+        "reservedStatus": "/reservations/status"
       }
     },
   },

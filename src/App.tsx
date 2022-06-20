@@ -8,6 +8,7 @@ import Demo from './pages/demo'
 import Project from './pages/project'
 import ProjectManager from './pages/project_manager'
 import Creator from './pages/creator'
+import Reservation from './pages/reservation'
 
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -31,6 +32,7 @@ const App: React.FC<{}> = () => {
                 <Route path="/page/:name" element={<ClaimPage />} />
                 <Route path="/projects" element={<ProjectManager/>}/>
                 <Route path="/project/:contractaddress" element={<Project />} />
+                <Route path="/reservation/:name" element={<Reservation />} />
                 <Route path="/" element={<Home />} />
               </Routes>
             </div>
