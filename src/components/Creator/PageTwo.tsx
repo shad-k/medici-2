@@ -94,7 +94,7 @@ const PageTwo: React.FC<StepperFormProps> = ({
       </div>
       <div className="text-center p-10 md:mt-10">
         <div className="space-y-5">
-          <h1 className="text-3xl md:text-5xl bg-transparent inline w-fit text-center tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">What will you name your project?</h1>
+          <h1 className="text-3xl md:text-5xl bg-transparent inline w-fit text-center tracking-wide text-transparent bg-clip-text text-[#9403fc] font-semibold">What will you name your project?</h1>
           <h2 className="text-zinc-400 text-md md:text-lg font-light">The name of your project must be unique and currently cannot be changed, but we plan on removing that restriction in the near future.</h2> 
         <div className="text-left">
             <label htmlFor="input-name" className="block py-2 text-transparent tracking-wide bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Project Title</label>

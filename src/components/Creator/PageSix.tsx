@@ -113,7 +113,7 @@ const PageSix: React.FC<StepperFormProps> = ({
     return (
     <div className="w-full flex flex-col items-center p-10 h-screen">
         <div className="text-center w-4/5 mt-10 md:mt-52">
-            <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Finally...</h1>
+            <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-[#9403fc] font-semibold">Finally...</h1>
             <h2 className="text-zinc-500">Just a few more details needed for launch!</h2>
         </div>
         <div className="space-y-4 w-full md:w-2/5 m-10">

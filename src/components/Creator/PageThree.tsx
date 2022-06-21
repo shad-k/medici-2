@@ -74,7 +74,7 @@ const PageThree: React.FC<StepperFormProps> = ({
     return (
     <div className="w-full flex flex-col items-center p-10 h-screen">
         <div className="text-center w-4/5 mt-10 md:mt-52">
-            <h1 className="text-[50px]">✨<span className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Bring Your Own Metadata</span>✨</h1>
+            <h1 className="text-[50px]">✨<span className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text text-[#9403fc] font-semibold">Bring Your Own Metadata</span>✨</h1>
             <h2 className="text-zinc-500">If you have custom metadata for your project, please upload it now.</h2>
         </div>
         <div className="flex flex-col space-y-4 m-10 items-center">

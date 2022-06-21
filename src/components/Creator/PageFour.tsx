@@ -21,6 +21,9 @@ const PageFour: React.FC<StepperFormProps> = ({
 
     const onSubmit = () => {
       // handleOpen();
+      if (!imageUploadResponse) {
+        alert("Please upload your project!")
+      }
       console.log(data)
       nextStep();
     }
@@ -64,7 +67,7 @@ const PageFour: React.FC<StepperFormProps> = ({
     return (
       <div className="w-full flex flex-col items-center p-10 h-screen">
       <div className="text-center w-4/5 mt-10 md:mt-52">
-          <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Upload your collection media</h1>
+          <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text text-[#9403fc] font-semibold">Upload your collection media</h1>
           <h2 className="text-zinc-500">This is where you upload the content for your collection. If you’re not sure about our format, check our docs here.</h2>
       </div>
       { !imageUploadResponse ?
