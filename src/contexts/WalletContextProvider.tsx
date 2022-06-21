@@ -22,12 +22,12 @@ export const WalletContext = React.createContext(initialValue)
 const onboard = init({
   wallets: [injected],
   chains: [
-    {
-      id: '0xA',
-      token: 'ETH',
-      label: 'Optimistic Mainnet',
-      rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04'
-    },
+    // {
+    //   id: '0xA',
+    //   token: 'ETH',
+    //   label: 'Optimistic Mainnet',
+    //   rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04'
+    // },
     // {
     // id: '0x1',
     // token: 'ETH',
