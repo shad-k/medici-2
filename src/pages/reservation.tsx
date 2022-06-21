@@ -31,7 +31,7 @@ const Reservation: React.FC<{}> = () => {
 
   useEffect(() => {
     if (showModal && document.getElementById("modal-container") !== null) {
-      document.getElementById("modal-container")!.style.display = 'block'
+      document.getElementById("modal-container")!.style.display = 'relative'
     } else if (!showModal && document.getElementById("modal-container") !== null){
       document.getElementById("modal-container")!.style.display = 'none'
     } else {
@@ -88,7 +88,7 @@ const Reservation: React.FC<{}> = () => {
             </div>)
           }
           </div>
-          <div id="modal-container" className="flex items-center justify-center text-center h-screen">
+          <div id="modal-container" className="hidden items-center justify-center text-center h-screen">
           {contractName && selectedNFT && 
             <NFTPopup showModal={showModal} handleClose={handleClose} collection={contractName} selected={selectedNFT}/>
           }

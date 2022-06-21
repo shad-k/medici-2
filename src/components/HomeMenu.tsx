@@ -35,11 +35,11 @@ const HomeMenu: React.FC<{}> = () => {
                   <h2 className="text-sm">Launch a custom claim site for your project. </h2>
                 </Link>
                 <Link
-                to={`/demo`}
+                to={`/docs`}
                 className="flex flex-col items-center md:items-start text-center sm:text-left relative px-4 py-4 h-[170px] rounded-lg text-medici-primary text-xl drop-shadow-lg transition duration-500 hover:scale-110 bg-[#2e2c38] space-y-3"
                 >
                   <h1 className="text-2xl">Docs</h1>
-                  <h2 className="text-sm">Try a demo launch on the Kovan test network. </h2>
+                  <h2 className="text-sm">Check out documentation on how to effectively launch your NFT!</h2>
                 </Link>
             </div>
         </section>

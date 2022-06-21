@@ -13,7 +13,7 @@ const { wallet, connect, setChain, connectedChain } = useWallet()
         </h1>
         <br></br>
         <span className="text-center md:w-3/5 font-extralight md:text-2xl text-zinc-500">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, nunc id bibendum viverra, justo elit dictum erat, sed consequat elit 
+        Connect your wallet to see all your projects.
         </span>
         { wallet && <AllContracts masterAddress={wallet.accounts[0].address}/> }
     </div>
