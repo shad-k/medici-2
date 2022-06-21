@@ -40,10 +40,7 @@ const Creator: React.FC<{}> = () => {
   switch(step) {
     case 1:
       return (
-          <div>
-            <AlphaBanner/>
-            <PageOne nextStep={nextStep} handleInputData={handleInputData} data={params}/>
-          </div>
+          <PageOne nextStep={nextStep} handleInputData={handleInputData} data={params}/>
       );
     case 2: 
       return (
