@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import HomeMenu from '../components/HomeMenu'
 import AlphaBanner from '../components/AlphaBanner'
+import useWallet from '../hooks/useWallet'
 
 const Home: React.FC<{}> = () => {
-
   return (
     <div>
     <AlphaBanner/>
@@ -17,19 +17,7 @@ const Home: React.FC<{}> = () => {
           <span className="md:w-3/5 text-center font-extralight md:text-2xl text-zinc-500">
           Create customizable NFT smart contracts and claim pages! 
           </span>
-          {/* <div className="md:mt-10 inline-flex">
-              <Ethereum/>
-              <h1 className="text-1xl md:text-3xl mr-4 ml-3"> {parseFloat(utils.formatUnits(collection.balance, 'gwei')).toFixed(2)}</h1>
-              <h1 className="text-1xl md:text-3xl text-zinc-500">| temp val usd</h1>
-          </div>
-          <div className="ml-6 sm:w-full md:w-3/5 text-1xl text-zinc-500">
-              earned on your most recent project
-          </div> */}
-      {<HomeMenu/>}
-       <br></br>
-     
-      {/* {data && <DashActive/>} */}
-      {/* {data.data} */}
+        {<HomeMenu/>}
       <br></br>
       </div> 
       </div>

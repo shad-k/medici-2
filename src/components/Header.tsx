@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { readyToTransact } from '../utils/web3'
 
@@ -6,13 +6,42 @@ import useWallet from '../hooks/useWallet'
 import NetworkIcon from './NetworkIcon'
 
 const Header: React.FC<{}> = () => {
-  const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
-  const location = useLocation()
+  // const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
+  const { wallet, connecting, connect, connectedWallets, connectedChain, settingChain, setChain } = useWallet();
 
+  useEffect(() => {
+    if (!connectedWallets) return
+    else {
+
+    const connectedWalletsLabelArray = connectedWallets.map(
+      ({ label }) => label
+    )
+    window.localStorage.setItem(
+      'connectedWallets',
+      JSON.stringify(connectedWalletsLabelArray)
+    )
+    }
+  }, [connectedWallets])
+
+  useEffect(() => {
+    const previouslyConnectedWallets = window.localStorage.getItem("connectedWallets");
+    if (!previouslyConnectedWallets) {
+      console.log("No previously connected wallets, returning")
+      return;
+    }
+    async function setWalletFromLocalStorage() {
+      const parsedPreviouslyConnectedWallets = JSON.parse(previouslyConnectedWallets!);
+      console.log("Connecting to previously connected wallet");
+      await connect({ autoSelect: parsedPreviouslyConnectedWallets[0] })
+    }
+    setWalletFromLocalStorage()
+  }, [connect])
+
+  const location = useLocation()
   if (location.pathname.startsWith('/page/')) {
     return null
   }
-
+  
   const connectedWallet = wallet?.accounts[0]
   
   const onConnect = async () => {

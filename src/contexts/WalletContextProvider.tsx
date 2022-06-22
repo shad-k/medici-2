@@ -1,5 +1,5 @@
 import React from 'react'
-import { init, useConnectWallet, useSetChain } from '@web3-onboard/react'
+import { init, useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
 import { CONFIG } from '../utils/config'
 
@@ -12,6 +12,7 @@ const initialValue: WalletContextReturn = {
   connect: (options) => Promise.resolve(),
   wallet: null,
   connecting: false,
+  connectedWallets: null,
   connectedChain: null,
   settingChain: false,
   setChain: (options) => Promise.resolve(false),
@@ -75,6 +76,7 @@ const WalletContextProvider: React.FC<React.PropsWithChildren<{}>> = ({
 }) => {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const [{ chains, connectedChain, settingChain }, setChain] = useSetChain()
+  const connectedWallets = useWallets();
 
   return (
     <WalletContext.Provider
@@ -82,6 +84,7 @@ const WalletContextProvider: React.FC<React.PropsWithChildren<{}>> = ({
         wallet,
         connect,
         connecting,
+        connectedWallets,
         connectedChain,
         setChain,
         settingChain,
