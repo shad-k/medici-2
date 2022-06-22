@@ -12,7 +12,6 @@ const initialValue: WalletContextReturn = {
   connect: (options) => Promise.resolve(),
   wallet: null,
   connecting: false,
-  connectedWallets: null,
   connectedChain: null,
   settingChain: false,
   setChain: (options) => Promise.resolve(false),
@@ -76,7 +75,6 @@ const WalletContextProvider: React.FC<React.PropsWithChildren<{}>> = ({
 }) => {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const [{ chains, connectedChain, settingChain }, setChain] = useSetChain()
-  const connectedWallets = useWallets();
 
   return (
     <WalletContext.Provider
@@ -84,7 +82,6 @@ const WalletContextProvider: React.FC<React.PropsWithChildren<{}>> = ({
         wallet,
         connect,
         connecting,
-        connectedWallets,
         connectedChain,
         setChain,
         settingChain,

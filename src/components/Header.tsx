@@ -4,14 +4,14 @@ import { readyToTransact } from '../utils/web3'
 
 import useWallet from '../hooks/useWallet'
 import NetworkIcon from './NetworkIcon'
+import { useWallets } from '@web3-onboard/react'
 
 const Header: React.FC<{}> = () => {
-  // const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
-  const { wallet, connecting, connect, connectedWallets, connectedChain, settingChain, setChain } = useWallet();
+  const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
+  const connectedWallets = useWallets();
 
   useEffect(() => {
-    if (!connectedWallets) return
-    else {
+    if (!connectedWallets.length) return
 
     const connectedWalletsLabelArray = connectedWallets.map(
       ({ label }) => label
@@ -20,8 +20,7 @@ const Header: React.FC<{}> = () => {
       'connectedWallets',
       JSON.stringify(connectedWalletsLabelArray)
     )
-    }
-  }, [connectedWallets])
+  }, [connectedWallets, wallet])
 
   useEffect(() => {
     const previouslyConnectedWallets = window.localStorage.getItem("connectedWallets");
@@ -32,6 +31,7 @@ const Header: React.FC<{}> = () => {
     async function setWalletFromLocalStorage() {
       const parsedPreviouslyConnectedWallets = JSON.parse(previouslyConnectedWallets!);
       console.log("Connecting to previously connected wallet");
+      console.log(parsedPreviouslyConnectedWallets);
       await connect({ autoSelect: parsedPreviouslyConnectedWallets[0] })
     }
     setWalletFromLocalStorage()
@@ -41,7 +41,7 @@ const Header: React.FC<{}> = () => {
   if (location.pathname.startsWith('/page/')) {
     return null
   }
-  
+
   const connectedWallet = wallet?.accounts[0]
   
   const onConnect = async () => {

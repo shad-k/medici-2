@@ -46,7 +46,6 @@ export type WalletContextReturn = {
   connect: (options: ConnectOptions) => Promise<void>
   wallet: WalletState | null
   connecting: boolean
-  connectedWallets: Array<WalletState> | null
   setChain: (options: {
     chainId: string
     chainNamespace?: string
