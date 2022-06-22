@@ -65,10 +65,19 @@ const NetworkIcon: React.FC<{}> = () => {
     if (connectedWallet){
       if (connectedChain?.id === '0xa') {
         setCurrChainLabel("Optimism");
+        document.getElementById("invalid-icon")!.style.display = 'none';
+        document.getElementById("eth-icon")!.style.display = 'none';
+        document.getElementById("optimism-icon")!.style.display = 'block';
       } else if (connectedChain?.id === '0x5') {
         setCurrChainLabel("Goerli");
+        document.getElementById("invalid-icon")!.style.display = 'none';
+        document.getElementById("eth-icon")!.style.display = 'block';
+        document.getElementById("optimism-icon")!.style.display = 'none';
       } else {
         setCurrChainLabel("Unsupported Network");
+        document.getElementById("invalid-icon")!.style.display = 'block';
+        document.getElementById("eth-icon")!.style.display = 'none';
+        document.getElementById("optimism-icon")!.style.display = 'none';
       }
     }
   }, [connectedChain])
@@ -91,7 +100,9 @@ const NetworkIcon: React.FC<{}> = () => {
             backgroundColor: 'black',
           },}}
       >
-      <BsExclamationTriangle style={{height: '25px', marginRight: '5px'}}/>
+      <div id="optimism-icon" className="mr-2"><Optimism/></div>
+      <div id="eth-icon" className="mr-2"><Ethereum/></div>
+      <BsExclamationTriangle id="invalid-icon" style={{height: '25px', marginRight: '5px'}}/>
       <h2 className="hidden md:block">{currChainLabel}</h2>
       </Button>
       <StyledMenu
