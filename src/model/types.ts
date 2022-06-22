@@ -1,5 +1,6 @@
 import type {
   ConnectOptions,
+  DisconnectOptions,
   WalletState,
   ConnectedChain,
 } from '@web3-onboard/core'
@@ -44,6 +45,7 @@ export type Contract = {
 
 export type WalletContextReturn = {
   connect: (options: ConnectOptions) => Promise<void>
+  disconnect: (options: DisconnectOptions) => Promise<void>
   wallet: WalletState | null
   connecting: boolean
   setChain: (options: {

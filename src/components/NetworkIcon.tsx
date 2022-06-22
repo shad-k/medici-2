@@ -6,6 +6,10 @@ import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import useWallet from '../hooks/useWallet';
 
+import Ethereum from './svgComponents/Ethereum';
+import Optimism from './svgComponents/Optimism';
+import { BsExclamationTriangle } from 'react-icons/bs'
+
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
     elevation={0}
@@ -44,12 +48,14 @@ const NetworkIcon: React.FC<{}> = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [currChainLabel, setCurrChainLabel] = React.useState<string>();
   const open = Boolean(anchorEl);
+  
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleClose = (chainId: string) => {
     setAnchorEl(null);
-    // setChain({ chainId: '0xA' })
+    setChain({ chainId: chainId })
   };
   
   const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
@@ -57,12 +63,12 @@ const NetworkIcon: React.FC<{}> = () => {
 
   React.useEffect(() => {
     if (connectedWallet){
-      if (connectedChain?.id === '0xA') {
+      if (connectedChain?.id === '0xa') {
         setCurrChainLabel("Optimism");
       } else if (connectedChain?.id === '0x5') {
         setCurrChainLabel("Goerli");
       } else {
-        return;
+        setCurrChainLabel("Unsupported Network");
       }
     }
   }, [connectedChain])
@@ -85,7 +91,8 @@ const NetworkIcon: React.FC<{}> = () => {
             backgroundColor: 'black',
           },}}
       >
-      {currChainLabel}
+      <BsExclamationTriangle style={{height: '25px', marginRight: '5px'}}/>
+      <h2 className="hidden md:block">{currChainLabel}</h2>
       </Button>
       <StyledMenu
         id="demo-customized-menu"
@@ -96,11 +103,11 @@ const NetworkIcon: React.FC<{}> = () => {
         open={open}
         onClose={handleClose}
       >
-      <MenuItem onClick={handleClose} disabled={true} disableRipple>
-        Optimism (coming soon!)
+      <MenuItem onClick={event => handleClose("0xa")} disabled={true} disableRipple>
+      <Optimism/> <p className="ml-2">Optimism (coming soon!)</p>
       </MenuItem>
-      <MenuItem onClick={handleClose} disableRipple>
-        Goerli
+      <MenuItem onClick={event => handleClose("0x5")} disableRipple>
+      <Ethereum/> <p className="ml-2">Goerli</p>
       </MenuItem>
       </StyledMenu>
     </div>

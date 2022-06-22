@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { readyToTransact } from '../utils/web3'
+import NetworkIcon from './NetworkIcon'
 
 import useWallet from '../hooks/useWallet'
-import NetworkIcon from './NetworkIcon'
 import { useWallets } from '@web3-onboard/react'
 
 const Header: React.FC<{}> = () => {
-  const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
+  const { wallet, connecting, connectedChain, connect, disconnect, setChain } = useWallet()
   const connectedWallets = useWallets();
 
   useEffect(() => {
@@ -47,8 +47,13 @@ const Header: React.FC<{}> = () => {
   const onConnect = async () => {
     connect({});
     console.log("wallet connected")
-    await readyToTransact(connectedWallet, connect, setChain)
-    console.log("ready to transact")
+  }
+
+  const onDisconnect = async () => {
+    if (wallet) {
+      await disconnect({label: wallet!.label});
+      window.localStorage.removeItem('connectedWallets');
+    }
   }
 
   return (
@@ -69,13 +74,17 @@ const Header: React.FC<{}> = () => {
           {connectedWallet ? (
           <div className="flex flex-row gap-1">
            <NetworkIcon/>
-            <div className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white">
+            <button
+              id="connected-button"
+              className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white"
+              onClick={() => onDisconnect()}
+            >
               {connectedWallet?.ens?.name ??
                 `${connectedWallet?.address.slice(
                   0,
                   6
                 )}...${connectedWallet?.address.slice(-6)}`}
-            </div>
+            </button>
           </div>
           ) : (
             <button

@@ -10,6 +10,7 @@ const injected = injectedModule()
 
 const initialValue: WalletContextReturn = {
   connect: (options) => Promise.resolve(),
+  disconnect: (options) => Promise.resolve(),
   wallet: null,
   connecting: false,
   connectedChain: null,
@@ -53,7 +54,7 @@ const onboard = init({
 appMetadata: {
     name: 'Medici',
     icon: '<svg><svg/>',
-    description: 'Lyra',
+    description: 'Regulus',
     recommendedInjectedWallets: [
       { name: 'MetaMask', url: 'https://metamask.io' },
     ],
@@ -81,6 +82,7 @@ const WalletContextProvider: React.FC<React.PropsWithChildren<{}>> = ({
       value={{
         wallet,
         connect,
+        disconnect,
         connecting,
         connectedChain,
         setChain,
