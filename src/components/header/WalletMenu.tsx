@@ -6,10 +6,6 @@ import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import useWallet from '../../hooks/useWallet';
 
-import Ethereum from '../svgComponents/Ethereum';
-import Optimism from '../svgComponents/Optimism';
-import { BsExclamationTriangle } from 'react-icons/bs'
-
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
     elevation={0}
@@ -44,7 +40,7 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-const NetworkIcon: React.FC<{}> = () => {
+const WalletMenu: React.FC<{}> = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [currChainLabel, setCurrChainLabel] = React.useState<string>();
   const open = Boolean(anchorEl);
@@ -58,34 +54,22 @@ const NetworkIcon: React.FC<{}> = () => {
     setChain({ chainId: chainId })
   };
   
-  const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
+  const { wallet, connecting, connectedChain, connect, disconnect, setChain } = useWallet()
   const connectedWallet = wallet?.accounts[0]
 
-  React.useEffect(() => {
-    if (connectedWallet){
-      if (connectedChain?.id === '0xa') {
-        setCurrChainLabel("Optimism");
-        document.getElementById("invalid-icon")!.style.display = 'none';
-        document.getElementById("eth-icon")!.style.display = 'none';
-        document.getElementById("optimism-icon")!.style.display = 'block';
-      } else if (connectedChain?.id === '0x5') {
-        setCurrChainLabel("Goerli");
-        document.getElementById("invalid-icon")!.style.display = 'none';
-        document.getElementById("eth-icon")!.style.display = 'block';
-        document.getElementById("optimism-icon")!.style.display = 'none';
-      } else {
-        setCurrChainLabel("Unsupported Network");
-        document.getElementById("invalid-icon")!.style.display = 'block';
-        document.getElementById("eth-icon")!.style.display = 'none';
-        document.getElementById("optimism-icon")!.style.display = 'none';
-      }
+
+  const onDisconnect = async () => {
+    if (wallet) {
+      await disconnect({label: wallet!.label});
+      window.localStorage.removeItem('connectedWallets');
     }
-  }, [connectedChain])
-  
+  }
+
   return (
     <div>
       <Button
         id="demo-customized-button"
+        className="px-5 py-2"
         aria-controls={open ? 'demo-customized-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
@@ -97,6 +81,8 @@ const NetworkIcon: React.FC<{}> = () => {
           marginTop: '3px',
           paddingLeft: '1.25rem',
           paddingRight: '1.25rem'/* 20px */,
+          paddingTop: "0.5rem",
+          paddingBottom: "0.5rem",
           borderRadius: '1rem',
           fontSize: '0.875rem',
           fontWeight: 'light',
@@ -106,10 +92,11 @@ const NetworkIcon: React.FC<{}> = () => {
             backgroundColor: 'black',
           },}}
       >
-      <div id="optimism-icon"><Optimism/></div>
-      <div id="eth-icon"><Ethereum/></div>
-      <BsExclamationTriangle id="invalid-icon" style={{height: '25px', marginRight: '5px'}}/>
-      <h2 className="hidden md:block ml-2">{currChainLabel}</h2>
+        {connectedWallet?.ens?.name ??
+          `${connectedWallet?.address.slice(
+            0,
+            6
+          )}...${connectedWallet?.address.slice(-6)}`}
       </Button>
       <StyledMenu
         id="demo-customized-menu"
@@ -120,14 +107,11 @@ const NetworkIcon: React.FC<{}> = () => {
         open={open}
         onClose={handleClose}
       >
-      <MenuItem onClick={event => handleClose("0xa")} disabled={true} disableRipple>
-      <Optimism/> <p className="ml-1">Optimism (coming soon!)</p>
-      </MenuItem>
-      <MenuItem onClick={event => handleClose("0x5")} disableRipple>
-      <Ethereum/> <p className="ml-1">Goerli</p>
+      <MenuItem onClick={event => onDisconnect()} disableRipple>
+      Disconnect Wallet
       </MenuItem>
       </StyledMenu>
     </div>
   );
 }
-export default NetworkIcon
+export default WalletMenu

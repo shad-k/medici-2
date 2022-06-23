@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { readyToTransact } from '../../utils/web3'
 import NetworkIcon from './NetworkIcon'
+import WalletMenu from './WalletMenu'
+import { Button } from '@mui/material'
 
 import useWallet from '../../hooks/useWallet'
 import { useWallets } from '@web3-onboard/react'
@@ -49,13 +51,6 @@ const Header: React.FC<{}> = () => {
     console.log("wallet connected")
   }
 
-  const onDisconnect = async () => {
-    if (wallet) {
-      await disconnect({label: wallet!.label});
-      window.localStorage.removeItem('connectedWallets');
-    }
-  }
-
   return (
     <header className="h-16 w-full px-2 lg:px-0 py-4 fixed top-0 left-0 border-t border-transparent z-10 header-bg">
       <div className="w-full md:w-4/5 mx-auto flex items-center justify-between h-full">
@@ -73,27 +68,33 @@ const Header: React.FC<{}> = () => {
         <div className="flex justify-end md:justify-end w-4/6">
           {connectedWallet ? (
           <div className="flex flex-row gap-1">
-           <NetworkIcon/>
-            <button
-              id="connected-button"
-              className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white"
-              onClick={() => onDisconnect()}
-            >
-              {connectedWallet?.ens?.name ??
-                `${connectedWallet?.address.slice(
-                  0,
-                  6
-                )}...${connectedWallet?.address.slice(-6)}`}
-            </button>
+            <NetworkIcon/>
+            <WalletMenu/>
           </div>
           ) : (
-            <button
-              className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white disabled:cursor-not-allowed"
-              onClick={() => onConnect()}
-              disabled={connecting}
-            >
-              {connecting ? 'Connecting' : 'Connect Wallet'}
-            </button>
+            <Button
+        id="demo-customized-button"
+        variant="contained"
+        disableElevation
+        onClick={onConnect}
+        sx={{
+          marginTop: '3px',
+          paddingLeft: '1.25rem',
+          paddingRight: '1.25rem'/* 20px */,
+          paddingTop: "0.5rem",
+          paddingBottom: "0.5rem",
+          borderRadius: '1rem',
+          fontSize: '0.875rem',
+          fontWeight: 'light',
+          textTransform: 'none',
+          lineHeight: '1.25rem',
+          '&:hover': {
+            color: '#6618E4',
+            backgroundColor: 'black',
+          },}}
+          >
+            {connecting ? 'Connecting' : 'Connect Wallet'}
+            </Button>
           )}
           {/* <RiShoppingCartLine size="30" className="hidden md:block" /> */}
         </div>
