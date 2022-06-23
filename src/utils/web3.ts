@@ -48,6 +48,7 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         const FactoryContract = new ethers.Contract(localenv.contract.factory_address, localenv.contract.factory_abi, signer);
 
         /*
+        function createContract(
         string memory _name,
         string memory _symbol,
         string memory _baseuri,
@@ -56,6 +57,7 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         uint256 _price,
         uint256 _maxMintPerPerson,
         address _masterAddress
+        ) 
         */
         try {
             const result_contract = await FactoryContract.createContract(
@@ -63,8 +65,8 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
             props.symbol, // symbol
             props.baseuri, // base URI
             merkleRoot, // merkle root
-            utils.parseUnits(props.price, 'wei'), // price
             props.maxSupply, // max supply
+            utils.parseUnits(props.price, 'wei'), // price
             props.maxMintsPerPerson, // max mint per person
             props.masterAddress // master address
             );
@@ -158,7 +160,6 @@ export const startMintPeriod = async (callerWallet: any, contractAddress: string
     await myContract.turnOffClaimPeriodAndTurnOnMintPeriod()
 }
 
-
 /* end mint period */
 export const endMintPeriod = async (callerWallet: any, contractAddress: string) => {
     const myContract = getContract(callerWallet, contractAddress)
@@ -170,9 +171,9 @@ export const changeBaseURI = async (callerWallet: any, contractAddress: string, 
     await myContract.changeBaseUri(newUri)
 } 
 
-export const changePrice = async (callerWallet: any, contractAddress: string, newPrice: BigNumber) => {
+export const changePrice = async (callerWallet: any, contractAddress: string, newPrice: string) => {
     const myContract = getContract(callerWallet, contractAddress)
-    await myContract.changePrice(newPrice)
+    await myContract.changePrice(utils.parseUnits(newPrice, 'wei'));
 }
 
 export const changeMasterAddress = async (callerWallet: any, contractAddress: string, newMasterAddress: string) => {
@@ -184,9 +185,7 @@ export const changeMasterAddress = async (callerWallet: any, contractAddress: st
 
 export const getIsClaimPeriod = async (callerWallet: any, contractAddress: string) => {
     const myContract = getContract(callerWallet, contractAddress);
-    console.log(myContract)
-    const result = await myContract.price();
-    return result;
+    return myContract.isClaimPeriod();
 }
 
 // export const getBalance = async (callerWallet: any, contractAddress: string): Promise<any> => {
