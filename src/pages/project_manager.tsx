@@ -1,6 +1,6 @@
 import React from 'react'
-import DashHero from '../components/HomeMenu'
-import AllContracts from '../components/AllContracts'
+import DashHero from '../components/home/HomeMenu'
+import AllContracts from '../components/projects/AllContracts'
 import useWallet from '../hooks/useWallet'
 import useAllLaunchedContracts from '../hooks/useAllLaunchedContracts'
 

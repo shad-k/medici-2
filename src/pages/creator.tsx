@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import PageOne from '../components/Creator/PageOne';
-import PageTwo from '../components/Creator/PageTwo';
-import PageThree from '../components/Creator/PageThree';
-import PageFour from '../components/Creator/PageFour';
-import PageFive from '../components/Creator/PageFive';
-import PageSix from '../components/Creator/PageSix';
-import AlphaBanner from '../components/AlphaBanner'
+import PageOne from '../components/creator/PageOne';
+import PageTwo from '../components/creator/PageTwo';
+import PageThree from '../components/creator/PageThree';
+import PageFour from '../components/creator/PageFour';
+import PageFive from '../components/creator/PageFive';
+import PageSix from '../components/creator/PageSix';
+import AlphaBanner from '../components/home/AlphaBanner'
 
 const Creator: React.FC<{}> = () => {
   const [step, setStep] = useState<number>(1);

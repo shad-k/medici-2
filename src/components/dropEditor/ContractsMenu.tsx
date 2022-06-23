@@ -5,8 +5,8 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
-import { Contract } from '../model/types'
-import useAllLaunchedContracts from '../hooks/useAllLaunchedContracts'
+import { Contract } from '../../model/types'
+import useAllLaunchedContracts from '../../hooks/useAllLaunchedContracts'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8

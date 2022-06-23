@@ -4,10 +4,10 @@ import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import useWallet from '../hooks/useWallet';
+import useWallet from '../../hooks/useWallet';
 
-import Ethereum from './svgComponents/Ethereum';
-import Optimism from './svgComponents/Optimism';
+import Ethereum from '../svgComponents/Ethereum';
+import Optimism from '../svgComponents/Optimism';
 import { BsExclamationTriangle } from 'react-icons/bs'
 
 const StyledMenu = styled((props: MenuProps) => (

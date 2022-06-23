@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import { StepperFormProps } from '../../model/types';
 import validator from 'validator';
-import { uploadCoverImage, checkNameAvailability } from '../../utils/claims';
+import { getNameAvailability } from '../../utils/retrieve';
+import { uploadCoverImage } from '../../utils/upload';
 
 const PageTwo: React.FC<StepperFormProps> = ({
   nextStep,
@@ -53,7 +54,7 @@ const PageTwo: React.FC<StepperFormProps> = ({
         clearTimeout(timer);
         
         const newTimer = setTimeout( async () => {
-          const isNameAvailable = await checkNameAvailability(name);
+          const isNameAvailable = await getNameAvailability(name);
           if (isNameAvailable) {
             await handleInputData("name", name);
             setIsNameAvailable(true);

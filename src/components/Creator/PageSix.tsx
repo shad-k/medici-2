@@ -59,8 +59,8 @@ const PageSix: React.FC<StepperFormProps> = ({
             maxMintsPerPerson: parseInt(data.maxMintsPerPerson),
             masterAddress: data.masterAddress
           });
-        console.log("done generating! Getting new launched contract");
         const result = await getNewLaunchedContract(data.masterAddress);
+        setContractCreationResult(result);
         console.log("Get new launched contract " + result.name);
         await whitelist(
         { 
@@ -73,7 +73,6 @@ const PageSix: React.FC<StepperFormProps> = ({
         })
         console.log("Done setting whitelist!")
         setContractCreationSuccess(true);
-        setContractCreationResult(result);
       }
     } catch {
         setContractCreationSuccess(false);
@@ -144,7 +143,9 @@ const PageSix: React.FC<StepperFormProps> = ({
             aria-describedby="modal-modal-description"
           >
           <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
-            <h1 className="text-center text-2xl">Generating your Smart Contract</h1>
+            {(!ContractCreationResult) && <h1 className="text-center text-2xl">Generating your Smart Contract</h1>}
+            {(ContractCreationResult && !ContractCreationSuccess) && <h1 className="text-center text-2xl">Confirming your transaction</h1>}
+            {(ContractCreationResult && !ContractCreationSuccess) && <p>Our platform waits for five blocks to confirm your transaction, to ensure your transaction is secure  </p>}
             <br></br>
             { (ContractCreationSuccess && ContractCreationResult) ? <a href={localenv.network.txEtherscanUrl + ContractCreationResult.txhash}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
           </div>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import HomeMenu from '../components/HomeMenu'
-import AlphaBanner from '../components/AlphaBanner'
+import HomeMenu from '../components/home/HomeMenu'
+import AlphaBanner from '../components/home/AlphaBanner'
 import useWallet from '../hooks/useWallet'
 
 const Home: React.FC<{}> = () => {

@@ -4,7 +4,7 @@ import { triggerUploadImageData } from '../../utils/upload';
 
 import Modal from '@mui/material/Modal';
 import LinearProgress from '@mui/material/LinearProgress';
-import { getGatewayURL, getMetadata } from '../../utils/metadata';
+import { getMetadata } from '../../utils/retrieve';
 
 const PageFour: React.FC<StepperFormProps> = ({
     nextStep,

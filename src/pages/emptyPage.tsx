@@ -1,5 +1,5 @@
 import React from 'react'
-import AlphaBanner from '../components/AlphaBanner'
+import AlphaBanner from '../components/home/AlphaBanner'
 import { Link } from 'react-router-dom'
 
 const EmptyPage: React.FC<{}> = () => {

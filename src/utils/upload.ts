@@ -50,3 +50,22 @@ onMetadataProgress: any) => {
   })
 }
 
+export const uploadCoverImage = async (name: string, file: File) => {
+  const formdata = new FormData();
+  formdata.append("cover", file)
+  
+  return apiClient.post(
+    localenv.api.paths.uploadImageCover,
+    formdata,
+    {
+      "headers": {"Content-Type": "form-data"},
+      "params": {"collection": name},
+    })
+    .then(function(response) {
+      return Promise.resolve(true);
+    }).catch(function(error){
+      return Promise.resolve(false);
+    });
+}
+
+

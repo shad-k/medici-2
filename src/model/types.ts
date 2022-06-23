@@ -129,3 +129,9 @@ export type FormState = {
   fontFamily: string
   tier: TemplateTier | null
 }
+
+export type ChainConfigReturn = {
+  network: string
+  factory: string
+  claims: string
+}

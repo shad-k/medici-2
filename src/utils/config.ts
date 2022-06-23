@@ -4,12 +4,19 @@ export enum API_PATHS {
   GET_MERKLE_ROOT = '/getMerkleRoot',
   REGULUS_TEST = '/regulusTest',
   GET_NEW_LAUNCHED_CONTRACT = '/getNewLaunchedContract',
+  GET_ALL_LAUNCHED_CONTRACTS = '/getAllLaunchedContracts',
+  WHITELIST = '/whitelist',
   COLLECTION = '/collections',
   CLAIM_FETCH = '/claims/fetch',
   CLAIM_COVER = '/claims/cover',
+  CLAIM_SETUP = '/claims/setup',
+  UPLOAD_COVER = '/upload/cover',
+  UPLOAD_COLLECTION_DATA = '/upload/collection',
+  CHECK_NAME = '/claims/checkNameAvailability',
   RESERVE_NFT = '/reservations/reserve',
   GET_RESERVED_NFTS = '/reservations/status',
-  RETRIEVE_THUMBNAILS = '/retrieve/thumbnails'
+  RETRIEVE_THUMBNAILS = '/retrieve/thumbnails',
+  RETRIEVE_CHAIN_CONFIG = '/retrieve/chainConfig',
 }
 
 export const CONFIG = {

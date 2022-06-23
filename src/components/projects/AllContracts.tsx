@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { Contract } from '../model/types'
-import useAllLaunchedContracts from '../hooks/useAllLaunchedContracts'
-import ContractCard from './ContractCard';
+import { Contract } from '../../model/types'
+import useAllLaunchedContracts from '../../hooks/useAllLaunchedContracts'
 import ContractCardV2 from './ContractCardV2'
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";

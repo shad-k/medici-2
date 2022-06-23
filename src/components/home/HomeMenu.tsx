@@ -1,7 +1,7 @@
 
 import React from 'react'
-import Ethereum from './svgComponents/Ethereum';
-import { Collection } from '../model/types'
+import Ethereum from '../svgComponents/Ethereum';
+import { Collection } from '../../model/types'
 import { Link } from 'react-router-dom'
 import { IoMdRocket } from 'react-icons/io'
 import { BsEaselFill, BsPiggyBank } from 'react-icons/bs';

@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom'
 import useReservedNFTs from '../hooks/useReservedNFTs'
 import { getThumbnails } from '../utils/reservations'
 
-import NFTCard from '../components/Reservations/NFTCard'
-import NFTPopup from '../components/Reservations/NFTPopup'
+import NFTCard from '../components/reservations/NFTCard'
+import NFTPopup from '../components/reservations/NFTPopup'
 
 const Reservation: React.FC<{}> = () => {
   const { name: contractName } = useParams()

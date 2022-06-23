@@ -8,7 +8,7 @@ import ProjectManager from './pages/project_manager'
 import Creator from './pages/creator'
 import Reservation from './pages/reservation'
 
-import Header from './components/Header'
+import Header from './components/header/Header'
 import WalletContextProvider from './contexts/WalletContextProvider'
 import Background from './components/Background'
 import ClaimPage from './pages/claimPage'

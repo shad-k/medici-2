@@ -6,7 +6,7 @@ import Button from '@mui/material/Button'
 
 import useWallet from '../../hooks/useWallet'
 import { Typography } from '@mui/material'
-import ContractsMenu from '../ContractsMenu'
+import ContractsMenu from './ContractsMenu'
 
 interface Props {
   selectProject: (input: any) => void

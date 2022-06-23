@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { readyToTransact } from '../utils/web3'
+import { readyToTransact } from '../../utils/web3'
 import NetworkIcon from './NetworkIcon'
 
-import useWallet from '../hooks/useWallet'
+import useWallet from '../../hooks/useWallet'
 import { useWallets } from '@web3-onboard/react'
 
 const Header: React.FC<{}> = () => {
