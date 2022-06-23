@@ -3,6 +3,10 @@ import { CONFIG } from './config'
 
 const localenv = CONFIG.DEV
 
+/* -------------------------------------------------------------------------- */
+/*                              Image Data Upload                             */
+/* -------------------------------------------------------------------------- */
+
 export const triggerUploadImageData = async (
   name: string,
   formdata: FormData,
@@ -30,6 +34,10 @@ export const triggerUploadImageData = async (
   })
 }
 
+/* -------------------------------------------------------------------------- */
+/*                               Metadata Upload                              */
+/* -------------------------------------------------------------------------- */
+
 export const triggerUploadMetadata = async (
 name: string,
 formdata: FormData,
@@ -49,6 +57,10 @@ onMetadataProgress: any) => {
     return Promise.reject("error");
   })
 }
+
+/* -------------------------------------------------------------------------- */
+/*                                Upload Cover                                */
+/* -------------------------------------------------------------------------- */
 
 export const uploadCoverImage = async (name: string, file: File) => {
   const formdata = new FormData();
