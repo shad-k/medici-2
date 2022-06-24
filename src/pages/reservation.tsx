@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import useReservedNFTs from '../hooks/useReservedNFTs'
 import { getThumbnails } from '../utils/reservations'
+import useWallet from '../hooks/useWallet';
 
 import NFTCard from '../components/reservations/NFTCard'
 import NFTPopup from '../components/reservations/NFTPopup'
 
 const Reservation: React.FC<{}> = () => {
+  const { wallet, connect, connectedChain, setChain } = useWallet();
+
   const { name: contractName } = useParams()
-  const { data, error } = useReservedNFTs(contractName as string)
+  const { data, error } = useReservedNFTs(contractName as string, connectedChain!.id)
   const [allImages, setAllImages] = useState<Array<number>>();
   const [allThumbnails, setAllThumbnails] = useState<Array<string>>();
   const [selectedNFT, setSelectedNFT] = useState<number>();

@@ -15,9 +15,8 @@ const PageSix: React.FC<StepperFormProps> = ({
     handleInputData,
     data
 }) => {
-
   const localenv = CONFIG.DEV;
-  const { wallet, connect, setChain } = useWallet();
+  const { wallet, connect, connectedChain, setChain } = useWallet();
 
   const [showModal, setShowModal] = useState(false);
   const [isValidMasterAddress, setIsValidMasterAddress] = useState<boolean>(false);
@@ -57,20 +56,14 @@ const PageSix: React.FC<StepperFormProps> = ({
             maxSupply: data.maxSupply,
             price: data.price,
             maxMintsPerPerson: parseInt(data.maxMintsPerPerson),
-            masterAddress: data.masterAddress
+            masterAddress: data.masterAddress,
+            claimStartBlock: data.claimStartBlock,
+            mintStartBlock: data.mintStartBlock
           });
         const result = await getNewLaunchedContract(data.masterAddress);
         setContractCreationResult(result);
         console.log("Get new launched contract " + result.name);
-        await whitelist(
-        { 
-          "project": data.name,
-          "symbol": data.symbol,
-          "ERC721Contract": result.contractaddress,
-          "ownerAddress": result.masteraddress,
-          "whitelistedAddresses": data.whitelistedAddresses,
-          "merkleRoot": data.merkleRoot
-        })
+        await whitelist(result.contractaddress, connectedChain!.id, data.whitelistedAddresses, data.merkleRoot);
         console.log("Done setting whitelist!")
         setContractCreationSuccess(true);
       }
@@ -111,7 +104,7 @@ const PageSix: React.FC<StepperFormProps> = ({
 
     return (
     <div className="w-full flex flex-col items-center p-10 h-screen">
-        <div className="text-center w-4/5 mt-10 md:mt-52">
+        <div className="text-center w-4/5">
             <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-[#9403fc] font-semibold">Finally...</h1>
             <h2 className="text-zinc-500">Just a few more details needed for launch!</h2>
         </div>
@@ -125,6 +118,14 @@ const PageSix: React.FC<StepperFormProps> = ({
             <input id="input-max-per-wallet" type="number" className="w-full text-zinc-500 text-2xl p-2 rounded-lg bg-white border-2 border-zinc-300 outline-none" onChange={event => handleInputData("maxMintsPerPerson", event.target.value)}/>
           </div>
           <div className="text-left">
+            <label htmlFor="input-claim-block" className="block py-2 text-transparent tracking-wide bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Claim Start Block</label>
+            <input id="input-claim-block" type="number" className="w-full text-zinc-500 text-2xl p-2 rounded-lg bg-white border-2 border-zinc-300 outline-none" onChange={event => handleInputData("claimStartBlock", event.target.value)}/>
+          </div>
+          <div className="text-left">
+            <label htmlFor="input-mint-block" className="block py-2 text-transparent tracking-wide bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Mint Start Block</label>
+            <input id="input-mint-block" type="number" className="w-full text-zinc-500 text-2xl p-2 rounded-lg bg-white border-2 border-zinc-300 outline-none" onChange={event => handleInputData("mintStartBlock", event.target.value)}/>
+          </div>
+          <div className="text-left">
             <label htmlFor="input-owner-address" className="block py-2 text-transparent tracking-wide bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold">Owner address</label>
             <div className="inline-flex w-full gap-2">
               <input id="input-owner-address" type="text"  defaultValue={wallet?.accounts[0].address} className="w-11/12 text-zinc-500 text-2xl p-2 rounded-lg bg-white border-2 border-zinc-300 outline-none" onChange={event => addressCheck(event.target.value)}/>
@@ -132,7 +133,7 @@ const PageSix: React.FC<StepperFormProps> = ({
             </div>
           </div>
         </div>
-        <div className="block m-10">
+        <div className="block">
           <button className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[100px]" onClick={onSubmit}>Let's go!</button>
         </div>
         <div id="modal-container" className="flex items-center justify-center text-center h-screen">

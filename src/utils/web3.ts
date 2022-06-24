@@ -1,5 +1,5 @@
 import { BigNumber, ethers, utils } from 'ethers'
-import { ContractCreationProps, WhitelistProps, Contract } from '../model/types'
+import { ContractCreationProps, Contract } from '../model/types'
 
 import { CONFIG } from './config'
 import apiClient from './apiClient'
@@ -46,6 +46,7 @@ const getFactoryContract = async (callerWallet: any): Promise<ethers.Contract> =
 export const generateNewContract = (callerWallet: any, merkleRoot: string, props: ContractCreationProps): any => {
   return new Promise( async (resolve, reject ) => {
     const FactoryContract = await getFactoryContract(callerWallet);
+    console.log(FactoryContract);
       /* From Factory Contract:
      function createContract(
         string memory _name,
@@ -55,7 +56,9 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         uint256 _maxSupply,
         uint256 _price,
         uint256 _maxMintPerPerson,
-        address _masterAddress
+        address _masterAddress,
+        uint256 _claimsStartBlock,
+        uint256 _mintStartBlock
       ) 
       */
       try {
@@ -67,21 +70,30 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         props.maxSupply, // max supply
         utils.parseUnits(props.price, 'wei'), // price
         props.maxMintsPerPerson, // max mint per person
-        props.masterAddress // master address
+        props.masterAddress, // master address
+        props.claimStartBlock, // claim start block
+        props.mintStartBlock, // mint start block
         );
         console.log(result_contract);
         await result_contract.wait(5);
         return resolve("Contract generation success");
-      } catch {
+      } catch (error) {
+        console.log(error)
         return reject("Error creating contract")
       }
   })
 }
 
 /* call when new contract is created to update backend */
-export const whitelist = async (props: WhitelistProps) => {
+export const whitelist = async (contractAddress: string, chainId: string, whitelistedAddreses: string[], merkleRoot: string) => {
+  const request_data = {
+    "contract": contractAddress,
+    "chainid": chainId,
+    "whitelistedAddresses": whitelistedAddreses,
+    "merkleRoot": merkleRoot
+  }
   return apiClient.post(
-      localenv.api.paths.whitelist, props,
+      localenv.api.paths.whitelist, request_data,
       {
           headers: {"Content-Type": "application/json"}
       }

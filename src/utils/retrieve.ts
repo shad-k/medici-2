@@ -1,6 +1,7 @@
 import apiClient from './apiClient'
 import { API_PATHS, CONFIG } from './config'
 import { ChainConfigReturn } from '../model/types'
+import { utils } from 'ethers'
 
 
 export const getGatewayURL = (url: string): string => {
@@ -16,19 +17,17 @@ export const getMetadata = async (metadataurl: string) => {
 
 export const getChainConfig = async (chain: string): Promise<ChainConfigReturn> => {
   const request_data = {
-    "chainID": chain
+    "chainid": parseInt(chain, 16)
   }
-  return apiClient.post(
+  return apiClient.get(
   API_PATHS.RETRIEVE_CHAIN_CONFIG,
-  request_data,
-  {
-    headers: {"Content-Type": "application/json"}
-  }).then(function(response) {
+  { params: request_data }
+  ).then(function(response) {
     console.log(response.data)
     return Promise.resolve(response.data)
   }).catch(function(error) {
     console.log(error)
-    return Promise.reject("Error doing whitelisting")
+    return Promise.reject("Error getting chain config")
   });
 }
 
@@ -60,16 +59,13 @@ export const getNameAvailability = async (name: string) => {
 }
 
 export const getContractCover = async (contract: string) => {
+  console.log("Getting contract cover for " + contract);
   const request_data = {
-    "contractName": contract,
+    "collection": contract,
   }
-  return apiClient.post(
+  return apiClient.get(
   API_PATHS.CLAIM_COVER,
-  request_data,
-  { 
-      headers: { "Content-Type": "application/json"},
-      responseType: 'arraybuffer',
-  }
+  { params: request_data }
   ).then((res: any) => {
     const base64 = 'data:application/json;base64,' + btoa(
     new Uint8Array(res.data).reduce(

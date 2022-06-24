@@ -21,9 +21,10 @@ const MenuProps = {
 
 const ContractsMenu: React.FC<{
   masterAddress: string
+  connectedChain: string
   selectProject: (input: any) => void
-}> = ({ masterAddress, selectProject }) => {
-  const { data: contracts, error } = useAllLaunchedContracts(masterAddress)
+}> = ({ masterAddress, connectedChain, selectProject }) => {
+  const { data: contracts, error } = useAllLaunchedContracts(masterAddress, connectedChain)
 
   if (!contracts && !error) {
     return null
