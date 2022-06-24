@@ -1,7 +1,7 @@
 import { BigNumber, ethers, utils } from 'ethers'
 import { ContractCreationProps, WhitelistProps, Contract } from '../model/types'
 
-import { CONFIG } from './config'
+import { API_PATHS, CONFIG } from './config'
 import apiClient from './apiClient'
 import { getChainConfig } from './retrieve';
 const localenv = CONFIG.DEV;
@@ -16,7 +16,7 @@ export const getMerkleRoot = async (whitelistAddresses: string[]):Promise<string
   }
 
   return apiClient.post(
-      localenv.api.paths.getMerkleRoot, request_data, 
+      API_PATHS.GET_MERKLE_ROOT, request_data, 
       {
           headers: {"Content-Type": "application/json"}
       }
@@ -26,6 +26,30 @@ export const getMerkleRoot = async (whitelistAddresses: string[]):Promise<string
   }).catch(function(error) {
       console.log(error)
       return Promise.reject("Error getting merkle root")
+  });
+}
+
+export const verifyMerkleProof = async (contractAddress: string, walletAddress: string): Promise<boolean> => {
+  const request_data = {
+    "ERC721Contract": contractAddress,
+    "address" : walletAddress,
+  }
+
+  return apiClient.post(
+    API_PATHS.GET_MERKLE_PROOF, request_data, 
+    {
+        headers: {"Content-Type": "application/json"}
+    }
+  ).then(function(response) {
+    if (response.data.message === "Could not verify address with given Merkle Tree") {
+      return Promise.reject(false);
+    } else {
+      console.log(response);
+      return Promise.resolve(true);
+    }
+  }).catch(function(error) {
+      console.log(error)
+      return Promise.reject(false)
   });
 }
 
@@ -45,7 +69,11 @@ const getFactoryContract = async (callerWallet: any): Promise<ethers.Contract> =
 /* generate a new smart contract from user input */
 export const generateNewContract = (callerWallet: any, merkleRoot: string, props: ContractCreationProps): any => {
   return new Promise( async (resolve, reject ) => {
-    const FactoryContract = await getFactoryContract(callerWallet);
+    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
+    const signer = provider.getSigner(callerWallet.accounts[0].address);
+
+    const FactoryContract = new ethers.Contract(localenv.contract.factory_address, localenv.contract.factory_abi, signer);
+    // const FactoryContract = await getFactoryContract(callerWallet);
       /* From Factory Contract:
      function createContract(
         string memory _name,
