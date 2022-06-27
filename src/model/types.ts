@@ -71,22 +71,14 @@ export type ContractCreationProps = {
   price: string
   maxMintsPerPerson: number
   masterAddress: string
+  claimStartBlock: string
+  mintStartBlock: string
 }
 
 export interface StepperFormProps {
   nextStep: () => void
   handleInputData: (input: any, value: any) => Promise<boolean>
   data: any
-}
-
-export type WhitelistProps = {
-  project: String
-  symbol: String
-  ERC721Contract: String
-  ownerAddress: String // FIXME: change to masterAddress
-  ownerEmail?: String
-  whitelistedAddresses: Array<String>
-  merkleRoot: string
 }
 
 export enum TemplateTier {

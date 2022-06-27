@@ -7,8 +7,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from 'react-router-dom';
 
-const AllContracts: React.FC<{masterAddress : string}> = ({masterAddress}) => {
-const { data: contracts, error } = useAllLaunchedContracts(masterAddress);
+const AllContracts: React.FC<{masterAddress : string, connectedChain: string}> = ({masterAddress, connectedChain}) => {
+const { data: contracts, error } = useAllLaunchedContracts(masterAddress, connectedChain);
 
 
   if (!contracts && !error) {

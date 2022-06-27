@@ -15,7 +15,7 @@ const { wallet, connect, setChain, connectedChain } = useWallet()
         <span className="text-center md:w-3/5 font-extralight md:text-2xl text-zinc-500">
         Connect your wallet to see all your projects.
         </span>
-        { wallet && <AllContracts masterAddress={wallet.accounts[0].address}/> }
+        { wallet && <AllContracts masterAddress={wallet.accounts[0].address}connectedChain={wallet.chains[0].id}/>}
     </div>
   )
 }

@@ -22,6 +22,8 @@ const Creator: React.FC<{}> = () => {
     maxMintsPerPerson: "",
     masterAddress: "",
     merkleRoot: "",
+    claimStartBlock: "",
+    mintStartBlock: ""
   })
 
   const nextStep = () => {

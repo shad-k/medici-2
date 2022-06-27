@@ -43,7 +43,7 @@ const ClaimPage: React.FC<{}> = () => {
       const headers = new Headers()
       headers.set('Content-Type', 'application/json')
       const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM_FETCH}`, {
-        method: 'POST',
+        method: 'GET',
         headers,
         body: JSON.stringify({
           contractName,

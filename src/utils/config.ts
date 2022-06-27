@@ -9,7 +9,7 @@ export enum API_PATHS {
   WHITELIST = '/whitelist',
   COLLECTION = '/collections',
   CLAIM_FETCH = '/claims/fetch',
-  CLAIM_COVER = '/claims/cover',
+  CLAIM_COVER = '/retrieve/cover',
   CLAIM_SETUP = '/claims/setup',
   UPLOAD_COVER = '/upload/cover',
   UPLOAD_COLLECTION_DATA = '/upload/collection',
@@ -40,166 +40,194 @@ export const CONFIG = {
       factory_address: '0x053e59FD6A01Ba3d30beacaEaF0f3504d65baA73',
       factory_abi: [
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: 'address',
-              name: '_impl',
-              type: 'address',
-            },
+              "internalType": "address",
+              "name": "_impl",
+              "type": "address"
+            }
           ],
-          stateMutability: 'nonpayable',
-          type: 'constructor',
+          "stateMutability": "nonpayable",
+          "type": "constructor"
         },
         {
-          anonymous: false,
-          inputs: [
+          "anonymous": false,
+          "inputs": [
             {
-              indexed: false,
-              internalType: 'string',
-              name: 'name',
-              type: 'string',
+              "indexed": false,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
             },
             {
-              indexed: false,
-              internalType: 'string',
-              name: 'symbol',
-              type: 'string',
+              "indexed": false,
+              "internalType": "string",
+              "name": "symbol",
+              "type": "string"
             },
             {
-              indexed: false,
-              internalType: 'address',
-              name: 'instance',
-              type: 'address',
+              "indexed": false,
+              "internalType": "address",
+              "name": "instance",
+              "type": "address"
             },
             {
-              indexed: false,
-              internalType: 'address',
-              name: 'masterAddress',
-              type: 'address',
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "claimsStartBlock",
+              "type": "uint256"
             },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "mintStartBlock",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "masterAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "factoryAddress",
+              "type": "address"
+            }
           ],
-          name: 'ERC721RandomCreated',
-          type: 'event',
+          "name": "ERC721RandomCreated",
+          "type": "event"
         },
         {
-          anonymous: false,
-          inputs: [
+          "anonymous": false,
+          "inputs": [
             {
-              indexed: true,
-              internalType: 'address',
-              name: 'previousOwner',
-              type: 'address',
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
             },
             {
-              indexed: true,
-              internalType: 'address',
-              name: 'newOwner',
-              type: 'address',
-            },
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
           ],
-          name: 'OwnershipTransferred',
-          type: 'event',
+          "name": "OwnershipTransferred",
+          "type": "event"
         },
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: 'address',
-              name: '_newAddress',
-              type: 'address',
-            },
+              "internalType": "address",
+              "name": "_newAddress",
+              "type": "address"
+            }
           ],
-          name: 'changeImplAddress',
-          outputs: [],
-          stateMutability: 'nonpayable',
-          type: 'function',
+          "name": "changeImplAddress",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: 'string',
-              name: '_name',
-              type: 'string',
+              "internalType": "string",
+              "name": "_name",
+              "type": "string"
             },
             {
-              internalType: 'string',
-              name: '_symbol',
-              type: 'string',
+              "internalType": "string",
+              "name": "_symbol",
+              "type": "string"
             },
             {
-              internalType: 'string',
-              name: '_baseuri',
-              type: 'string',
+              "internalType": "string",
+              "name": "_baseuri",
+              "type": "string"
             },
             {
-              internalType: 'bytes32',
-              name: '_merkleroot',
-              type: 'bytes32',
+              "internalType": "bytes32",
+              "name": "_merkleroot",
+              "type": "bytes32"
             },
             {
-              internalType: 'uint256',
-              name: '_maxSupply',
-              type: 'uint256',
+              "internalType": "uint256",
+              "name": "_maxSupply",
+              "type": "uint256"
             },
             {
-              internalType: 'uint256',
-              name: '_price',
-              type: 'uint256',
+              "internalType": "uint256",
+              "name": "_price",
+              "type": "uint256"
             },
             {
-              internalType: 'uint256',
-              name: '_maxMintPerPerson',
-              type: 'uint256',
+              "internalType": "uint256",
+              "name": "_maxMintPerPerson",
+              "type": "uint256"
             },
             {
-              internalType: 'address',
-              name: '_masterAddress',
-              type: 'address',
+              "internalType": "address",
+              "name": "_masterAddress",
+              "type": "address"
             },
+            {
+              "internalType": "uint256",
+              "name": "_claimsStartBlock",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_mintStartBlock",
+              "type": "uint256"
+            }
           ],
-          name: 'createContract',
-          outputs: [
+          "name": "createContract",
+          "outputs": [
             {
-              internalType: 'address',
-              name: '',
-              type: 'address',
-            },
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
           ],
-          stateMutability: 'nonpayable',
-          type: 'function',
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
-          inputs: [],
-          name: 'owner',
-          outputs: [
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
             {
-              internalType: 'address',
-              name: '',
-              type: 'address',
-            },
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
           ],
-          stateMutability: 'view',
-          type: 'function',
+          "stateMutability": "view",
+          "type": "function"
         },
         {
-          inputs: [],
-          name: 'renounceOwnership',
-          outputs: [],
-          stateMutability: 'nonpayable',
-          type: 'function',
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: 'address',
-              name: 'newOwner',
-              type: 'address',
-            },
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
           ],
-          name: 'transferOwnership',
-          outputs: [],
-          stateMutability: 'nonpayable',
-          type: 'function',
-        },
+          "name": "transferOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
       ],
       instanceAbi: [
         {
@@ -345,7 +373,7 @@ export const CONFIG = {
             {
               "indexed": false,
               "internalType": "uint256",
-              "name": "newMintStartBlock",
+              "name": "newClaimsStartBlock",
               "type": "uint256"
             }
           ],
@@ -937,131 +965,131 @@ export const CONFIG = {
       claim_contract: '0x1B4F93D2722a12e621cAC51DDDe63A97AB93580e',
       claim_abi: [
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: 'uint256',
-              name: 'low',
-              type: 'uint256',
+              "internalType": "uint256",
+              "name": "low",
+              "type": "uint256"
             },
             {
-              internalType: 'uint256',
-              name: 'mid',
-              type: 'uint256',
+              "internalType": "uint256",
+              "name": "mid",
+              "type": "uint256"
             },
             {
-              internalType: 'uint256',
-              name: 'high',
-              type: 'uint256',
+              "internalType": "uint256",
+              "name": "high",
+              "type": "uint256"
             },
             {
-              internalType: 'address',
-              name: '_masterAddress',
-              type: 'address',
-            },
+              "internalType": "address",
+              "name": "_masterAddress",
+              "type": "address"
+            }
           ],
-          stateMutability: 'nonpayable',
-          type: 'constructor',
+          "stateMutability": "nonpayable",
+          "type": "constructor"
         },
         {
-          anonymous: false,
-          inputs: [
+          "anonymous": false,
+          "inputs": [
             {
-              indexed: false,
-              internalType: 'address',
-              name: 'contractAddress',
-              type: 'address',
+              "indexed": false,
+              "internalType": "address",
+              "name": "contractAddress",
+              "type": "address"
             },
             {
-              indexed: false,
-              internalType: 'string',
-              name: 'tier',
-              type: 'string',
+              "indexed": false,
+              "internalType": "string",
+              "name": "tier",
+              "type": "string"
             },
             {
-              indexed: false,
-              internalType: 'address',
-              name: 'sender',
-              type: 'address',
-            },
+              "indexed": false,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
           ],
-          name: 'DepositReceived',
-          type: 'event',
+          "name": "DepositReceived",
+          "type": "event"
         },
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: 'string',
-              name: 'tier',
-              type: 'string',
+              "internalType": "string",
+              "name": "tier",
+              "type": "string"
             },
             {
-              internalType: 'uint256',
-              name: 'newPrice',
-              type: 'uint256',
-            },
+              "internalType": "uint256",
+              "name": "newPrice",
+              "type": "uint256"
+            }
           ],
-          name: 'changeTierPrice',
-          outputs: [],
-          stateMutability: 'nonpayable',
-          type: 'function',
+          "name": "changeTierPrice",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: 'string',
-              name: 'tier',
-              type: 'string',
+              "internalType": "string",
+              "name": "tier",
+              "type": "string"
             },
             {
-              internalType: 'address',
-              name: 'contractAddress',
-              type: 'address',
-            },
+              "internalType": "address",
+              "name": "contractAddress",
+              "type": "address"
+            }
           ],
-          name: 'depositForClaimsPage',
-          outputs: [],
-          stateMutability: 'payable',
-          type: 'function',
+          "name": "depositForClaimsPage",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
         },
         {
-          inputs: [],
-          name: 'getBalance',
-          outputs: [
+          "inputs": [],
+          "name": "getBalance",
+          "outputs": [
             {
-              internalType: 'uint256',
-              name: '',
-              type: 'uint256',
-            },
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
           ],
-          stateMutability: 'view',
-          type: 'function',
+          "stateMutability": "view",
+          "type": "function"
         },
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: 'string',
-              name: 'tier',
-              type: 'string',
-            },
+              "internalType": "string",
+              "name": "tier",
+              "type": "string"
+            }
           ],
-          name: 'getPricing',
-          outputs: [
+          "name": "getPricing",
+          "outputs": [
             {
-              internalType: 'uint256',
-              name: '',
-              type: 'uint256',
-            },
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
           ],
-          stateMutability: 'view',
-          type: 'function',
+          "stateMutability": "view",
+          "type": "function"
         },
         {
-          inputs: [],
-          name: 'withdraw',
-          outputs: [],
-          stateMutability: 'nonpayable',
-          type: 'function',
-        },
+          "inputs": [],
+          "name": "withdraw",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
       ],
     },
     api: {
