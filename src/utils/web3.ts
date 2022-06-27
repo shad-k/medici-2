@@ -1,5 +1,5 @@
 import { BigNumber, ethers, utils } from 'ethers'
-import { ContractCreationProps, WhitelistProps, Contract } from '../model/types'
+import { ContractCreationProps, Contract } from '../model/types'
 
 import { API_PATHS, CONFIG } from './config'
 import apiClient from './apiClient'
@@ -29,10 +29,11 @@ export const getMerkleRoot = async (whitelistAddresses: string[]):Promise<string
   });
 }
 
-export const verifyMerkleProof = async (contractAddress: string, walletAddress: string): Promise<boolean> => {
+export const verifyMerkleProof = async (contractAddress: string, callerWallet: any) => {
   const request_data = {
     "ERC721Contract": contractAddress,
-    "address" : walletAddress,
+    "chainid": callerWallet.chains[0].id,
+    "address" : callerWallet.accounts[0].address,
   }
 
   return apiClient.post(
@@ -42,14 +43,23 @@ export const verifyMerkleProof = async (contractAddress: string, walletAddress: 
     }
   ).then(function(response) {
     if (response.data.message === "Could not verify address with given Merkle Tree") {
-      return Promise.reject(false);
+      return Promise.reject({
+        success: false,
+        merkleProof: null
+      })
     } else {
-      console.log(response);
-      return Promise.resolve(true);
+      console.log(response.data);
+      return Promise.resolve({
+        success: true,
+        merkleProof: response.data
+      })
     }
-  }).catch(function(error) {
-      console.log(error)
-      return Promise.reject(false)
+    }).catch(function(error) {
+        console.log(error)
+        return Promise.reject({
+          success: false,
+          merkleProof: null
+    })
   });
 }
 

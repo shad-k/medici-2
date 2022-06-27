@@ -8,6 +8,7 @@ import { Claim } from '../../model/types'
 import useWallet from '../../hooks/useWallet'
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
 import { verifyMerkleProof } from '../../utils/web3'
+import { getContractClaimStatus } from '../../utils/retrieve'
 const localenv = CONFIG.DEV
 
 interface FreeTierProps {
@@ -40,15 +41,21 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   const [claiming, setClaiming] = React.useState<boolean>(false)
   const [claimTxHash, setClaimTxHash] = React.useState<string>()
   const [isVerified, setIsVerified] = React.useState<boolean>()
+  const [verifiedProof, setVerifiedProof] = React.useState<string>()
+  const [contractStatus, setContractStatus] = React.useState<string>()
+
+  const getContractStatus = React.useCallback(async () => {
+    if (connectedWallet) {
+      const { success, msg } = await getContractClaimStatus(claim.contract, wallet);
+      setContractStatus(msg)
+    }
+  }, [connectedWallet, contractStatus])
 
   const isAllowlistMember = React.useCallback(async () => {
     if (connectedWallet) {
-      try {
-        await verifyMerkleProof(claim.contract, connectedWallet.address);
-        setIsVerified(true)
-      } catch {
-        setIsVerified(false)
-      }
+      const { success, merkleProof } = await verifyMerkleProof(claim.contract, wallet);
+      setIsVerified(success);
+      setVerifiedProof(merkleProof);
     }
   }, [connectedWallet, isVerified])
 
@@ -99,7 +106,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
           wallet.provider
         )
         const signer = walletProvider.getSigner(connectedWallet?.address)
-        const contract = new ethers.Contract(claim.contract, abi, signer)
+        const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
         const tx = await contract.mint(connectedWallet?.address, 1, {
           gasLimit: 30000000,
         })
@@ -119,15 +126,15 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   }
 
   const claimOnContract = async () => {
-    if (wallet && connectedWallet && isVerified) {
+    if (wallet && connectedWallet && isVerified && (verifiedProof !== null)) {
       setClaiming(true)
       try {
         const walletProvider = new ethers.providers.Web3Provider(
           wallet.provider
         )
         const signer = walletProvider.getSigner(connectedWallet?.address)
-        const contract = new ethers.Contract(claim.contract, abi, signer)
-        const tx = await contract.claim(connectedWallet?.address, 1, {
+        const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
+        const tx = await contract.claim(connectedWallet?.address, 1, verifiedProof, {
           gasLimit: 30000000,
         })
         const claimResponse = await tx.wait()
