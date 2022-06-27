@@ -84,3 +84,24 @@ export const getContractCover = async (contract: string) => {
     return Promise.reject("error");
   }
 }
+
+export const getContractClaimStatus = async (contractName: string, callerWallet: any): Promise<any> => {
+  const request_data = {
+    "collection": contractName,
+    "chainid": callerWallet.chains[0].id
+  }
+
+  return apiClient.get(
+    API_PATHS.RETRIEVE_CONTRACT_STATUS,
+    {params: request_data}
+    ).then(function (response) {
+      return Promise.resolve({
+        status: response.data.status,
+        msg: response.data.msg
+      })
+    }).catch(function (error) {
+      return Promise.reject({
+        status: 'failure',
+        msg: "Not supported"
+      })
+    });

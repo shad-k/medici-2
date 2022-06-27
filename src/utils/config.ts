@@ -2,6 +2,7 @@ export const API_ENDPOINT = 'https://athensgate.xyz'
 
 export enum API_PATHS {
   GET_MERKLE_ROOT = '/getMerkleRoot',
+  GET_MERKLE_PROOF = '/getMerkleProof',
   REGULUS_TEST = '/regulusTest',
   GET_NEW_LAUNCHED_CONTRACT = '/getNewLaunchedContract',
   GET_ALL_LAUNCHED_CONTRACTS = '/getAllLaunchedContracts',
@@ -17,6 +18,7 @@ export enum API_PATHS {
   GET_RESERVED_NFTS = '/reservations/status',
   RETRIEVE_THUMBNAILS = '/retrieve/thumbnails',
   RETRIEVE_CHAIN_CONFIG = '/retrieve/chainConfig',
+  RETRIEVE_CONTRACT_STATUS = '/retrieve/contractStatus'
 }
 
 export const CONFIG = {

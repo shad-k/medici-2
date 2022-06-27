@@ -7,6 +7,8 @@ import { FaDiscord } from 'react-icons/fa'
 import { Claim } from '../../model/types'
 import useWallet from '../../hooks/useWallet'
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
+import { verifyMerkleProof } from '../../utils/web3'
+import { getContractClaimStatus } from '../../utils/retrieve'
 const localenv = CONFIG.DEV
 
 interface FreeTierProps {
@@ -36,6 +38,26 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   const [cover, setCover] = React.useState<string>()
   const [minting, setMinting] = React.useState<boolean>(false)
   const [txHash, setTxHash] = React.useState<string>()
+  const [claiming, setClaiming] = React.useState<boolean>(false)
+  const [claimTxHash, setClaimTxHash] = React.useState<string>()
+  const [isVerified, setIsVerified] = React.useState<boolean>()
+  const [verifiedProof, setVerifiedProof] = React.useState<string>()
+  const [contractStatus, setContractStatus] = React.useState<string>()
+
+  const getContractStatus = React.useCallback(async () => {
+    if (connectedWallet) {
+      const { success, msg } = await getContractClaimStatus(claim.contract, wallet);
+      setContractStatus(msg)
+    }
+  }, [connectedWallet, contractStatus])
+
+  const isAllowlistMember = React.useCallback(async () => {
+    if (connectedWallet) {
+      const { success, merkleProof } = await verifyMerkleProof(claim.contract, wallet);
+      setIsVerified(success);
+      setVerifiedProof(merkleProof);
+    }
+  }, [connectedWallet, isVerified])
 
   const getName = React.useCallback(async () => {
     const contract = new ethers.Contract(claim.contract, abi, provider)
@@ -84,7 +106,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
           wallet.provider
         )
         const signer = walletProvider.getSigner(connectedWallet?.address)
-        const contract = new ethers.Contract(claim.contract, abi, signer)
+        const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
         const tx = await contract.mint(connectedWallet?.address, 1, {
           gasLimit: 30000000,
         })
@@ -103,16 +125,45 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
     }
   }
 
+  const claimOnContract = async () => {
+    if (wallet && connectedWallet && isVerified && (verifiedProof !== null)) {
+      setClaiming(true)
+      try {
+        const walletProvider = new ethers.providers.Web3Provider(
+          wallet.provider
+        )
+        const signer = walletProvider.getSigner(connectedWallet?.address)
+        const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
+        const tx = await contract.claim(connectedWallet?.address, 1, verifiedProof, {
+          gasLimit: 30000000,
+        })
+        const claimResponse = await tx.wait()
+        console.log(claimResponse)
+        setClaimTxHash(claimResponse.transactionHash)
+      } catch (error: any) {
+        if (error.message) {
+          alert(error.message)
+        } else {
+          alert('Something went wrong, please try again!')
+        }
+      } finally {
+        setClaiming(false)
+      }
+    }
+  }
+
   React.useEffect(() => {
     if (contractName && !name && !masterAddress && !cover) {
       getName()
       getContractOwner()
       getCoverImage()
     }
+    isAllowlistMember()
   }, [
     getName,
     getContractOwner,
     getCoverImage,
+    isAllowlistMember,
     contractName,
     cover,
     masterAddress,
@@ -209,7 +260,26 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
           alt=""
           className="h-[calc(100%-80px)] object-contain"
         />
-        {txHash ? (
+        { connectedWallet && <p>Connected as: {connectedWallet.address}</p> }
+        { isVerified ? ( claimTxHash ? ( <a
+            className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
+            href={`${localenv.network.txEtherscanUrl}${claimTxHash}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+          Success: Check transaction
+          </a>) :
+          <button
+              className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
+              onClick={connectedWallet ? () => claimOnContract() : () => connect({})}
+              disabled={claiming}
+          > {connectedWallet
+            ? claiming
+              ? 'Claiming...'
+              : 'Claim Now'
+            : 'Connect Wallet'}
+          </button> ) :
+        (txHash ? (
           <a
             className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
             href={`${localenv.network.txEtherscanUrl}${txHash}`}
@@ -230,7 +300,8 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
                 : 'Mint Now'
               : 'Connect Wallet'}
           </button>
-        )}
+        ))
+        }
         <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">
           powered by{' '}
           <img src="/logo.png" alt="Medici logo" width={20} className="mx-1" />

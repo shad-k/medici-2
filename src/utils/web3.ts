@@ -1,7 +1,7 @@
 import { BigNumber, ethers, utils } from 'ethers'
 import { ContractCreationProps, Contract } from '../model/types'
 
-import { CONFIG } from './config'
+import { API_PATHS, CONFIG } from './config'
 import apiClient from './apiClient'
 import { getChainConfig } from './retrieve';
 const localenv = CONFIG.DEV;
@@ -16,7 +16,7 @@ export const getMerkleRoot = async (whitelistAddresses: string[]):Promise<string
   }
 
   return apiClient.post(
-      localenv.api.paths.getMerkleRoot, request_data, 
+      API_PATHS.GET_MERKLE_ROOT, request_data, 
       {
           headers: {"Content-Type": "application/json"}
       }
@@ -26,6 +26,40 @@ export const getMerkleRoot = async (whitelistAddresses: string[]):Promise<string
   }).catch(function(error) {
       console.log(error)
       return Promise.reject("Error getting merkle root")
+  });
+}
+
+export const verifyMerkleProof = async (contractAddress: string, callerWallet: any) => {
+  const request_data = {
+    "ERC721Contract": contractAddress,
+    "chainid": callerWallet.chains[0].id,
+    "address" : callerWallet.accounts[0].address,
+  }
+
+  return apiClient.post(
+    API_PATHS.GET_MERKLE_PROOF, request_data, 
+    {
+        headers: {"Content-Type": "application/json"}
+    }
+  ).then(function(response) {
+    if (response.data.message === "Could not verify address with given Merkle Tree") {
+      return Promise.reject({
+        success: false,
+        merkleProof: null
+      })
+    } else {
+      console.log(response.data);
+      return Promise.resolve({
+        success: true,
+        merkleProof: response.data
+      })
+    }
+    }).catch(function(error) {
+        console.log(error)
+        return Promise.reject({
+          success: false,
+          merkleProof: null
+    })
   });
 }
 
