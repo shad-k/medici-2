@@ -66,7 +66,7 @@ const NetworkIcon: React.FC<{}> = () => {
   const connectedWallet = wallet?.accounts[0]
 
   React.useEffect(() => {
-    if (connectedWallet){
+    if (connectedWallet && connectedChain) {
       if (connectedChain?.id === '0xa') {
         setCurrChainLabel("Optimism");
         document.getElementById("invalid-icon")!.style.display = 'none';

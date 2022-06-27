@@ -34,7 +34,8 @@ const PageFive: React.FC<StepperFormProps> = ({
           await readyToTransact(wallet, connect, setChain);
         }
         else {
-          const parsedStrings = await parseData(wallet.accounts[0].address);
+          /* medici wallet address as second address for merkle tree */
+          const parsedStrings = [wallet.accounts[0].address, '0xABeF33AA09593Ee532Cf203074Df2f19f9C61f8f'];
           await handleInputData("whitelistedAddresses", parsedStrings);
           const merkleRoot = await getMerkleRoot(parsedStrings);
           await handleInputData("merkleRoot", merkleRoot);

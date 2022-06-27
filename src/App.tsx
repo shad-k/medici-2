@@ -14,6 +14,7 @@ import Background from './components/Background'
 import ClaimPage from './pages/claimPage'
 import EmptyPage from './pages/emptyPage'
 import { createTheme, ThemeProvider } from '@mui/material'
+import StarryBackground from './components/home/StarryBackground'
 
 const customTheme = createTheme({
   palette: {
@@ -33,6 +34,7 @@ const App: React.FC<{}> = () => {
           <Router>
             <main className="font-sans mt-16">
               <Background />
+              <StarryBackground/>
               <Header />
               <div className="z-1 relative">
                 <Routes>
