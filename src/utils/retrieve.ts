@@ -63,19 +63,24 @@ export const getContractCover = async (contract: string) => {
   const request_data = {
     "collection": contract,
   }
-  return apiClient.get(
+  const res = await apiClient.get(
   API_PATHS.CLAIM_COVER,
-  { params: request_data }
-  ).then((res: any) => {
-    const base64 = 'data:application/json;base64,' + btoa(
-    new Uint8Array(res.data).reduce(
-        (data, byte) => data + String.fromCharCode(byte),
-        ''
-    )
-  )
-    return Promise.resolve(base64)
-  }).catch((error) => {
-    console.log(error);
-    return Promise.reject("error")
+  { params: request_data,
+    responseType: 'blob' },
+  ).then(function (res) {
+    if (res.status === 200) {
+      return res.data;
+    } else {
+      throw new Error(res.statusText)
+    }
+  }).catch(function (error) {
+    console.log(error)
   });
+  
+  if (res) {
+    console.log(res)
+    return Promise.resolve(URL.createObjectURL(res));
+  } else {
+    return Promise.reject("error");
+  }
 }

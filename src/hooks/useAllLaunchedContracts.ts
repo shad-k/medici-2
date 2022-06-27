@@ -24,8 +24,8 @@ const useAllLaunchedContracts = (masterAddress: string, connectedChain: string):
         headers: { "Content-Type": "application/json"}
       }
       ).then((res) => {
-        // console.log(res)
-        return res.data
+        console.log(res)
+        return res.data.launchedContracts
       }),
   )
   return { data, error }
