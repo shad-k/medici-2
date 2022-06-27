@@ -106,3 +106,30 @@ export const getContractClaimStatus = async (contractName: string, callerWallet:
       })
     });
 }
+
+export const getAllContracts = async (masterAddress: string, connectedChain: string): Promise<any> => {
+  const request_data = {
+    "masterAddress": utils.getAddress(masterAddress),
+    "chainID": parseInt(connectedChain, 16)
+  }
+
+  return apiClient.post(
+    API_PATHS.GET_ALL_LAUNCHED_CONTRACTS,
+    request_data,
+    { 
+      headers: { "Content-Type": "application/json"}
+    }
+    ).then(function (response) {
+      console.log(response)
+      return Promise.resolve({
+        status: 'success',
+        contracts: response.data.launchedContracts
+      })
+    }).catch(function (error) {
+      console.log(error)
+      return Promise.reject({
+        status: 'failure',
+        contracts: null
+      })
+    });
+}

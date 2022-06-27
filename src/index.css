@@ -32,6 +32,7 @@ body,
 }
 
 .body-bg {
+  background: url('../public/Stars.png');
   background-color: #1b1a1f;
   background-size: 30%;
   background-repeat: repeat;

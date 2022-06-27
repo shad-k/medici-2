@@ -9,7 +9,7 @@ const Home: React.FC<{}> = () => {
     <AlphaBanner/>
       <div className="w-full flex flex-col p-5 items-center">
           <div className="whitespace-nowrap">
-            <h1 className="text-center text-4xl md:text-6xl font-semibold">
+            <h1 className="text-center text-[34px] md:text-6xl font-semibold">
             ✨ <span className="tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500">Launch Your Project</span> ✨
             </h1>
           </div>
