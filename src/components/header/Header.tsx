@@ -27,13 +27,10 @@ const Header: React.FC<{}> = () => {
   useEffect(() => {
     const previouslyConnectedWallets = window.localStorage.getItem("connectedWallets");
     if (!previouslyConnectedWallets) {
-      console.log("No previously connected wallets, returning")
       return;
     }
     async function setWalletFromLocalStorage() {
       const parsedPreviouslyConnectedWallets = JSON.parse(previouslyConnectedWallets!);
-      console.log("Connecting to previously connected wallet");
-      console.log(parsedPreviouslyConnectedWallets);
       await connect({ autoSelect: parsedPreviouslyConnectedWallets[0] })
     }
     setWalletFromLocalStorage()

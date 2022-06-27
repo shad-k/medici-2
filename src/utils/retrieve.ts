@@ -76,7 +76,7 @@ export const getContractCover = async (contract: string) => {
   }).catch(function (error) {
     console.log(error)
   });
-  
+
   if (res) {
     console.log(res)
     return Promise.resolve(URL.createObjectURL(res));
@@ -105,3 +105,4 @@ export const getContractClaimStatus = async (contractName: string, callerWallet:
         msg: "Not supported"
       })
     });
+}

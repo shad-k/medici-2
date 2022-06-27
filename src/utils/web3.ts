@@ -55,10 +55,10 @@ export const verifyMerkleProof = async (contractAddress: string, callerWallet: a
       })
     }
     }).catch(function(error) {
-        console.log(error)
-        return Promise.reject({
-          success: false,
-          merkleProof: null
+      console.log(error)
+      return Promise.reject({
+        success: false,
+        merkleProof: null
     })
   });
 }

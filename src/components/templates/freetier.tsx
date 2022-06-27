@@ -8,7 +8,7 @@ import { Claim } from '../../model/types'
 import useWallet from '../../hooks/useWallet'
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
 import { verifyMerkleProof } from '../../utils/web3'
-import { getContractClaimStatus } from '../../utils/retrieve'
+import { getContractClaimStatus, getContractCover } from '../../utils/retrieve'
 const localenv = CONFIG.DEV
 
 interface FreeTierProps {
@@ -53,9 +53,13 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
 
   const isAllowlistMember = React.useCallback(async () => {
     if (connectedWallet) {
+      try {
       const { success, merkleProof } = await verifyMerkleProof(claim.contract, wallet);
       setIsVerified(success);
       setVerifiedProof(merkleProof);
+      } catch {
+      console.log("error getting merkle proof")
+      }
     }
   }, [connectedWallet, isVerified])
 
@@ -72,29 +76,33 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   }, [claim])
 
   const getCoverImage = React.useCallback(async () => {
-    const headers = new Headers()
-    headers.set('Content-Type', 'application/json')
-    const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM_COVER}`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        contractName,
-      }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.blob()
-        } else {
-          throw new Error(res.statusText)
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    // const headers = new Headers()
+    // headers.set('Content-Type', 'application/json')
+    // const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM_COVER}`, {
+    //   method: 'GET',
+    //   headers,
+    //   body: JSON.stringify({
+    //     contractName,
+    //   }),
+    // })
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       return res.blob()
+    //     } else {
+    //       throw new Error(res.statusText)
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error)
+    //   })
 
-    if (res) {
-      const imageURl = URL.createObjectURL(res)
-      setCover(imageURl)
+    // if (res) {
+    //   const imageURl = URL.createObjectURL(res)
+    //   setCover(imageURl)
+    // }
+    if (contractName) {
+      const res = await getContractCover(contractName);
+      setCover(res);
     }
   }, [contractName])
 
