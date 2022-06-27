@@ -31,20 +31,18 @@ export const getChainConfig = async (chain: string): Promise<ChainConfigReturn> 
   });
 }
 
-export const getNameAvailability = async (name: string) => {
+export const getNameAvailability = async (name: string, connectedChain: string) => {
   if (name === "") {
       return Promise.resolve(false);
   }
   const request_data = {
-      "name": name
+    "collection": name,
+    "chainid": parseInt(connectedChain, 16)
   }
   
-  return apiClient.post(
+  return apiClient.get(
       API_PATHS.CHECK_NAME,
-      request_data,
-      {
-          headers: {"Content-Type": "application/json"}
-      }
+      { params: request_data },
   ).then(function(response) {
       console.log(response.data)
       if (response.data.value === true) {

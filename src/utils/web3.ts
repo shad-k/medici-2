@@ -199,9 +199,13 @@ export const isValidAddress = (address: string) => {
 
 export const readyToTransact = async (callerWallet: any, connect: any, setChain: any): Promise<boolean> => {
   if (!callerWallet) {
-      await connect({});
+    await connect({});
   }
-  return setChain({ chainId: localenv.network.id })
+  if (callerWallet.chains[0].id !== '0xa' && callerWallet.chains[0].id !== '0x5'){
+    return setChain({ chainId: localenv.network.id })
+  } else {
+    return Promise.resolve(true)
+  }
 }
 
 /* -------------------------------------------------------------------------- */

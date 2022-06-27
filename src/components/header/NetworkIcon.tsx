@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { ClickAwayListener } from '@mui/material';
 import useWallet from '../../hooks/useWallet';
 
 import Ethereum from '../svgComponents/Ethereum';
@@ -53,13 +54,16 @@ const NetworkIcon: React.FC<{}> = () => {
   
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+    console.log("handle click")
   };
 
   const handleClose = async (chainId: string) => {
     setAnchorEl(null);
-    setSwitchingNetwork(true)
-    await setChain({ chainId: chainId })
-    setSwitchingNetwork(false)
+    if (chainId === "0xA" || chainId === "0x5") {
+      setSwitchingNetwork(true)
+      await setChain({ chainId: chainId })
+      setSwitchingNetwork(false)
+    }
   };
   
   const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
@@ -116,8 +120,10 @@ const NetworkIcon: React.FC<{}> = () => {
       <div id="eth-icon">
       { switchingNetwork ? <MdSwapHoriz style={{height: '25px'}}/> : <Ethereum/>}
       </div>
-      <BsExclamationTriangle id="invalid-icon" style={{height: '35px', marginRight: '5px'}}/>
-      { switchingNetwork ? <h2 className="hidden md:block ml-2">Switching</h2> : <h2 className="hidden md:block ml-2">{currChainLabel} </h2>}
+      <div id="invalid-icon">
+      { switchingNetwork ? <MdSwapHoriz style={{height: '25px'}}/> : <BsExclamationTriangle style={{height: '23px', marginRight: '5px'}}/> }
+      </div>
+      { switchingNetwork ? <h2 className="hidden md:block ml-2">Switching</h2> : <h2 className="hidden md:block ml-2">{currChainLabel} </h2> }
       </Button>
       <StyledMenu
         id="demo-customized-menu"
