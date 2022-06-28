@@ -25,7 +25,7 @@ const PageFive: React.FC<StepperFormProps> = ({
           console.log(data);
           nextStep();
         } catch {
-          alert("Something went wrong!")
+          alert("Allowlist upload failed!")
         }
       } else {
         console.log("no allow list provided")

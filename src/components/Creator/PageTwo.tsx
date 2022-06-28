@@ -34,13 +34,13 @@ const PageTwo: React.FC<StepperFormProps> = ({
         nextStep();
       } else {
         console.log(data);
-        alert("Something went wrong!")
+        alert("Please input a name and symbol!")
       }
     } else {
       if (!(validator.isEmpty(data.name)) && !(validator.isEmpty(data.symbol))) {
         nextStep();
       } else {
-        alert("Something went wrong!")
+        alert("Please input a name and symbol!")
       }
     }
   }
