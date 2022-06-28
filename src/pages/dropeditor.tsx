@@ -1,33 +1,33 @@
-import React, { useState, useEffect } from 'react'
-import { useReward } from 'react-rewards'
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
-import MuiDrawer from '@mui/material/Drawer'
-import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import { IconButton } from '@mui/material'
-import Button from '@mui/material/Button'
-import { styled, Theme, CSSObject } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import Tooltip from '@mui/material/Tooltip'
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import React, { useState, useEffect } from 'react';
+import { useReward } from 'react-rewards';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import MuiDrawer from '@mui/material/Drawer';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import { IconButton } from '@mui/material';
+import Button from '@mui/material/Button';
+import { styled, Theme, CSSObject } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-import '../css/dropeditor.css'
-import Modal from '@mui/material/Modal'
-import CircularProgress from '@mui/material/CircularProgress'
+import '../css/dropeditor.css';
+import Modal from '@mui/material/Modal';
+import CircularProgress from '@mui/material/CircularProgress';
 
-import useWallet from '../hooks/useWallet'
-import apiClient from '../utils/apiClient'
-import { API_PATHS, CONFIG } from '../utils/config'
-import { Contract, FormState, TemplateTier } from '../model/types'
-import { claimsInit } from '../utils/web3'
-import DrawerAccordions from '../components/dropEditor/DrawerAccordions'
-import DrawerIcons from '../components/dropEditor/DrawerIcons'
-import ProjectSelector from '../components/dropEditor/ProjectSelector'
-import { ClaimPageRenderer } from '../pages/claimPage'
+import useWallet from '../hooks/useWallet';
+import apiClient from '../utils/apiClient';
+import { API_PATHS, CONFIG } from '../utils/config';
+import { Contract, FormState, TemplateTier } from '../model/types';
+import { claimsInit } from '../utils/web3';
+import DrawerAccordions from '../components/dropEditor/DrawerAccordions';
+import DrawerIcons from '../components/dropEditor/DrawerIcons';
+import ProjectSelector from '../components/dropEditor/ProjectSelector';
+import { ClaimPageRenderer } from '../pages/claimPage';
 
-const drawerWidth = 320
+const drawerWidth = 320;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -36,7 +36,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: 'auto',
-})
+});
 
 const closedMixin = (theme: Theme): CSSObject => ({
   transition: theme.transitions.create('width', {
@@ -48,7 +48,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
-})
+});
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -57,10 +57,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-}))
+}));
 
 interface AppBarProps extends MuiAppBarProps {
-  open?: boolean
+  open?: boolean;
 }
 
 const AppBar = styled(MuiAppBar, {
@@ -79,7 +79,7 @@ const AppBar = styled(MuiAppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
-}))
+}));
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -98,7 +98,7 @@ const Drawer = styled(MuiDrawer, {
     '& .MuiDrawer-paper': closedMixin(theme),
   }),
   zIndex: theme.zIndex.drawer,
-}))
+}));
 
 const formInitialState: FormState = {
   contract: '',
@@ -112,33 +112,33 @@ const formInitialState: FormState = {
   bgColor: '',
   fontFamily: '',
   tier: TemplateTier.FREE,
-  chainid: ''
-}
+  chainid: '',
+};
 
 const DropEditor: React.FC<{}> = () => {
-  const localenv = CONFIG.DEV
+  const localenv = CONFIG.DEV;
 
-  const { wallet, setChain, connect } = useWallet()
-  const [contract, setContract] = useState<Contract>()
-  const [isFormValid, setIsFormValid] = useState<boolean>(false)
-  const [claimCreationSuccess, setClaimCreationSuccess] = useState(false)
-  const [open, setOpen] = React.useState(false)
+  const { wallet, setChain, connect } = useWallet();
+  const [contract, setContract] = useState<Contract>();
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
+  const [claimCreationSuccess, setClaimCreationSuccess] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
-  const [expandedAccordion, setExpandedAccordion] = React.useState<string>('')
-  const [formState, setFormState] = React.useState(formInitialState)
+  const [expandedAccordion, setExpandedAccordion] = React.useState<string>('');
+  const [formState, setFormState] = React.useState(formInitialState);
 
   const handleDrawerOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleDrawerClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const openDrawerAndExpandAccordion = (accordion: string) => {
-    setExpandedAccordion(accordion)
-    handleDrawerOpen()
-  }
+    setExpandedAccordion(accordion);
+    handleDrawerOpen();
+  };
 
   const validateForm = (currentFormState: FormState) => {
     const {
@@ -153,7 +153,7 @@ const DropEditor: React.FC<{}> = () => {
       bgColor,
       fontFamily,
       tier,
-    } = currentFormState
+    } = currentFormState;
 
     if (
       contract &&
@@ -168,35 +168,34 @@ const DropEditor: React.FC<{}> = () => {
       fontFamily &&
       tier
     ) {
-      setIsFormValid(true)
+      setIsFormValid(true);
     } else {
-      setIsFormValid(false)
+      setIsFormValid(false);
     }
-  }
+  };
 
   const changeFormState = (key: string, value?: string) => {
     const newFormState = {
       ...formState,
       [key]: value,
-    }
-    setFormState(newFormState)
-    validateForm(newFormState)
-  }
+    };
+    setFormState(newFormState);
+    validateForm(newFormState);
+  };
 
   const changeProject = (contract: any) => {
-    console.log("Changing project to " + contract)
-    setContract(contract)
-    changeFormState('contract', contract?.contractaddress)
-  }
+    setContract(contract);
+    changeFormState('contract', contract?.contractaddress);
+  };
 
   const { reward } = useReward('claim-page-button', 'confetti', {
     elementCount: 200,
     elementSize: 10,
-  })
+  });
 
-  const [showModal, setShowModal] = useState(false)
-  const handleOpen = () => setShowModal(true)
-  const handleClose = () => setShowModal(false)
+  const [showModal, setShowModal] = useState(false);
+  const handleOpen = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
 
   // useEffect(() => {
   //   if (showModal) {
@@ -208,19 +207,19 @@ const DropEditor: React.FC<{}> = () => {
 
   const readyToTransact = async (): Promise<boolean> => {
     if (!wallet) {
-      await connect({})
+      await connect({});
     }
-    return setChain({ chainId: localenv.network.id })
-  }
+    return setChain({ chainId: localenv.network.id });
+  };
 
   const onConfirm = async () => {
     if (isFormValid && (await readyToTransact())) {
-      handleOpen()
+      handleOpen();
       const claimReady = await claimsInit(
         wallet,
         contract!.contractaddress,
         formState.tier as string
-      )
+      );
 
       if (claimReady) {
         const {
@@ -234,7 +233,7 @@ const DropEditor: React.FC<{}> = () => {
           secondaryColor,
           bgColor,
           fontFamily,
-        } = formState
+        } = formState;
         const params = {
           contract: contract,
           font: fontFamily,
@@ -246,26 +245,25 @@ const DropEditor: React.FC<{}> = () => {
           email: email,
           twitter: twitter,
           discord: discord,
-        }
-        console.log(params)
+        };
         apiClient
           .post(API_PATHS.CLAIM_SETUP, params, {
             headers: { 'Content-Type': 'application/json' },
           })
           .then(function (response) {
-            console.log(response)
-            setClaimCreationSuccess(true)
-            reward()
+            console.log(response);
+            setClaimCreationSuccess(true);
+            reward();
           })
           .catch(function (error) {
-            console.log(error)
-            setClaimCreationSuccess(false)
-          })
+            console.log(error);
+            setClaimCreationSuccess(false);
+          });
       }
     } else {
-      alert('Missing some fields!')
+      alert('Missing some fields!');
     }
-  }
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -354,8 +352,8 @@ const DropEditor: React.FC<{}> = () => {
           position: 'fixed',
         }}
       >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+        <DrawerHeader onClick={handleDrawerClose}>
+          <IconButton>
             <ChevronLeftIcon />
           </IconButton>
         </DrawerHeader>
@@ -385,7 +383,11 @@ const DropEditor: React.FC<{}> = () => {
             height: 'calc(100vh - 128px)',
           }}
         >
-          <ClaimPageRenderer claim={formState} contractName={contract?.name} isPreview={true}/>
+          <ClaimPageRenderer
+            claim={formState}
+            contractName={contract?.name}
+            isPreview={true}
+          />
         </Box>
       </Box>
       <Modal open={showModal} onClose={handleClose}>
@@ -414,7 +416,7 @@ const DropEditor: React.FC<{}> = () => {
         </div>
       </Modal>
     </Box>
-  )
-}
+  );
+};
 
-export default DropEditor
+export default DropEditor;

@@ -1,4 +1,4 @@
-export const API_ENDPOINT = 'https://athensgate.xyz'
+export const API_ENDPOINT = 'https://athensgate.xyz';
 
 export enum API_PATHS {
   GET_MERKLE_ROOT = '/getMerkleRoot',
@@ -26,16 +26,13 @@ export const CONFIG = {
   DEV: {
     env: 'DEV',
     network: {
-//       label: 'Goerli TestNet',
-//       id: '0x5',
-//       token: 'ETH',
-//       rpcUrl: 'https://rpc.ankr.com/eth_goerli',
       label: 'GOERLI',
       id: '0x5',
       token: 'ETH',
       rpcUrl:
-      'https://eth-goerli.alchemyapi.io/v2/cgHuBwD5rDkESlnFr3ee92PLMp3pkfyE',
+        'https://eth-goerli.alchemyapi.io/v2/cgHuBwD5rDkESlnFr3ee92PLMp3pkfyE',
       txEtherscanUrl: 'https://goerli.etherscan.io/tx/',
+      addressEtherscanUrl: 'https://goerli.etherscan.io/address/',
     },
     contract: {
       factory_address: '0x053e59FD6A01Ba3d30beacaEaF0f3504d65baA73',
@@ -1094,22 +1091,22 @@ export const CONFIG = {
       ],
     },
     api: {
-      "endpoint": "https://athensgate.xyz",
-      "paths": {
-        "getMerkleRoot": "/getMerkleRoot",
-        "whitelist": "/whitelist",
-        "getNewLaunchedContract": "/getNewLaunchedContract",
-        "getAllLaunchedContracts": "/getAllLaunchedContracts",
-        "test": "/regulusTest",
-        "uploadImageCover": "/upload/cover",
-        "uploadImageData": "/upload/collection",
-        "uploadMetadata": "upload/metadata",
-        "checkName": "/claims/checkNameAvailability",
-        "launchClaim": "/claims/setup",
-        "getCover": "/claims/cover",
-        "reserve": "/reservations/reserve",
-        "reservedStatus": "/reservations/status"
-      }
+      endpoint: 'https://athensgate.xyz',
+      paths: {
+        getMerkleRoot: '/getMerkleRoot',
+        whitelist: '/whitelist',
+        getNewLaunchedContract: '/getNewLaunchedContract',
+        getAllLaunchedContracts: '/getAllLaunchedContracts',
+        test: '/regulusTest',
+        uploadImageCover: '/upload/cover',
+        uploadImageData: '/upload/collection',
+        uploadMetadata: 'upload/metadata',
+        checkName: '/claims/checkNameAvailability',
+        launchClaim: '/claims/setup',
+        getCover: '/retrieve/cover',
+        reserve: '/reservations/reserve',
+        reservedStatus: '/reservations/status',
+      },
     },
   },
-}
+};

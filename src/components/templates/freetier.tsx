@@ -1,89 +1,96 @@
-import { ethers } from 'ethers'
-import React from 'react'
-import FontPicker from 'font-picker-react'
-import { BsTwitter } from 'react-icons/bs'
-import { HiOutlineMail } from 'react-icons/hi'
-import { FaDiscord } from 'react-icons/fa'
-import { Claim, Contract } from '../../model/types'
-import useWallet from '../../hooks/useWallet'
-import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
-import { verifyMerkleProof } from '../../utils/web3'
-import { getContractClaimStatus, getContractCover } from '../../utils/retrieve'
-const localenv = CONFIG.DEV
+import { ethers } from 'ethers';
+import React from 'react';
+import FontPicker from 'font-picker-react';
+import { BsTwitter } from 'react-icons/bs';
+import { HiOutlineMail } from 'react-icons/hi';
+import { FaDiscord } from 'react-icons/fa';
+import { Claim, Contract } from '../../model/types';
+import useWallet from '../../hooks/useWallet';
+import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config';
+import { verifyMerkleProof } from '../../utils/web3';
+import { getContractClaimStatus, getContractCover } from '../../utils/retrieve';
+const localenv = CONFIG.DEV;
 
 interface FreeTierProps {
-  claim: Claim
-  contractName?: string
-  isPreview: boolean
+  claim: Claim;
+  contractName?: string;
+  isPreview: boolean;
 }
 const abi = [
   'function tokenURI(uint256 tokenId) public view returns (string memory)',
   'function name() public view returns (string memory)',
   'function masterAddress() public view returns (string memory)',
   'function mint(address account,uint256 numOfTokensToMint) external payable',
-]
+];
 // const provider = new ethers.providers.JsonRpcProvider(
 //   'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04'
 // )
 const provider = new ethers.providers.JsonRpcProvider(
   'https://rpc.ankr.com/eth_goerli'
-)
+);
 
-const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) => {
-  const { wallet, connect } = useWallet()
+const FreeTier: React.FC<FreeTierProps> = ({
+  claim,
+  contractName,
+  isPreview,
+}) => {
+  const { wallet, connect } = useWallet();
 
-  const connectedWallet = wallet?.accounts[0]
+  const connectedWallet = wallet?.accounts[0];
 
-  const [name, setName] = React.useState<string>()
-  const [contract, setContract] = React.useState<Contract>()
-  const [masterAddress, setMasterAddress] = React.useState<string>()
-  const [cover, setCover] = React.useState<string>()
-  const [minting, setMinting] = React.useState<boolean>(false)
-  const [txHash, setTxHash] = React.useState<string>()
-  const [claiming, setClaiming] = React.useState<boolean>(false)
-  const [claimTxHash, setClaimTxHash] = React.useState<string>()
-  const [isVerified, setIsVerified] = React.useState<boolean>()
-  const [verifiedProof, setVerifiedProof] = React.useState<string>()
-  const [contractStatus, setContractStatus] = React.useState<string>()
+  const [name, setName] = React.useState<string>();
+  const [contract, setContract] = React.useState<Contract>();
+  const [masterAddress, setMasterAddress] = React.useState<string>();
+  const [cover, setCover] = React.useState<string>();
+  const [minting, setMinting] = React.useState<boolean>(false);
+  const [txHash, setTxHash] = React.useState<string>();
+  const [claiming, setClaiming] = React.useState<boolean>(false);
+  const [claimTxHash, setClaimTxHash] = React.useState<string>();
+  const [isVerified, setIsVerified] = React.useState<boolean>();
+  const [verifiedProof, setVerifiedProof] = React.useState<string>();
+  const [contractStatus, setContractStatus] = React.useState<string>();
 
   const getContractStatus = React.useCallback(async () => {
     if (name && wallet) {
       try {
         const { success, status } = await getContractClaimStatus(name, wallet);
         if (success) {
-          console.log("Status " + status)
-          setContractStatus(status)
+          console.log('Status ' + status);
+          setContractStatus(status);
         }
       } catch {
-        alert("Could not get contract status")
+        alert('Could not get contract status');
       }
     }
-  }, [connectedWallet, contractStatus])
+  }, [connectedWallet, contractStatus]);
 
   const isAllowlistMember = React.useCallback(async () => {
     if (connectedWallet && name) {
       try {
-        const { success, merkleProof } = await verifyMerkleProof(name, connectedWallet.address);
+        const { success, merkleProof } = await verifyMerkleProof(
+          name,
+          connectedWallet.address
+        );
         setIsVerified(success);
         setVerifiedProof(merkleProof);
       } catch {
-        console.log("error getting merkle proof")
-        setIsVerified(false)
+        console.log('error getting merkle proof');
+        setIsVerified(false);
       }
     }
-  }, [connectedWallet, isVerified, name])
+  }, [connectedWallet, isVerified, name]);
 
   const getName = React.useCallback(async () => {
-    const contract = new ethers.Contract(claim.contract, abi, provider)
-    const collectionName = await contract.name()
-    setName(collectionName)
-  }, [claim])
+    const contract = new ethers.Contract(claim.contract, abi, provider);
+    const collectionName = await contract.name();
+    setName(collectionName);
+  }, [claim]);
 
   const getContractOwner = React.useCallback(async () => {
-    const contract = new ethers.Contract(claim.contract, abi, provider)
-    const contractOwner = await contract.masterAddress()
-    setMasterAddress(contractOwner)
-  }, [claim])
+    const contract = new ethers.Contract(claim.contract, abi, provider);
+    const contractOwner = await contract.masterAddress();
+    setMasterAddress(contractOwner);
+  }, [claim]);
 
   const getCoverImage = React.useCallback(async () => {
     // const headers = new Headers()
@@ -114,72 +121,85 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
       const res = await getContractCover(contractName);
       setCover(res);
     }
-  }, [contractName])
+  }, [contractName]);
 
   const mint = async () => {
     if (wallet && connectedWallet) {
-      setMinting(true)
+      setMinting(true);
       try {
         const walletProvider = new ethers.providers.Web3Provider(
           wallet.provider
-        )
-        const signer = walletProvider.getSigner(connectedWallet?.address)
-        const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
+        );
+        const signer = walletProvider.getSigner(connectedWallet?.address);
+        const contract = new ethers.Contract(
+          claim.contract,
+          localenv.contract.instanceAbi,
+          signer
+        );
         const tx = await contract.mint(connectedWallet?.address, 1, {
           gasLimit: 30000000,
-        })
-        const mintResponse = await tx.wait()
-        console.log(mintResponse)
-        setTxHash(mintResponse.transactionHash)
+        });
+        const mintResponse = await tx.wait();
+        console.log(mintResponse);
+        setTxHash(mintResponse.transactionHash);
       } catch (error: any) {
         if (error.message) {
-          alert(error.message)
+          alert(error.message);
         } else {
-          alert('Something went wrong, please try again!')
+          alert('Something went wrong, please try again!');
         }
       } finally {
-        setMinting(false)
+        setMinting(false);
       }
     }
-  }
+  };
 
   const claimOnContract = async () => {
-    if (wallet && connectedWallet && isVerified && (verifiedProof !== null)) {
-      setClaiming(true)
+    if (wallet && connectedWallet && isVerified && verifiedProof !== null) {
+      setClaiming(true);
       try {
         const walletProvider = new ethers.providers.Web3Provider(
           wallet.provider
-        )
-        const signer = walletProvider.getSigner(connectedWallet?.address)
-        const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
-        const tx = await contract.claim(connectedWallet?.address, 1, verifiedProof, {
-          gasLimit: 30000000,
-        })
-        const claimResponse = await tx.wait()
-        console.log(claimResponse)
-        setClaimTxHash(claimResponse.transactionHash)
+        );
+        const signer = walletProvider.getSigner(connectedWallet?.address);
+        const contract = new ethers.Contract(
+          claim.contract,
+          localenv.contract.instanceAbi,
+          signer
+        );
+        const tx = await contract.claim(
+          connectedWallet?.address,
+          1,
+          verifiedProof,
+          {
+            gasLimit: 30000000,
+          }
+        );
+        const claimResponse = await tx.wait();
+        console.log(claimResponse);
+        setClaimTxHash(claimResponse.transactionHash);
       } catch (error: any) {
         if (error.message) {
-          alert(error.message)
+          alert(error.message);
         } else {
-          alert('Something went wrong, please try again!')
+          alert('Something went wrong, please try again!');
         }
       } finally {
-        setClaiming(false)
+        setClaiming(false);
       }
     }
-  }
+  };
 
   React.useEffect(() => {
-    console.log("Rendering " + contractName + " at address " + claim.contract)
+    console.log('Rendering ' + contractName + ' at address ' + claim.contract);
     if (contractName && !name && !masterAddress && !cover) {
-      getName()
-      getContractOwner()
-      getCoverImage()
+      getName();
+      getContractOwner();
+      getCoverImage();
     }
     if (!isPreview) {
-      isAllowlistMember()
-      getContractStatus()
+      isAllowlistMember();
+      getContractStatus();
     }
   }, [
     getName,
@@ -191,50 +211,55 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
     cover,
     masterAddress,
     name,
-  ])
+  ]);
 
   React.useEffect(() => {
-    ;(async () => {
+    (async () => {
       if (contractName) {
-      const params = new URLSearchParams({
-        collection: contractName
-      })
-      const headers = new Headers()
-      headers.set('Content-Type', 'application/json')
-      const res = await fetch(`${API_ENDPOINT}${API_PATHS.GET_CONTRACT_BY_NAME}?` + params, {
-        method: 'GET',
-        headers,
-      }).then((res) => {
-        if (res.status === 200) {
-          return res.json()
-        } else {
-          throw new Error(res.statusText)
+        const params = new URLSearchParams({
+          collection: contractName,
+        });
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        const res = await fetch(
+          `${API_ENDPOINT}${API_PATHS.GET_CONTRACT_BY_NAME}?` + params,
+          {
+            method: 'GET',
+            headers,
+          }
+        )
+          .then((res) => {
+            if (res.status === 200) {
+              return res.json();
+            } else {
+              throw new Error(res.statusText);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        if (res !== undefined) {
+          console.log(res);
+          const {
+            name,
+            symbol,
+            masteraddress,
+            contractaddress,
+            txhash,
+            chainid,
+          } = res;
+          setContract({
+            name,
+            symbol,
+            masteraddress,
+            contractaddress,
+            txhash,
+            chainid,
+          });
         }
-      }).catch((error) => {
-        console.log(error)
-      })
-      if (res !== undefined) {
-        console.log(res)
-        const {
-          name,
-          symbol,
-          masteraddress,
-          contractaddress,
-          txhash,
-          chainid
-        } = res
-        setContract({
-          name,
-          symbol,
-          masteraddress,
-          contractaddress,
-          txhash,
-          chainid
-        })
       }
-    }
-    })()
-  }, [contractName])
+    })();
+  }, [contractName]);
 
   // console.log(
   //   `linear-gradient(180deg, ${claim.primaryColor} 0%, ${claim.secondaryColor} 100%)`
@@ -246,7 +271,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
       <div className="hidden">
         {/* { @ts-expect-error } */}
         <FontPicker
-          activeFontFamily={claim.fontFamily as string}
+          activeFontFamily={(claim.fontFamily as string) ?? undefined}
           apiKey={process.env.REACT_APP_GOOGLE_FONTS_API_KEY!}
         />
       </div>
@@ -297,7 +322,15 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
               <tr>
                 <td>Contract Address</td>
                 <td className="text-right text-white">
-                  {claim?.contract?.slice(0, 6)}...{claim?.contract?.slice(-6)}
+                  <a
+                    className=""
+                    href={`${localenv.network.addressEtherscanUrl}${claim?.contract}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {claim?.contract?.slice(0, 6)}...
+                    {claim?.contract?.slice(-6)}
+                  </a>
                 </td>
               </tr>
               <tr>
@@ -314,7 +347,11 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
               )}
               <tr>
                 <td>Blockchain</td>
-                { contract?.chainid === '5' ? <td className="text-right">Goerli</td> : <td className="text-right">Optimism</td>}
+                {contract?.chainid === '5' ? (
+                  <td className="text-right">Goerli</td>
+                ) : (
+                  <td className="text-right">Optimism</td>
+                )}
               </tr>
             </tbody>
           </table>
@@ -326,45 +363,63 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
           alt=""
           className="h-[calc(100%-80px)] object-contain"
         />
-        { contractStatus === "claim" && 
-        ( isVerified ? 
-          ( claimTxHash ? 
-            ( <a className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
-              href={`${localenv.network.txEtherscanUrl}${claimTxHash}`}
-              target="_blank"
-              rel="noreferrer">
-              Success: Check transaction
-              </a> ) : 
+        {contractStatus === 'claim' &&
+          (isVerified ? (
+            claimTxHash ? (
+              <a
+                className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
+                href={`${localenv.network.txEtherscanUrl}${claimTxHash}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Success: Check transaction
+              </a>
+            ) : (
               <button
                 className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
-                onClick={connectedWallet ? () => claimOnContract() : () => connect({})}
+                onClick={
+                  connectedWallet ? () => claimOnContract() : () => connect({})
+                }
                 disabled={claiming}
-              > {connectedWallet
-                ? claiming
-                  ? 'Claiming...'
-                  : 'Claim Now'
-                : 'Connect Wallet'}
-              </button> ) : <button className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500">Mint not active</button>)}
-        { contractStatus === "mint" && 
-          ( claimTxHash ? 
-            ( <a className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
+              >
+                {' '}
+                {connectedWallet
+                  ? claiming
+                    ? 'Claiming...'
+                    : 'Claim Now'
+                  : 'Connect Wallet'}
+              </button>
+            )
+          ) : (
+            <button className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500">
+              Mint not active
+            </button>
+          ))}
+        {contractStatus === 'mint' &&
+          (claimTxHash ? (
+            <a
+              className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
               href={`${localenv.network.txEtherscanUrl}${claimTxHash}`}
               target="_blank"
-              rel="noreferrer">
+              rel="noreferrer"
+            >
               Success: Check transaction
-              </a> ) : 
-              <button
-                className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
-                onClick={connectedWallet ? () => mint() : () => connect({})}
-                disabled={minting}
-              > {connectedWallet
+            </a>
+          ) : (
+            <button
+              className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
+              onClick={connectedWallet ? () => mint() : () => connect({})}
+              disabled={minting}
+            >
+              {' '}
+              {connectedWallet
                 ? minting
                   ? 'Minting...'
                   : 'Mint Now'
                 : 'Connect Wallet'}
-              </button> )
-        }
-          {/* (txHash ? (
+            </button>
+          ))}
+        {/* (txHash ? (
           <a
             className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
             href={`${localenv.network.txEtherscanUrl}${txHash}`}
@@ -394,7 +449,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FreeTier
+export default FreeTier;

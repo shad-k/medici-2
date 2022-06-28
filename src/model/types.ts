@@ -130,3 +130,13 @@ export type ChainConfigReturn = {
   factory: string
   claims: string
 }
+
+export interface Chain {
+  namespace?: 'evm'
+  id: string
+  rpcUrl: string
+  label: string
+  token: string
+  color?: string
+  icon?: string
+}
