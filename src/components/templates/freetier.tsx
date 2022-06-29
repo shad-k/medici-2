@@ -45,20 +45,28 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   const [contractStatus, setContractStatus] = React.useState<string>()
 
   const getContractStatus = React.useCallback(async () => {
-    if (connectedWallet) {
-      const { success, msg } = await getContractClaimStatus(claim.contract, wallet);
-      setContractStatus(msg)
+    if (name && wallet) {
+      try {
+        const { success, status } = await getContractClaimStatus(name, wallet);
+        if (success) {
+          console.log("Status " + status)
+          setContractStatus(status)
+        }
+      } catch {
+        alert("Could not get contract status")
+      }
     }
   }, [connectedWallet, contractStatus])
 
   const isAllowlistMember = React.useCallback(async () => {
     if (connectedWallet && name) {
       try {
-      const { success, merkleProof } = await verifyMerkleProof(name, connectedWallet.address);
-      setIsVerified(success);
-      setVerifiedProof(merkleProof);
+        const { success, merkleProof } = await verifyMerkleProof(name, connectedWallet.address);
+        setIsVerified(success);
+        setVerifiedProof(merkleProof);
       } catch {
-      console.log("error getting merkle proof")
+        console.log("error getting merkle proof")
+        setIsVerified(false)
       }
     }
   }, [connectedWallet, isVerified, name])
@@ -167,11 +175,14 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
       getCoverImage()
     }
     isAllowlistMember()
+    getContractStatus()
   }, [
     getName,
     getContractOwner,
     getCoverImage,
     isAllowlistMember,
+    getContractStatus,
+    contractStatus,
     contractName,
     cover,
     masterAddress,
@@ -268,26 +279,45 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
           alt=""
           className="h-[calc(100%-80px)] object-contain"
         />
-        { connectedWallet && <p>Connected as: {connectedWallet.address}</p> }
-        { isVerified ? ( claimTxHash ? ( <a
-            className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
-            href={`${localenv.network.txEtherscanUrl}${claimTxHash}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-          Success: Check transaction
-          </a>) :
-          <button
-              className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
-              onClick={connectedWallet ? () => claimOnContract() : () => connect({})}
-              disabled={claiming}
-          > {connectedWallet
-            ? claiming
-              ? 'Claiming...'
-              : 'Claim Now'
-            : 'Connect Wallet'}
-          </button> ) :
-        (txHash ? (
+        { contractStatus === "claim" && 
+        ( isVerified ? 
+          ( claimTxHash ? 
+            ( <a className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
+              href={`${localenv.network.txEtherscanUrl}${claimTxHash}`}
+              target="_blank"
+              rel="noreferrer">
+              Success: Check transaction
+              </a> ) : 
+              <button
+                className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
+                onClick={connectedWallet ? () => claimOnContract() : () => connect({})}
+                disabled={claiming}
+              > {connectedWallet
+                ? claiming
+                  ? 'Claiming...'
+                  : 'Claim Now'
+                : 'Connect Wallet'}
+              </button> ) : <button className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500">Mint not active</button>)}
+        { contractStatus === "mint" && 
+          ( claimTxHash ? 
+            ( <a className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
+              href={`${localenv.network.txEtherscanUrl}${claimTxHash}`}
+              target="_blank"
+              rel="noreferrer">
+              Success: Check transaction
+              </a> ) : 
+              <button
+                className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
+                onClick={connectedWallet ? () => mint() : () => connect({})}
+                disabled={minting}
+              > {connectedWallet
+                ? minting
+                  ? 'Minting...'
+                  : 'Mint Now'
+                : 'Connect Wallet'}
+              </button> )
+        }
+          {/* (txHash ? (
           <a
             className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
             href={`${localenv.network.txEtherscanUrl}${txHash}`}
@@ -309,7 +339,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
               : 'Connect Wallet'}
           </button>
         ))
-        }
+        } */}
         <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">
           powered by{' '}
           <img src="/logo.png" alt="Medici logo" width={20} className="mx-1" />
