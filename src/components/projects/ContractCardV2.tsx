@@ -29,7 +29,7 @@ const ContractCardV2: React.FC<{ contract: Contract}> = ({contract}) => {
             <div className="justify-center drop-shadow-lg rounded-2xl h-[300px] bg-[#2e2c38] aspect-video items-center flex flex-col m-2">   
                 <div className="group relative">
                     <div className="w-full aspect-video rounded-2xl object-cover overflow-hidden">
-                        <img src={CoverImage} alt={contract.name} className="w-full aspect-video rounded-2xl object-cover"/>
+                      <img src={CoverImage} alt={contract.name} className="w-full aspect-video rounded-2xl object-cover"/>
                     </div>
                     <div className="absolute h-full left-0 top-0 rounded-2xl right-0 p-5 group-hover:bg-medici-purple/60 bg-transparent transition-all ease-in">
                         <h1 className="text-4xl font-bold text-center mt-[20%] text-white opacity-100">{contract.name}({contract.symbol})</h1>
