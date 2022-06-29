@@ -96,36 +96,38 @@ const ProjectPage: React.FC<{ contractAddress: string }> = ({contractAddress}) =
   return (
   <div>
   { isOwner ? (
-    <div className="flex flex-col items-center">
-      <div className="drop-shadow-lg items-center flex flex-col max-h-96">   
-        <div className="relative aspect-video object-cover overflow-hidden">
-          <img src={cover} className="w-full aspect-video object-cover"/>
+    <div className="flex flex-col items-center -mt-16">
+      <div className="overflow-hidden drop-shadow-lg items-center flex w-full">   
+        <div className="relative w-full aspect-video object-cover overflow-hidden max-h-96">
+          <img src={cover} className="block w-full aspect-video object-cover"/>
         </div>
         <div className="absolute h-full left-0 top-0 aspect-video w-full bg-gradient-to-b from-transparent to-black/80 drop-shadow-md"></div>
       </div>
-      <div className="p-10 space-y-10 flex flex-col w-full">
-        <div className="grid grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 gap-[0.5px] lg:gap-3 bg-[#121216] lg:bg-transparent rounded-3xl overflow-hidden lg:overflow-visible drop-shadow-lg lg:drop-shadow-none">
-          <div className="p-5 lg:rounded-2xl bg-[#201F27] lg:drop-shadow-lg text-center transition lg:hover:-translate-y-1 ease-in">
+        <div className="grid grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 gap-[0.5px] rounded-3xl overflow-hidden -translate-y-52 w-4/5">
+          <div className="p-5 bg-zinc-400/20 backdrop-blur-sm hover:bg-zinc-50/20 hover:backdrop-blur-lg transition ease-in text-center">
             <h1 className="block text-2xl">Earnings</h1>
             {balance && <p className="text-lg">{balance} ETH</p>} 
           </div>
-          <div className="p-5 lg:rounded-2xl bg-[#201F27] lg:drop-shadow-lg text-center transition lg:hover:-translate-y-1 ease-in">
+          <div className="p-5 bg-zinc-400/20 backdrop-blur-sm text-center">
           <h1 className="block text-2xl">Price</h1>
           { price && <p className="text-lg">{price} ETH</p> }
           </div>
-          <div className="p-5 lg:rounded-2xl bg-[#201F27] lg:drop-shadow-lg text-center transition lg:hover:-translate-y-1 ease-in">
+          <div className="p-5 bg-zinc-400/20 backdrop-blur-sm text-center">
             <h1 className="block text-2xl">Address</h1>
             <p className="text-lg overflow-hidden overflow-ellipsis block w-full">{contractAddress}</p>
           </div>
-          <div className="p-5 lg:rounded-2xl bg-[#201F27] lg:drop-shadow-lg text-center transition lg:hover:-translate-y-1 ease-in">
+          <div className="p-5 bg-zinc-400/20 backdrop-blur-sm text-center">
             <h1 className="block text-2xl">Owner</h1>
             <p className="text-lg overflow-hidden overflow-ellipsis block w-full">{connectedWallet!.address}</p>
           </div>
         </div>
-        <h1 className="text-5xl text-left tracking-wide text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500">{name} ({symbol}) </h1>
-        { withdrawing ? <button className="bg-medici-purple rounded-2xl p-3 mt-24">Withdrawing</button> : <button className="bg-medici-purple rounded-2xl p-3" onClick={onWithdraw}>Withdraw</button> }
+        <h1 className="text-6xl -mt-16">{name}</h1>
+        <div className="flex flex-col md:grid grid-cols-3 gap-3 w-full p-10 h-[500px]">
+          <button className="bg-zinc-800 drop-shadow-sm rounded-2xl">Withdraw</button>
+          <button className="bg-zinc-800 drop-shadow-sm rounded-2xl">Withdraw</button>
+          <button className="bg-zinc-800 drop-shadow-sm rounded-2xl">Withdraw</button>
+        </div>
       </div>
-    </div>
   ) : ( <p>Not your page</p> )
   }
   </div>
