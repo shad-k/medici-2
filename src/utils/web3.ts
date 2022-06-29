@@ -120,9 +120,8 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
 
 /* call when new contract is created to update backend */
 export const whitelist = async (contractAddress: string, chainId: string, whitelistedAddreses: string[], merkleRoot: string) => {
-  const request_data = {
-    "contract": contractAddress,
-    "chainid": chainId,
+    const request_data = {
+    "contractName": contractAddress,
     "whitelistedAddresses": whitelistedAddreses,
     "merkleRoot": merkleRoot
   }
@@ -141,9 +140,10 @@ export const whitelist = async (contractAddress: string, chainId: string, whitel
 }
 
 /* call to verify backend results */
-export const getNewLaunchedContract = async (masterAddress: string): Promise<Contract> => {
+export const getNewLaunchedContract = async (masterAddress: string, callerWallet: any): Promise<Contract> => {
   const request_data = {
       "masterAddress": masterAddress,
+      "chainID": parseInt(callerWallet.chains[0].id, 16)
   }
   return apiClient.post(
       localenv.api.paths.getNewLaunchedContract, request_data,

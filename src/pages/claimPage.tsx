@@ -40,14 +40,14 @@ const ClaimPage: React.FC<{}> = () => {
 
   React.useEffect(() => {
     ;(async () => {
+      const params = new URLSearchParams({
+        collection: contractName!
+      })
       const headers = new Headers()
       headers.set('Content-Type', 'application/json')
-      const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM_FETCH}`, {
+      const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM_FETCH}?` + params, {
         method: 'GET',
         headers,
-        body: JSON.stringify({
-          contractName,
-        }),
       })
         .then((res) => {
           if (res.status === 200) {
