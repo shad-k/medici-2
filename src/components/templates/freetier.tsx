@@ -52,16 +52,16 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
   }, [connectedWallet, contractStatus])
 
   const isAllowlistMember = React.useCallback(async () => {
-    if (connectedWallet) {
+    if (connectedWallet && name) {
       try {
-      const { success, merkleProof } = await verifyMerkleProof(claim.contract, wallet);
+      const { success, merkleProof } = await verifyMerkleProof(name, connectedWallet.address);
       setIsVerified(success);
       setVerifiedProof(merkleProof);
       } catch {
       console.log("error getting merkle proof")
       }
     }
-  }, [connectedWallet, isVerified])
+  }, [connectedWallet, isVerified, name])
 
   const getName = React.useCallback(async () => {
     const contract = new ethers.Contract(claim.contract, abi, provider)

@@ -29,12 +29,12 @@ export const getMerkleRoot = async (whitelistAddresses: string[]):Promise<string
   });
 }
 
-export const verifyMerkleProof = async (contractAddress: string, callerWallet: any) => {
+export const verifyMerkleProof = async (contractName: string, callerWalletAddress: string) => {
   const request_data = {
-    "ERC721Contract": contractAddress,
-    "chainid": callerWallet.chains[0].id,
-    "address" : callerWallet.accounts[0].address,
+    "collection": contractName,
+    "address" : callerWalletAddress
   }
+  console.log(request_data)
 
   return apiClient.post(
     API_PATHS.GET_MERKLE_PROOF, request_data, 
@@ -42,6 +42,7 @@ export const verifyMerkleProof = async (contractAddress: string, callerWallet: a
         headers: {"Content-Type": "application/json"}
     }
   ).then(function(response) {
+    console.log(response)
     if (response.data.message === "Could not verify address with given Merkle Tree") {
       return Promise.reject({
         success: false,
@@ -102,6 +103,7 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         props.baseuri, // base URI
         merkleRoot, // merkle root
         props.maxSupply, // max supply
+        // utils.parseUnits(props.price, 'wei'),
         utils.parseUnits(props.price, 'ether'), // price
         props.maxMintsPerPerson, // max mint per person
         props.masterAddress, // master address
@@ -119,9 +121,9 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
 }
 
 /* call when new contract is created to update backend */
-export const whitelist = async (contractAddress: string, chainId: string, whitelistedAddreses: string[], merkleRoot: string) => {
+export const whitelist = async (contractName: string, chainId: string, whitelistedAddreses: string[], merkleRoot: string) => {
     const request_data = {
-    "contractName": contractAddress,
+    "contractName": contractName,
     "whitelistedAddresses": whitelistedAddreses,
     "merkleRoot": merkleRoot
   }

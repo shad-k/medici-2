@@ -60,6 +60,7 @@ const ClaimPage: React.FC<{}> = () => {
           console.log(error)
         })
       if (res) {
+        console.log(res)
         const {
           artist,
           description,
