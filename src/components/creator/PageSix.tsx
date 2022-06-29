@@ -60,10 +60,10 @@ const PageSix: React.FC<StepperFormProps> = ({
             claimStartBlock: data.claimStartBlock,
             mintStartBlock: data.mintStartBlock
           });
-        const result = await getNewLaunchedContract(data.masterAddress);
+        const result = await getNewLaunchedContract(data.masterAddress, wallet);
         setContractCreationResult(result);
         console.log("Get new launched contract " + result.name);
-        await whitelist(result.contractaddress, connectedChain!.id, data.whitelistedAddresses, data.merkleRoot);
+        await whitelist(data.name, connectedChain!.id, data.whitelistedAddresses, data.merkleRoot);
         console.log("Done setting whitelist!")
         setContractCreationSuccess(true);
       }

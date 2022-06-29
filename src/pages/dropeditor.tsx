@@ -19,7 +19,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 
 import useWallet from '../hooks/useWallet'
 import apiClient from '../utils/apiClient'
-import { CONFIG } from '../utils/config'
+import { API_PATHS, CONFIG } from '../utils/config'
 import { Contract, FormState, TemplateTier } from '../model/types'
 import { claimsInit } from '../utils/web3'
 import DrawerAccordions from '../components/dropEditor/DrawerAccordions'
@@ -245,8 +245,9 @@ const DropEditor: React.FC<{}> = () => {
           twitter: twitter,
           discord: discord,
         }
+        console.log(params)
         apiClient
-          .post(localenv.api.paths.launchClaim, params, {
+          .post(API_PATHS.CLAIM_SETUP, params, {
             headers: { 'Content-Type': 'application/json' },
           })
           .then(function (response) {

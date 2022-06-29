@@ -11,7 +11,7 @@ const Reservation: React.FC<{}> = () => {
   const { wallet, connect, connectedChain, setChain } = useWallet();
 
   const { name: contractName } = useParams()
-  const { data, error } = useReservedNFTs(contractName as string, connectedChain!.id)
+  const { data, error } = useReservedNFTs(contractName as string)
   const [allImages, setAllImages] = useState<Array<number>>();
   const [allThumbnails, setAllThumbnails] = useState<Array<string>>();
   const [selectedNFT, setSelectedNFT] = useState<number>();
