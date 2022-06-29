@@ -102,7 +102,7 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         props.baseuri, // base URI
         merkleRoot, // merkle root
         props.maxSupply, // max supply
-        utils.parseUnits(props.price, 'wei'), // price
+        utils.parseUnits(props.price, 'ether'), // price
         props.maxMintsPerPerson, // max mint per person
         props.masterAddress, // master address
         props.claimStartBlock, // claim start block
