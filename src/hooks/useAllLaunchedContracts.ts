@@ -14,19 +14,20 @@ type UseProjectsReturn = {
     error?: any
 }
 
-const useAllLaunchedContracts = (masterAddress: string): UseProjectsReturn  => {
+const useAllLaunchedContracts = (masterAddress: string, connectedChain: string): UseProjectsReturn  => {
+  console.log("Getting contracts for " + masterAddress + " on chain " + connectedChain)
   const { data, error } = useSWR<Array<Contract>>(
     [localenv.api.paths.getAllLaunchedContracts],
     async (url) =>
       await apiClient.post
-      (url, {"masterAddress": utils.getAddress(masterAddress)},
+      (url, {"masterAddress": utils.getAddress(masterAddress), "chainID": parseInt(connectedChain, 16)},
       { 
         headers: { "Content-Type": "application/json"}
       }
       ).then((res) => {
-        // console.log(res)
-        return res.data
-      }),
+        console.log(res.data.launchedContracts)
+        return res.data.launchedContracts
+      })
   )
   return { data, error }
 }

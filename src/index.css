@@ -31,13 +31,21 @@ body,
   background: linear-gradient(to bottom, transparent 0%, #000 100%);
 }
 
+.main-page-bg {
+  background: url('../public/Stars.png');
+  opacity: 0.7;
+  background-color: #1b1a1f;
+  background-size: 30%;
+  background-repeat: repeat;
+}
+
 .body-bg {
   background-color: #1b1a1f;
   background-size: 30%;
   background-repeat: repeat;
 }
 
-.hero-collection {
+.hero-collection:hover {
   box-shadow: 0px 0px 84px 0px #ffffff66;
 }
 

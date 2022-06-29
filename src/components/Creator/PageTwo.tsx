@@ -3,12 +3,15 @@ import { StepperFormProps } from '../../model/types';
 import validator from 'validator';
 import { getNameAvailability } from '../../utils/retrieve';
 import { uploadCoverImage } from '../../utils/upload';
+import { readyToTransact } from '../../utils/web3';
+import useWallet from '../../hooks/useWallet';
 
 const PageTwo: React.FC<StepperFormProps> = ({
   nextStep,
   handleInputData,
   data
 }) => {
+  const { wallet, connect, setChain, connectedChain } = useWallet()
   const [nameChecked, setNameChecked] = useState<boolean>(false);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
   const [timer, setTimer] = useState<any>(null)
@@ -31,18 +34,20 @@ const PageTwo: React.FC<StepperFormProps> = ({
         nextStep();
       } else {
         console.log(data);
-        alert("Something went wrong!")
+        alert("Please input a name and symbol!")
       }
     } else {
       if (!(validator.isEmpty(data.name)) && !(validator.isEmpty(data.symbol))) {
         nextStep();
       } else {
-        alert("Something went wrong!")
+        alert("Please input a name and symbol!")
       }
     }
   }
 
   const nameCheck = async (name: string) => {
+    await readyToTransact(wallet, connect, setChain);
+    
     if (name === "") {
       setNameChecked(false);
       setIsNameAvailable(false);
@@ -54,7 +59,7 @@ const PageTwo: React.FC<StepperFormProps> = ({
         clearTimeout(timer);
         
         const newTimer = setTimeout( async () => {
-          const isNameAvailable = await getNameAvailability(name);
+          const isNameAvailable = await getNameAvailability(name, connectedChain!.id);
           if (isNameAvailable) {
             await handleInputData("name", name);
             setIsNameAvailable(true);

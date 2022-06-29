@@ -8,7 +8,7 @@ const AlphaBanner:React.FC<{}> = () => {
   const handleOpen = () => setShowAlert(true);
   const handleClose = () => setShowAlert(false);
   return (
-    <div className="p-10">
+    <div className="p-7">
     <Collapse in={showAlert}>
       <Alert severity="info" onClose={() => {handleClose()}} icon={false} sx={{backgroundColor: "#201F27", color: "#cacaca", boxShadow: "0.8"}}>
       <AlertTitle>Info</AlertTitle>

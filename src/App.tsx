@@ -14,6 +14,8 @@ import Background from './components/Background'
 import ClaimPage from './pages/claimPage'
 import EmptyPage from './pages/emptyPage'
 import { createTheme, ThemeProvider } from '@mui/material'
+import StarryBackground from './components/home/StarryBackground'
+import party from 'party-js'
 
 const customTheme = createTheme({
   palette: {
@@ -25,6 +27,16 @@ const customTheme = createTheme({
   },
 })
 
+const sparkleConfig  = {
+  lifetime: party.variation.range(0.5, 1.0),
+  size: party.variation.range(0.5, 0.8),
+  count: 15,
+}
+
+document.body.addEventListener("click", event => {
+  party.sparkles(event, sparkleConfig)
+})
+
 const App: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={customTheme}>
@@ -33,6 +45,7 @@ const App: React.FC<{}> = () => {
           <Router>
             <main className="font-sans mt-16">
               <Background />
+              <StarryBackground/>
               <Header />
               <div className="z-1 relative">
                 <Routes>

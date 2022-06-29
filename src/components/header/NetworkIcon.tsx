@@ -4,11 +4,13 @@ import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { ClickAwayListener } from '@mui/material';
 import useWallet from '../../hooks/useWallet';
 
 import Ethereum from '../svgComponents/Ethereum';
 import Optimism from '../svgComponents/Optimism';
 import { BsExclamationTriangle } from 'react-icons/bs'
+import { MdSwapHoriz } from 'react-icons/md';
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -47,22 +49,28 @@ const StyledMenu = styled((props: MenuProps) => (
 const NetworkIcon: React.FC<{}> = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [currChainLabel, setCurrChainLabel] = React.useState<string>();
+  const [switchingNetwork, setSwitchingNetwork] = React.useState<boolean>(false);
   const open = Boolean(anchorEl);
   
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+    console.log("handle click")
   };
 
-  const handleClose = (chainId: string) => {
+  const handleClose = async (chainId: string) => {
     setAnchorEl(null);
-    setChain({ chainId: chainId })
+    if (chainId === "0xA" || chainId === "0x5") {
+      setSwitchingNetwork(true)
+      await setChain({ chainId: chainId })
+      setSwitchingNetwork(false)
+    }
   };
   
   const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
   const connectedWallet = wallet?.accounts[0]
 
   React.useEffect(() => {
-    if (connectedWallet){
+    if (connectedWallet && connectedChain) {
       if (connectedChain?.id === '0xa') {
         setCurrChainLabel("Optimism");
         document.getElementById("invalid-icon")!.style.display = 'none';
@@ -106,10 +114,16 @@ const NetworkIcon: React.FC<{}> = () => {
             backgroundColor: 'black',
           },}}
       >
-      <div id="optimism-icon"><Optimism/></div>
-      <div id="eth-icon"><Ethereum/></div>
-      <BsExclamationTriangle id="invalid-icon" style={{height: '25px', marginRight: '5px'}}/>
-      <h2 className="hidden md:block ml-2">{currChainLabel}</h2>
+      <div id="optimism-icon">
+      { switchingNetwork ? <MdSwapHoriz style={{height: '25px'}}/> : <Optimism/> }
+      </div>
+      <div id="eth-icon">
+      { switchingNetwork ? <MdSwapHoriz style={{height: '25px'}}/> : <Ethereum/>}
+      </div>
+      <div id="invalid-icon">
+      { switchingNetwork ? <MdSwapHoriz style={{height: '25px'}}/> : <BsExclamationTriangle style={{height: '23px', marginRight: '5px'}}/> }
+      </div>
+      { switchingNetwork ? <h2 className="hidden md:block ml-2">Switching</h2> : <h2 className="hidden md:block ml-2">{currChainLabel} </h2> }
       </Button>
       <StyledMenu
         id="demo-customized-menu"
@@ -120,8 +134,8 @@ const NetworkIcon: React.FC<{}> = () => {
         open={open}
         onClose={handleClose}
       >
-      <MenuItem onClick={event => handleClose("0xa")} disabled={true} disableRipple>
-      <Optimism/> <p className="ml-1">Optimism (coming soon!)</p>
+      <MenuItem onClick={event => handleClose("0xA")} disableRipple>
+      <Optimism/> <p className="ml-1">Optimism</p>
       </MenuItem>
       <MenuItem onClick={event => handleClose("0x5")} disableRipple>
       <Ethereum/> <p className="ml-1">Goerli</p>

@@ -1,5 +1,7 @@
 import React from 'react'
 import { StepperFormProps } from '../../model/types';
+import { readyToTransact } from '../../utils/web3';
+import useWallet from '../../hooks/useWallet';
 
 /* FIXME: rename components */
 const PageOne: React.FC<StepperFormProps> = ({
@@ -7,10 +9,16 @@ const PageOne: React.FC<StepperFormProps> = ({
     handleInputData,
     data
 }) => {
+  const { wallet, connect, setChain } = useWallet()
 
-const onSubmit = () => {
-    console.log(data);
-    nextStep();
+const onSubmit = async () => {
+    const ready = await readyToTransact(wallet, connect, setChain);
+    if (ready) {
+      console.log(data);
+      nextStep();
+    } else {
+      alert("Please connect your wallet to create a collection!")
+    }
 }
 
 return (
@@ -28,7 +36,7 @@ return (
                 <option>identical</option>
             </select>
             <div className="block m-10">
-                <button className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[100px]" onClick={onSubmit}>Let's go!</button>
+              <button className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[100px]" onClick={onSubmit}>Let's go!</button>
             </div>
         </div>
         

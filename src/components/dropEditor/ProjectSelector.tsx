@@ -57,6 +57,7 @@ const ProjectSelector: React.FC<Props> = ({ selectProject }) => {
           {wallet ? (
             <ContractsMenu
               masterAddress={wallet.accounts[0].address}
+              connectedChain={wallet.chains[0].id}
               selectProject={selectProject}
             />
           ) : (

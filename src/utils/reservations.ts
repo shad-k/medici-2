@@ -46,15 +46,12 @@ export const makeReservation = async (contractName: string, tokenID: number, con
 
 export const getThumbnails = async (contractName: string) => {
     const request_data = {
-      "contractName": contractName
+      "collection": contractName
     };
   
-    return apiClient.post(
+    return apiClient.get(
       API_PATHS.RETRIEVE_THUMBNAILS,
-      request_data,
-      {
-          headers: {"Content-Type": "application/json"}
-      }
+      { params: request_data }
     ).then(function(response) {
         console.log(response.data)
         return Promise.resolve(response.data)
