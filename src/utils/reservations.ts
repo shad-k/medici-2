@@ -57,6 +57,6 @@ export const getThumbnails = async (contractName: string) => {
         return Promise.resolve(response.data)
     }).catch(function(error) {
         console.log(error);
-        return Promise.reject("Error making reservation")
+        return Promise.reject("Error getting thumbnails")
     });
 }
