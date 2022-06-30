@@ -14,6 +14,7 @@ const localenv = CONFIG.DEV
 interface FreeTierProps {
   claim: Claim
   contractName?: string
+  isPreview: boolean
 }
 const abi = [
   'function tokenURI(uint256 tokenId) public view returns (string memory)',
@@ -28,7 +29,7 @@ const provider = new ethers.providers.JsonRpcProvider(
   'https://rpc.ankr.com/eth_goerli'
 )
 
-const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
+const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) => {
   const { wallet, connect } = useWallet()
 
   const connectedWallet = wallet?.accounts[0]
@@ -174,8 +175,10 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName }) => {
       getContractOwner()
       getCoverImage()
     }
-    isAllowlistMember()
-    getContractStatus()
+    if (!isPreview) {
+      isAllowlistMember()
+      getContractStatus()
+    }
   }, [
     getName,
     getContractOwner,

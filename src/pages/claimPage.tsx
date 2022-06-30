@@ -24,12 +24,13 @@ const mockData: Claim = {
 export const ClaimPageRenderer: React.FC<{
   claim: Claim
   contractName?: string
-}> = ({ claim, contractName }) => {
+  isPreview: boolean
+}> = ({ claim, contractName, isPreview }) => {
   switch (claim.tier) {
     case TemplateTier.LOW:
-      return <FreeTier claim={claim} contractName={contractName} />
+      return <FreeTier claim={claim} contractName={contractName} isPreview={isPreview}/>
     default:
-      return <FreeTier claim={claim} contractName={contractName} />
+      return <FreeTier claim={claim} contractName={contractName} isPreview={isPreview}/>
   }
 }
 
@@ -95,7 +96,7 @@ const ClaimPage: React.FC<{}> = () => {
   }
   return (
     <Box sx={{ height: '100vh', marginTop: '-64px' }}>
-      <ClaimPageRenderer claim={claim} contractName={contractName as string} />
+      <ClaimPageRenderer claim={claim} contractName={contractName as string} isPreview={false}/>
     </Box>
   )
 }

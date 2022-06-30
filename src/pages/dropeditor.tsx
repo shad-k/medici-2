@@ -107,8 +107,8 @@ const formInitialState: FormState = {
   twitter: '',
   discord: '',
   email: '',
-  primaryColor: '',
-  secondaryColor: '',
+  primaryColor: '#1b1a1f',
+  secondaryColor: '#1b1a1f',
   bgColor: '',
   fontFamily: '',
   tier: TemplateTier.FREE,
@@ -158,12 +158,12 @@ const DropEditor: React.FC<{}> = () => {
       contract &&
       artist &&
       description &&
-      twitter &&
-      email &&
-      discord &&
+      // twitter &&
+      // email &&
+      // discord &&
       primaryColor !== '' &&
       secondaryColor !== '' &&
-      bgColor !== '' &&
+      // bgColor !== '' &&
       fontFamily &&
       tier
     ) {
@@ -383,7 +383,7 @@ const DropEditor: React.FC<{}> = () => {
             height: 'calc(100vh - 128px)',
           }}
         >
-          <ClaimPageRenderer claim={formState} contractName={contract?.name} />
+          <ClaimPageRenderer claim={formState} contractName={contract?.name} isPreview={true}/>
         </Box>
       </Box>
       <Modal open={showModal} onClose={handleClose}>
