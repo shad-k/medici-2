@@ -112,6 +112,7 @@ const formInitialState: FormState = {
   bgColor: '',
   fontFamily: '',
   tier: TemplateTier.FREE,
+  chainid: ''
 }
 
 const DropEditor: React.FC<{}> = () => {
@@ -183,6 +184,7 @@ const DropEditor: React.FC<{}> = () => {
   }
 
   const changeProject = (contract: any) => {
+    console.log("Changing project to " + contract)
     setContract(contract)
     changeFormState('contract', contract?.contractaddress)
   }

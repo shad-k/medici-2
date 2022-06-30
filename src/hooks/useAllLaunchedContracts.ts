@@ -15,7 +15,7 @@ type UseProjectsReturn = {
 }
 
 const useAllLaunchedContracts = (masterAddress: string, connectedChain: string): UseProjectsReturn  => {
-  console.log("Getting contracts for " + masterAddress + " on chain " + connectedChain)
+  // console.log("Getting contracts for " + masterAddress + " on chain " + connectedChain)
   const { data, error } = useSWR<Array<Contract>>(
     [localenv.api.paths.getAllLaunchedContracts],
     async (url) =>
@@ -25,7 +25,7 @@ const useAllLaunchedContracts = (masterAddress: string, connectedChain: string):
         headers: { "Content-Type": "application/json"}
       }
       ).then((res) => {
-        console.log(res.data.launchedContracts)
+        // console.log(res.data.launchedContracts)
         return res.data.launchedContracts
       })
   )

@@ -6,6 +6,7 @@ export enum API_PATHS {
   REGULUS_TEST = '/regulusTest',
   GET_NEW_LAUNCHED_CONTRACT = '/getNewLaunchedContract',
   GET_ALL_LAUNCHED_CONTRACTS = '/getAllLaunchedContracts',
+  GET_CONTRACT_BY_NAME = '/getContractDetails',
   WHITELIST = '/whitelist',
   COLLECTION = '/collections',
   CLAIM_FETCH = '/claims/fetch',

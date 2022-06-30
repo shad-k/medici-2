@@ -4,7 +4,7 @@ import FontPicker from 'font-picker-react'
 import { BsTwitter } from 'react-icons/bs'
 import { HiOutlineMail } from 'react-icons/hi'
 import { FaDiscord } from 'react-icons/fa'
-import { Claim } from '../../model/types'
+import { Claim, Contract } from '../../model/types'
 import useWallet from '../../hooks/useWallet'
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
 import { verifyMerkleProof } from '../../utils/web3'
@@ -35,6 +35,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
   const connectedWallet = wallet?.accounts[0]
 
   const [name, setName] = React.useState<string>()
+  const [contract, setContract] = React.useState<Contract>()
   const [masterAddress, setMasterAddress] = React.useState<string>()
   const [cover, setCover] = React.useState<string>()
   const [minting, setMinting] = React.useState<boolean>(false)
@@ -170,6 +171,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
   }
 
   React.useEffect(() => {
+    console.log("Rendering " + contractName + " at address " + claim.contract)
     if (contractName && !name && !masterAddress && !cover) {
       getName()
       getContractOwner()
@@ -185,16 +187,58 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
     getCoverImage,
     isAllowlistMember,
     getContractStatus,
-    contractStatus,
     contractName,
     cover,
     masterAddress,
     name,
   ])
 
-  console.log(
-    `linear-gradient(180deg, ${claim.primaryColor} 0%, ${claim.secondaryColor} 100%)`
-  )
+  React.useEffect(() => {
+    ;(async () => {
+      if (contractName) {
+      const params = new URLSearchParams({
+        collection: contractName
+      })
+      const headers = new Headers()
+      headers.set('Content-Type', 'application/json')
+      const res = await fetch(`${API_ENDPOINT}${API_PATHS.GET_CONTRACT_BY_NAME}?` + params, {
+        method: 'GET',
+        headers,
+      }).then((res) => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          throw new Error(res.statusText)
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+      if (res !== undefined) {
+        console.log(res)
+        const {
+          name,
+          symbol,
+          masteraddress,
+          contractaddress,
+          txhash,
+          chainid
+        } = res
+        setContract({
+          name,
+          symbol,
+          masteraddress,
+          contractaddress,
+          txhash,
+          chainid
+        })
+      }
+    }
+    })()
+  }, [contractName])
+
+  // console.log(
+  //   `linear-gradient(180deg, ${claim.primaryColor} 0%, ${claim.secondaryColor} 100%)`
+  // )
 
   return (
     <div className="w-full h-full flex flex-col md:flex-row items-center justify-center text-white relative md:overflow-hidden px-0 md:px-8 apply-font">
@@ -270,7 +314,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
               )}
               <tr>
                 <td>Blockchain</td>
-                <td className="text-right">Optimism</td>
+                { contract?.chainid === '5' ? <td className="text-right">Goerli</td> : <td className="text-right">Optimism</td>}
               </tr>
             </tbody>
           </table>

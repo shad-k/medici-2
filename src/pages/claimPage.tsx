@@ -19,6 +19,7 @@ const mockData: Claim = {
   email: null,
   twitter: null,
   discord: null,
+  chainid: ''
 }
 
 export const ClaimPageRenderer: React.FC<{
@@ -74,6 +75,7 @@ const ClaimPage: React.FC<{}> = () => {
           primarycolor,
           secondarycolor,
           tier,
+          chainid
         } = res[0]
         setClaim({
           artist,
@@ -87,6 +89,7 @@ const ClaimPage: React.FC<{}> = () => {
           primaryColor: primarycolor,
           secondaryColor: secondarycolor,
           tier,
+          chainid
         })
       }
     })()

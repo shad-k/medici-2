@@ -253,7 +253,7 @@ export const changeBaseURI = async (callerWallet: any, contractAddress: string, 
 
 export const changePrice = async (callerWallet: any, contractAddress: string, newPrice: string) => {
     const myContract = await getContract(callerWallet, contractAddress)
-    await myContract.changePrice(utils.parseUnits(newPrice, "wei"));
+    await myContract.changePrice(utils.parseUnits(newPrice, "ether"));
 }
 
 export const changeMasterAddress = async (callerWallet: any, contractAddress: string, newMasterAddress: string) => {

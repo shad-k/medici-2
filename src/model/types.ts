@@ -41,6 +41,7 @@ export type Contract = {
   masteraddress: string
   contractaddress: string
   txhash: string
+  chainid: string
 }
 
 export type WalletContextReturn = {
@@ -98,6 +99,7 @@ export type Claim = {
   email: string | null
   twitter: string | null
   discord: string | null
+  chainid: string
 }
 
 export enum Accordions {
@@ -120,6 +122,7 @@ export type FormState = {
   bgColor: string
   fontFamily: string
   tier: TemplateTier | null
+  chainid: string
 }
 
 export type ChainConfigReturn = {
