@@ -42,6 +42,8 @@ export type Contract = {
   contractaddress: string
   txhash: string
   chainid: string
+  claimsstart: number
+  mintstart: number
 }
 
 export type WalletContextReturn = {

@@ -26,6 +26,7 @@ import DrawerAccordions from '../components/dropEditor/DrawerAccordions'
 import DrawerIcons from '../components/dropEditor/DrawerIcons'
 import ProjectSelector from '../components/dropEditor/ProjectSelector'
 import { ClaimPageRenderer } from '../pages/claimPage'
+import { utils } from 'ethers'
 
 const drawerWidth = 320
 
@@ -210,7 +211,7 @@ const DropEditor: React.FC<{}> = () => {
     if (!wallet) {
       await connect({})
     }
-    return setChain({ chainId: localenv.network.id })
+    return setChain({ chainId: utils.hexlify(parseInt(contract!.chainid)) })
   }
 
   const onConfirm = async () => {
