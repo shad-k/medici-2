@@ -9,6 +9,7 @@ import useWallet from '../../hooks/useWallet';
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config';
 import { verifyMerkleProof } from '../../utils/web3';
 import { getContractClaimStatus, getContractCover } from '../../utils/retrieve';
+import Countdown from './Countdown';
 const localenv = CONFIG.DEV;
 
 interface FreeTierProps {
@@ -191,7 +192,6 @@ const FreeTier: React.FC<FreeTierProps> = ({
   };
 
   React.useEffect(() => {
-    console.log('Rendering ' + contractName + ' at address ' + claim.contract);
     if (contractName && !name && !masterAddress && !cover) {
       getName();
       getContractOwner();
@@ -208,6 +208,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
     isAllowlistMember,
     getContractStatus,
     contractName,
+    isPreview,
     cover,
     masterAddress,
     name,
@@ -247,6 +248,8 @@ const FreeTier: React.FC<FreeTierProps> = ({
             contractaddress,
             txhash,
             chainid,
+            claimsstart,
+            mintstart,
           } = res;
           setContract({
             name,
@@ -255,6 +258,8 @@ const FreeTier: React.FC<FreeTierProps> = ({
             contractaddress,
             txhash,
             chainid,
+            claimsstart,
+            mintstart,
           });
         }
       }
@@ -442,6 +447,26 @@ const FreeTier: React.FC<FreeTierProps> = ({
           </button>
         ))
         } */}
+        {!isPreview &&
+          contract &&
+          contractStatus === 'none' &&
+          (isVerified ? (
+            <div className="inline-flex gap-1">
+              <Countdown countdownBlock={contract?.claimsstart} /> until claim
+              starts
+            </div>
+          ) : (
+            <div className="inline-flex gap-1">
+              <Countdown countdownBlock={contract?.mintstart} /> until mint
+              starts
+            </div>
+          ))}
+        {!isPreview && contract && contractStatus === 'claim' && (
+          <div className="inline-flex gap-1">
+            <Countdown countdownBlock={contract?.mintstart} /> until mint starts
+          </div>
+        )}
+        {/* { (!(isPreview) && contract) && <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.mintstart}/> until mint </div> } */}
         <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">
           powered by{' '}
           <img src="/logo.png" alt="Medici logo" width={20} className="mx-1" />
