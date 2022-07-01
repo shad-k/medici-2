@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useReward } from 'react-rewards';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -145,12 +145,8 @@ const DropEditor: React.FC<{}> = () => {
       contract,
       artist,
       description,
-      twitter,
-      email,
-      discord,
       primaryColor,
       secondaryColor,
-      bgColor,
       fontFamily,
       tier,
     } = currentFormState;
@@ -159,12 +155,8 @@ const DropEditor: React.FC<{}> = () => {
       contract &&
       artist &&
       description &&
-      // twitter &&
-      // email &&
-      // discord &&
       primaryColor !== '' &&
       secondaryColor !== '' &&
-      // bgColor !== '' &&
       fontFamily &&
       tier
     ) {

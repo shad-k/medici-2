@@ -1,53 +1,53 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import useReservedNFTs from '../hooks/useReservedNFTs'
-import { getThumbnails } from '../utils/reservations'
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import useReservedNFTs from '../hooks/useReservedNFTs';
+import { getThumbnails } from '../utils/reservations';
 import useWallet from '../hooks/useWallet';
 
-import NFTCard from '../components/Reservations/NFTCard'
-import NFTPopup from '../components/Reservations/NFTPopup'
+import NFTCard from '../components/reservations/NFTCard';
+import NFTPopup from '../components/reservations/NFTPopup';
 
 const Reservation: React.FC<{}> = () => {
   const { wallet, connect, connectedChain, setChain } = useWallet();
 
-  const { name: contractName } = useParams()
-  const { data, error } = useReservedNFTs(contractName as string)
-  const [allImages, setAllImages] = useState<Array<number>>()
-  const [allThumbnails, setAllThumbnails] = useState<Array<string>>()
-  const [selectedNFT, setSelectedNFT] = useState<number>()
-  const [showModal, setShowModal] = useState(false)
-  const handleOpen = () => setShowModal(true)
-  const handleClose = () => setShowModal(false)
+  const { name: contractName } = useParams();
+  const { data, error } = useReservedNFTs(contractName as string);
+  const [allImages, setAllImages] = useState<Array<number>>();
+  const [allThumbnails, setAllThumbnails] = useState<Array<string>>();
+  const [selectedNFT, setSelectedNFT] = useState<number>();
+  const [showModal, setShowModal] = useState(false);
+  const handleOpen = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
 
   useEffect(() => {
-    ;(async () => {
-      if (data) console.log('Got all images')
-      setAllImages(data.open)
+    (async () => {
+      if (data) console.log('Got all images');
+      setAllImages(data.open);
       if (contractName) {
-        console.log('Getting thumbnails')
-        const thumbnails = await getThumbnails('cryptopups')
-        setAllThumbnails(thumbnails)
+        console.log('Getting thumbnails');
+        const thumbnails = await getThumbnails('cryptopups');
+        setAllThumbnails(thumbnails);
       }
-    })()
-  }, [data])
+    })();
+  }, [data]);
 
   useEffect(() => {
     if (showModal && document.getElementById('modal-container') !== null) {
-      document.getElementById('modal-container')!.style.display = 'relative'
+      document.getElementById('modal-container')!.style.display = 'relative';
     } else if (
       !showModal &&
       document.getElementById('modal-container') !== null
     ) {
-      document.getElementById('modal-container')!.style.display = 'none'
+      document.getElementById('modal-container')!.style.display = 'none';
     } else {
-      return
+      return;
     }
-  }, [showModal])
+  }, [showModal]);
 
   useEffect(() => {
     var lazyImages = [].slice.call(
       document.querySelectorAll('.lazy-loaded-image.lazy')
-    )
+    );
 
     let lazyImageObserver = new IntersectionObserver(function (
       entries,
@@ -55,34 +55,34 @@ const Reservation: React.FC<{}> = () => {
     ) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          let lazyImage = entry.target as HTMLMediaElement
+          let lazyImage = entry.target as HTMLMediaElement;
           if (lazyImage) {
-            lazyImage.src = lazyImage.dataset.src!
-            lazyImage.classList.remove('lazy')
-            lazyImageObserver.unobserve(lazyImage)
+            lazyImage.src = lazyImage.dataset.src!;
+            lazyImage.classList.remove('lazy');
+            lazyImageObserver.unobserve(lazyImage);
           }
         }
-      })
-    })
+      });
+    });
 
     lazyImages.forEach(function (lazyImage) {
-      lazyImageObserver.observe(lazyImage)
-    })
-  })
+      lazyImageObserver.observe(lazyImage);
+    });
+  });
 
   if (!data && !error) {
-    return null
+    return null;
   }
 
   if (!data) {
-    return null
+    return null;
   }
 
   const handleSelectNFT = (index: number) => {
-    setSelectedNFT(index)
-    console.log(selectedNFT)
-    handleOpen()
-  }
+    setSelectedNFT(index);
+    console.log(selectedNFT);
+    handleOpen();
+  };
 
   return (
     <div className="w-full flex flex-col p-5 items-center">
@@ -122,7 +122,7 @@ const Reservation: React.FC<{}> = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Reservation
+export default Reservation;
