@@ -54,7 +54,7 @@ const App: React.FC<{}> = () => {
                   <Route path="/page/:name" element={<ClaimPage />} />
                   <Route path="/projects" element={<ProjectManager />} />
                   <Route
-                    path="/project/:contractaddress"
+                    path="/project/:contractname"
                     element={<Project />}
                   />
                   <Route path="/reservation/:name" element={<Reservation />} />

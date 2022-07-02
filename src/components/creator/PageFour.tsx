@@ -47,6 +47,11 @@ const PageFour: React.FC<StepperFormProps> = ({
         const formdata = new FormData();
         formdata.append("images", file)
         formdata.append("isMetadataUploaded", data.isMetadataUploaded)
+        if (!data.isMetadataUploaded) {
+        formdata.append("renameFiles", "true")
+        } else {
+          formdata.append("renameFiles", "false")
+        }
         setShowLoader(true)
 
         const res = await triggerUploadImageData(data.name, formdata, (progressEvent: any) => {

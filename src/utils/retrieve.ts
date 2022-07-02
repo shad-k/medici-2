@@ -9,7 +9,7 @@ export const getGatewayURL = (url: string): string => {
 }
 
 export const getMetadata = async (metadataurl: string) => {
-  console.log("getting metadata for " + metadataurl)
+  // console.log("getting metadata for " + metadataurl)
   return apiClient.get(getGatewayURL(metadataurl)).
   then((response) => { 
     return response.data; } )
@@ -23,10 +23,10 @@ export const getChainConfig = async (chain: string): Promise<ChainConfigReturn> 
   API_PATHS.RETRIEVE_CHAIN_CONFIG,
   { params: request_data }
   ).then(function(response) {
-    console.log(response.data)
+    // console.log(response.data)
     return Promise.resolve(response.data)
   }).catch(function(error) {
-    console.log(error)
+    // console.log(error)
     return Promise.reject("Error getting chain config")
   });
 }
@@ -44,20 +44,20 @@ export const getNameAvailability = async (name: string, connectedChain: string) 
       API_PATHS.CHECK_NAME,
       { params: request_data },
   ).then(function(response) {
-      console.log(response.data)
+      // console.log(response.data)
       if (response.data.value === true) {
           return Promise.resolve(true)
       } else {
           return Promise.resolve(false)
       }
   }).catch(function(error) {
-      console.log(error);
+      // console.log(error);
       return Promise.reject("Error checking name availability")
   });
 }
 
 export const getContractCover = async (contract: string) => {
-  console.log("Getting contract cover for " + contract);
+  // console.log("Getting contract cover for " + contract);
   const request_data = {
     "collection": contract,
   }
@@ -76,17 +76,17 @@ export const getContractCover = async (contract: string) => {
   });
 
   if (res) {
-    console.log(res)
+    // console.log(res)
     return Promise.resolve(URL.createObjectURL(res));
   } else {
     return Promise.reject("error");
   }
 }
 
-export const getContractClaimStatus = async (contractName: string, callerWallet: any): Promise<any> => {
+export const getContractClaimStatus = async (contractName: string, chainid: string): Promise<any> => {
   const request_data = {
     "collection": contractName,
-    "chainid": parseInt(callerWallet.chains[0].id, 16)
+    "chainid": parseInt(chainid, 16)
   }
 
   return apiClient.get(
@@ -118,13 +118,13 @@ export const getAllContracts = async (masterAddress: string, connectedChain: str
       headers: { "Content-Type": "application/json"}
     }
     ).then(function (response) {
-      console.log(response)
+      // console.log(response)
       return Promise.resolve({
         status: 'success',
         contracts: response.data.launchedContracts
       })
     }).catch(function (error) {
-      console.log(error)
+      // console.log(error)
       return Promise.reject({
         status: 'failure',
         contracts: null

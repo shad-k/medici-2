@@ -9,6 +9,7 @@ import useWallet from '../../hooks/useWallet'
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
 import { verifyMerkleProof } from '../../utils/web3'
 import { getContractClaimStatus, getContractCover } from '../../utils/retrieve'
+import Countdown from './Countdown'
 const localenv = CONFIG.DEV
 
 interface FreeTierProps {
@@ -47,9 +48,10 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
   const [contractStatus, setContractStatus] = React.useState<string>()
 
   const getContractStatus = React.useCallback(async () => {
-    if (name && wallet) {
+    if (name && contract) {
+      console.log("Getting contract status")
       try {
-        const { success, status } = await getContractClaimStatus(name, wallet);
+        const { success, status } = await getContractClaimStatus(name, contract.chainid)
         if (success) {
           console.log("Status " + status)
           setContractStatus(status)
@@ -58,12 +60,12 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
         alert("Could not get contract status")
       }
     }
-  }, [connectedWallet, contractStatus])
+  }, [name, contract, contractStatus])
 
   const isAllowlistMember = React.useCallback(async () => {
     if (connectedWallet && name) {
       try {
-        const { success, merkleProof } = await verifyMerkleProof(name, connectedWallet.address);
+        const { success, merkleProof } = await verifyMerkleProof(name, connectedWallet.address)
         setIsVerified(success);
         setVerifiedProof(merkleProof);
       } catch {
@@ -111,7 +113,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
     //   setCover(imageURl)
     // }
     if (contractName) {
-      const res = await getContractCover(contractName);
+      const res = await getContractCover(contractName)
       setCover(res);
     }
   }, [contractName])
@@ -125,7 +127,9 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
         )
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
+        const price = await contract.price()
         const tx = await contract.mint(connectedWallet?.address, 1, {
+          value: price,
           gasLimit: 30000000,
         })
         const mintResponse = await tx.wait()
@@ -152,7 +156,9 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
         )
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
+        const price = await contract.price()
         const tx = await contract.claim(connectedWallet?.address, 1, verifiedProof, {
+          value: price,
           gasLimit: 30000000,
         })
         const claimResponse = await tx.wait()
@@ -171,7 +177,6 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
   }
 
   React.useEffect(() => {
-    console.log("Rendering " + contractName + " at address " + claim.contract)
     if (contractName && !name && !masterAddress && !cover) {
       getName()
       getContractOwner()
@@ -188,9 +193,10 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
     isAllowlistMember,
     getContractStatus,
     contractName,
+    isPreview,
     cover,
     masterAddress,
-    name,
+    name
   ])
 
   React.useEffect(() => {
@@ -221,7 +227,9 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
           masteraddress,
           contractaddress,
           txhash,
-          chainid
+          chainid,
+          claimsstart,
+          mintstart,
         } = res
         setContract({
           name,
@@ -229,7 +237,9 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
           masteraddress,
           contractaddress,
           txhash,
-          chainid
+          chainid,
+          claimsstart,
+          mintstart
         })
       }
     }
@@ -387,6 +397,9 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
           </button>
         ))
         } */}
+        { (!(isPreview) && contract && contractStatus === "none") && ( isVerified ? <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.claimsstart}/> until claim starts</div> : <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.mintstart}/> until mint starts</div>)}
+        { (!(isPreview) && contract && contractStatus === "claim") && <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.mintstart}/> until mint starts</div> }
+        {/* { (!(isPreview) && contract) && <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.mintstart}/> until mint </div> } */}
         <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">
           powered by{' '}
           <img src="/logo.png" alt="Medici logo" width={20} className="mx-1" />

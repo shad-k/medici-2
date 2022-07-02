@@ -214,59 +214,54 @@ export const readyToTransact = async (callerWallet: any, connect: any, setChain:
 /*                    Contract Instance Interaction Methods                   */
 /* -------------------------------------------------------------------------- */
 
-export const getContract = async (callerWallet: any, contractAddress: string):Promise<ethers.Contract> => {
-    const provider = new ethers.providers.Web3Provider(callerWallet.provider)
+export const getContract = async (callerWallet: any, contractAddress: string, chainid: string):Promise<ethers.Contract> => {
+    const chainConfig = await getChainConfig(chainid)
+    const url = chainConfig.url.replace("wss://", "https://")
+    // console.log("RPC URL: " + url)
+    const provider = new ethers.providers.JsonRpcProvider(url)
     const signer = provider.getSigner(callerWallet.accounts[0].address);
 
     const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
     return myContract;
 }
 
-/* withdraw */
-export const withdrawBalance = async (callerWallet: any, contractAddress: string): Promise<any> => {
-    const myContract = await getContract(callerWallet, contractAddress)
-    await myContract.withdraw()
+export const getContractForTransactions = async (callerWallet: any, contractAddress: string):Promise<ethers.Contract> => {
+  const provider = new ethers.providers.Web3Provider(callerWallet.provider)
+  const signer = provider.getSigner(callerWallet.accounts[0].address);
+
+  const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
+  return myContract;
 }
 
-/* begin claim period */
-export const startClaimPeriod = async (callerWallet: any, contractAddress: string) => {
-    const myContract = await getContract(callerWallet, contractAddress)
-    await myContract.turnOnClaimPeriod()
-}
+// /* begin claim period */
+// export const startClaimPeriod = async (callerWallet: any, contractAddress: string) => {
+//     const myContract = await getContract(callerWallet, contractAddress)
+//     await myContract.turnOnClaimPeriod()
+// }
 
-/* begin mint period */
-export const startMintPeriod = async (callerWallet: any, contractAddress: string) => {
-    const myContract = await getContract(callerWallet, contractAddress)
-    await myContract.turnOffClaimPeriodAndTurnOnMintPeriod()
-}
+// /* begin mint period */
+// export const startMintPeriod = async (callerWallet: any, contractAddress: string) => {
+//     const myContract = await getContract(callerWallet, contractAddress)
+//     await myContract.turnOffClaimPeriodAndTurnOnMintPeriod()
+// }
 
-/* end mint period */
-export const endMintPeriod = async (callerWallet: any, contractAddress: string) => {
-    const myContract = await getContract(callerWallet, contractAddress)
-    await myContract.turnOffMintPeriod()
-}
+// /* end mint period */
+// export const endMintPeriod = async (callerWallet: any, contractAddress: string) => {
+//     const myContract = await getContract(callerWallet, contractAddress)
+//     await myContract.turnOffMintPeriod()
+// }
 
-export const changeBaseURI = async (callerWallet: any, contractAddress: string, newUri: string) => {
-    const myContract = await getContract(callerWallet, contractAddress)
-    await myContract.changeBaseUri(newUri)
-} 
+// export const changeBaseURI = async (callerWallet: any, contractAddress: string, newUri: string) => {
+//     const myContract = await getContract(callerWallet, contractAddress)
+//     await myContract.changeBaseUri(newUri)
+// } 
 
-export const changePrice = async (callerWallet: any, contractAddress: string, newPrice: string) => {
-    const myContract = await getContract(callerWallet, contractAddress)
-    await myContract.changePrice(utils.parseUnits(newPrice, "ether"));
-}
+// export const changePrice = async (callerWallet: any, contractAddress: string, newPrice: string) => {
+//     const myContract = await getContract(callerWallet, contractAddress)
+//     await myContract.changePrice(utils.parseUnits(newPrice, "ether"));
+// }
 
-export const changeMasterAddress = async (callerWallet: any, contractAddress: string, newMasterAddress: string) => {
-    const myContract = await getContract(callerWallet, contractAddress)
-    await myContract.transferOwnership(newMasterAddress);
-}
-
-export const getIsClaimPeriod = async (callerWallet: any, contractAddress: string) => {
-    const myContract = await getContract(callerWallet, contractAddress);
-    await myContract.isClaimPeriod();
-}
-
-export const getIsMintPeriod = async (callerWallet: any, contractAddress: string) => {
-  const myContract = await getContract(callerWallet, contractAddress);
-  await myContract.isMintPeriod();
-}
+// export const changeMasterAddress = async (callerWallet: any, contractAddress: string, newMasterAddress: string) => {
+//     const myContract = await getContract(callerWallet, contractAddress)
+//     await myContract.transferOwnership(newMasterAddress);
+// }

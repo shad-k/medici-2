@@ -25,8 +25,8 @@ const ContractCardV2: React.FC<{ contract: Contract}> = ({contract}) => {
 
     return (
         <Link
-            to={`/project/${contract.contractaddress}`}>
-            <div className="justify-center drop-shadow-lg rounded-2xl h-[300px] bg-[#2e2c38] aspect-video items-center flex flex-col m-2">   
+            to={`/project/${contract.name}`}>
+            <div className="justify-center drop-shadow-lg rounded-2xl bg-[#2e2c38] aspect-video items-center flex flex-col m-2">   
                 <div className="group relative">
                     <div className="w-full aspect-video rounded-2xl object-cover overflow-hidden">
                       <img src={CoverImage} alt={contract.name} className="w-full aspect-video rounded-2xl object-cover"/>
