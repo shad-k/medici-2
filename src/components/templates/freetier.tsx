@@ -179,52 +179,21 @@ const FreeTier: React.FC<FreeTierProps> = ({
   ]);
 
   React.useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (contractName) {
-        const params = new URLSearchParams({
-          collection: contractName,
-        });
-        const headers = new Headers();
-        headers.set('Content-Type', 'application/json');
-        const res = await fetch(
-          `${API_ENDPOINT}${API_PATHS.GET_CONTRACT_BY_NAME}?` + params,
-          {
-            method: 'GET',
-            headers,
-          }
-        )
-          .then((res) => {
-            if (res.status === 200) {
-              return res.json();
-            } else {
-              throw new Error(res.statusText);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        if (res !== undefined) {
-          console.log(res);
-          const {
-            name,
-            symbol,
-            masteraddress,
-            contractaddress,
-            txhash,
-            chainid,
-            claimsstart,
-            mintstart,
-          } = res;
-          setContract({
-            name,
-            symbol,
-            masteraddress,
-            contractaddress,
-            txhash,
-            chainid,
-            claimsstart,
-            mintstart,
-          });
+      const params = new URLSearchParams({
+        collection: contractName
+      })
+      const headers = new Headers()
+      headers.set('Content-Type', 'application/json')
+      const res = await fetch(`${API_ENDPOINT}${API_PATHS.GET_CONTRACT_BY_NAME}?` + params, {
+        method: 'GET',
+        headers,
+      }).then((res) => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          throw new Error(res.statusText)
         }
       }).catch((error) => {
         console.log(error)
@@ -251,8 +220,9 @@ const FreeTier: React.FC<FreeTierProps> = ({
           mintstart
         })
       }
-    })();
-  }, [contractName]);
+    }
+    })()
+  }, [contractName])
 
   // console.log(
   //   `linear-gradient(180deg, ${claim.primaryColor} 0%, ${claim.secondaryColor} 100%)`
