@@ -63,7 +63,13 @@ const ProjectSelector: React.FC<Props> = ({ selectProject }) => {
             />
           ) : (
             <Button
-              onClick={() => connect({})}
+              onClick={() => connect({
+                autoSelect: { 
+                  label: '0xa',
+                  disableModals: false
+                }
+              })
+            }
               sx={{ color: 'white', borderColor: 'white' }}
               variant="outlined"
             >

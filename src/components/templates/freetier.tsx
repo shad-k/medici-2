@@ -383,7 +383,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
                 connect({
                   autoSelect: { 
                     label: utils.hexValue(BigNumber.from(claim.chainid)),
-                    disableModals: false
+                    disableModals: true
                   }
                 })
               }
