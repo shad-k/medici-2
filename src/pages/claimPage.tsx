@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 
 import FreeTier from '../components/templates/freetier';
+import Free from '../components/templates/free';
 import { Claim, TemplateTier } from '../model/types';
 import { API_ENDPOINT, API_PATHS } from '../utils/config';
 
@@ -22,7 +23,7 @@ export const ClaimPageRenderer: React.FC<{
       );
     default:
       return (
-        <FreeTier
+        <Free
           claim={claim}
           contractName={contractName}
           isPreview={isPreview}
