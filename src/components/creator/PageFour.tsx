@@ -23,9 +23,9 @@ const PageFour: React.FC<StepperFormProps> = ({
       // handleOpen();
       if (!imageUploadResponse) {
         alert("Please upload your project!")
+      } else {
+        nextStep();
       }
-      console.log(data)
-      nextStep();
     }
 
     useEffect(() => {

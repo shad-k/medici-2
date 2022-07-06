@@ -41,15 +41,19 @@ const ContractsMenu: React.FC<{
 
   return (
     <div className="w-1/2 md:text-left flex flex-col my-2">
-      <FormControl sx={{ m: 1, width: 300, borderColor: 'white' }}>
-        <InputLabel id="contract-name">Project Name</InputLabel>
+      <FormControl sx={{m: 1, width: 300}}>
+        <InputLabel id="contract-name" sx={{color: 'white', '&.Mui-focused': { color: 'white'}}}>Project Name</InputLabel>
         <Select
           labelId="contract-name"
           id="contract"
           onChange={(event) => onSelectOption(event.target.value)}
-          input={<OutlinedInput label="Contract name" />}
+          input={<OutlinedInput label="Contract name"/>}
           MenuProps={MenuProps}
           defaultValue={''}
+          sx={{ 
+          "& .MuiSvgIcon-root": {
+            color: "white",
+          }}}
         >
           {contracts.map((contract: Contract, i) => (
             <MenuItem value={i + 1} key={contract.name}>

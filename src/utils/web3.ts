@@ -34,7 +34,6 @@ export const verifyMerkleProof = async (contractName: string, callerWalletAddres
     "collection": contractName,
     "address" : callerWalletAddress
   }
-  console.log(request_data)
 
   return apiClient.post(
     API_PATHS.GET_MERKLE_PROOF, request_data, 
@@ -42,21 +41,21 @@ export const verifyMerkleProof = async (contractName: string, callerWalletAddres
         headers: {"Content-Type": "application/json"}
     }
   ).then(function(response) {
-    console.log(response)
+    // console.log(response)
     if (response.data.message === "Could not verify address with given Merkle Tree") {
       return Promise.reject({
         success: false,
         merkleProof: null
       })
     } else {
-      console.log(response.data);
+      // console.log(response.data);
       return Promise.resolve({
         success: true,
         merkleProof: response.data
       })
     }
     }).catch(function(error) {
-      console.log(error)
+      // console.log(error)
       return Promise.reject({
         success: false,
         merkleProof: null
@@ -69,9 +68,10 @@ export const verifyMerkleProof = async (contractName: string, callerWalletAddres
 /* -------------------------------------------------------------------------- */
 
 const getFactoryContract = async (callerWallet: any): Promise<ethers.Contract> => {
-  const chainConfig = await getChainConfig(callerWallet.chains[0].id)
+  const chainid = parseInt(callerWallet.chains[0].id, 16)
+  const chainConfig = await getChainConfig(chainid.toString())
   const provider = new ethers.providers.Web3Provider(callerWallet.provider)
-  const signer = provider.getSigner(callerWallet.accounts[0].address);
+  const signer = provider.getSigner(callerWallet.accounts[0].address)
 
   const FactoryContract = new ethers.Contract(chainConfig.factory, localenv.contract.factory_abi, signer);
   return FactoryContract;
@@ -111,7 +111,7 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         props.mintStartBlock, // mint start block
         );
         console.log(result_contract);
-        await result_contract.wait(5);
+        await result_contract.wait(2);
         return resolve("Contract generation success");
       } catch (error) {
         console.log(error)
@@ -166,7 +166,8 @@ export const getNewLaunchedContract = async (masterAddress: string, callerWallet
 /* -------------------------------------------------------------------------- */
 
 const getClaimsContract = async (callerWallet: any): Promise<ethers.Contract> => {
-  const chainConfig = await getChainConfig(callerWallet.chains[0].id)
+  const chainid = parseInt(callerWallet.chains[0].id, 16);
+  const chainConfig = await getChainConfig(chainid.toString());
   const provider = new ethers.providers.Web3Provider(callerWallet.provider)
   const signer = provider.getSigner(callerWallet.accounts[0].address);
 
@@ -203,8 +204,8 @@ export const readyToTransact = async (callerWallet: any, connect: any, setChain:
   if (!callerWallet) {
     await connect({});
   }
-  if (callerWallet.chains[0].id !== '0xa' && callerWallet.chains[0].id !== '0x5'){
-    return setChain({ chainId: localenv.network.id })
+  if (callerWallet.chains[0].id !== '0xA' && callerWallet.chains[0].id !== '0x5'){
+    return setChain({ chainId: '0xA' })
   } else {
     return Promise.resolve(true)
   }
@@ -214,14 +215,13 @@ export const readyToTransact = async (callerWallet: any, connect: any, setChain:
 /*                    Contract Instance Interaction Methods                   */
 /* -------------------------------------------------------------------------- */
 
-export const getContract = async (callerWallet: any, contractAddress: string, chainid: string):Promise<ethers.Contract> => {
+export const getContract = async (contractAddress: string, chainid: string):Promise<ethers.Contract> => {
     const chainConfig = await getChainConfig(chainid)
     const url = chainConfig.url.replace("wss://", "https://")
     // console.log("RPC URL: " + url)
     const provider = new ethers.providers.JsonRpcProvider(url)
-    const signer = provider.getSigner(callerWallet.accounts[0].address);
 
-    const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, signer);
+    const myContract = new ethers.Contract(contractAddress, localenv.contract.instanceAbi, provider);
     return myContract;
 }
 

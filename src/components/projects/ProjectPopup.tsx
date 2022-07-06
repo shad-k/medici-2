@@ -1,19 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useWallet from '../../hooks/useWallet';
 import { utils } from 'ethers'
 
 import Modal from '@mui/material/Modal';
 import { Contract } from '../../model/types'
-import { getContractForTransactions } from '../../utils/web3';
+import { getContract, getContractForTransactions } from '../../utils/web3';
 
 const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Contract, action: string}> = ({showModal, handleClose, contract, action}) => {
   
   const { wallet, connect, setChain } = useWallet()
   const [newBaseURI, setNewBaseURI] = useState<string>()
+  const [currClaimBlock, setCurrClaimBlock] = useState<number>()
+  const [currMintBlock, setCurrMintBlock] = useState<number>()
   const [newMintBlock, setNewMintBlock] = useState<string>()
   const [newClaimBlock, setNewClaimBlock] = useState<string>()
   const [newPrice, setNewPrice] = useState<string>()
   const [newOwnerAddress, setNewOwnerAddress] = useState<string>()
+
+  const getCurrentClaimBlock = async () => {
+    const currContract = await getContract(contract.contractaddress, contract.chainid)
+    const claimBlockVal = await currContract.claimsStartBlock()
+    console.log("Current claim block: " + claimBlockVal)
+    setCurrClaimBlock(claimBlockVal)
+  }
+
+  const getCurrentMintBlock = async () => {
+    const currContract = await getContract(contract.contractaddress, contract.chainid)
+    const mintBlockVal = await currContract.mintStartBlock()
+    console.log("Current mint block: " + mintBlockVal)
+    setCurrMintBlock(mintBlockVal)
+  }
 
   const onChangeBaseURI = async () => {
     console.log("Changing base URI")
@@ -100,6 +116,12 @@ const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Co
     }
   }
 
+  useEffect(() => {
+    if (!currClaimBlock) getCurrentClaimBlock()
+    if (!currMintBlock) getCurrentMintBlock()
+  
+  }, [contract, getCurrentClaimBlock, getCurrentMintBlock, currClaimBlock, currMintBlock])
+
   switch(action) {
   
   case ("changeBaseURI"): 
@@ -145,6 +167,7 @@ const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Co
       >
       <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center outline-none space-y-5">
         <label htmlFor="input-field">Claim Block Start</label>
+        { currClaimBlock && <h1>Current Claim Block: {currClaimBlock.toString()}</h1>}
         <input id="input-field" className="text-black rounded-sm p-2" onChange={event => setNewClaimBlock(event.target.value)}></input>
         <button className="bg-medici-purple p-3 rounded-2xl" onClick={() => onSetClaimBlock()}>Submit</button>
       </div>
@@ -161,6 +184,7 @@ const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Co
     >
     <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center outline-none space-y-5">
       <label htmlFor="input-field">Mint Block Start</label>
+      { currMintBlock && <h1>Current Mint Block: {currMintBlock.toString()}</h1>}
       <input id="input-field" className="text-black rounded-sm p-2" onChange={event => setNewMintBlock(event.target.value)}></input>
       <button className="bg-medici-purple p-3 rounded-2xl" onClick={() => onSetMintBlock()}>Submit</button>
     </div>

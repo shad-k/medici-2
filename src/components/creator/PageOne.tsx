@@ -14,7 +14,6 @@ const PageOne: React.FC<StepperFormProps> = ({
 const onSubmit = async () => {
     const ready = await readyToTransact(wallet, connect, setChain);
     if (ready) {
-      console.log(data);
       nextStep();
     } else {
       alert("Please connect your wallet to create a collection!")

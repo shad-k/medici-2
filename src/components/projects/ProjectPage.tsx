@@ -75,7 +75,7 @@ const ProjectPage: React.FC<{ contractName: string }> = ({contractName}) => {
 
   const getContractDetails = useCallback(async () => {
     if (contract) {
-      const currContract = await getContract(wallet, contract.contractaddress, contract.chainid)
+      const currContract = await getContract(contract.contractaddress, contract.chainid)
       const balance = await currContract.checkBalance()
       setBalance(utils.formatEther(balance._hex.toString()))
       const price = await currContract.price();
@@ -168,9 +168,9 @@ useEffect(() => {
     if (!cover) getCoverImage()
     if (!contractStatus) getContractStatus()
     if (!price && !numMinted && !maxSupply && !balance) getContractDetails()
-    if (!thumbnails) {getCollectionThumbnails()} else {
-      console.log(thumbnails[1])
-    }
+    // if (!thumbnails) {getCollectionThumbnails()} else {
+    //   console.log(thumbnails[1])
+    // }
   }
 }, [
   contract, verify, isOwner, setIsOwner,

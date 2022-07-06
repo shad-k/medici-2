@@ -16,8 +16,9 @@ export const getMetadata = async (metadataurl: string) => {
 }
 
 export const getChainConfig = async (chain: string): Promise<ChainConfigReturn> => {
+  // console.log("Getting config for chain " + chain)
   const request_data = {
-    "chainid": parseInt(chain, 16)
+    "chainid": chain
   }
   return apiClient.get(
   API_PATHS.RETRIEVE_CHAIN_CONFIG,
@@ -86,13 +87,14 @@ export const getContractCover = async (contract: string) => {
 export const getContractClaimStatus = async (contractName: string, chainid: string): Promise<any> => {
   const request_data = {
     "collection": contractName,
-    "chainid": parseInt(chainid, 16)
+    "chainid": chainid
   }
-
+  
   return apiClient.get(
     API_PATHS.RETRIEVE_CONTRACT_STATUS,
     {params: request_data}
     ).then(function (response) {
+      console.log(response)
       return Promise.resolve({
         success: true,
         status: response.data.contractStatus

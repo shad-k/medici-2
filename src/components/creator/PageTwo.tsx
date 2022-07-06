@@ -26,22 +26,11 @@ const PageTwo: React.FC<StepperFormProps> = ({
   }, [CoverImage]);
 
   const onSubmit = async () => {
-    if (CoverImage) {
+    if (CoverImage && !(validator.isEmpty(data.name)) && !(validator.isEmpty(data.symbol)) ) {
       const res = await uploadCoverImage(data.name, CoverImage);
-      
-      if (res && !(validator.isEmpty(data.name)) && !(validator.isEmpty(data.symbol))) {
-        console.log(data);
-        nextStep();
-      } else {
-        console.log(data);
-        alert("Please input a name and symbol!")
-      }
+      nextStep();
     } else {
-      if (!(validator.isEmpty(data.name)) && !(validator.isEmpty(data.symbol))) {
-        nextStep();
-      } else {
-        alert("Please input a name and symbol!")
-      }
+      alert("A name, cover image, and symbol are required!")
     }
   }
 

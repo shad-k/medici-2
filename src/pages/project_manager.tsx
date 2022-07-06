@@ -34,7 +34,7 @@ useEffect(() => {
         {/* { connectedWallet && connectedChain && <AllContracts masterAddress={connectedWallet} connectedChain={connectedChain.id}/>} */}
         <div className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
         {contracts && contracts.map((contract: Contract, i) => (
-          <ContractCardV2 contract={contract}/>
+          <ContractCardV2 contract={contract} key={`${contract}-${i}`}/>
       ))}
         </div>
     </div>
