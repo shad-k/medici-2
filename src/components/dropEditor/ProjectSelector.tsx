@@ -7,6 +7,7 @@ import Button from '@mui/material/Button'
 import useWallet from '../../hooks/useWallet'
 import { Typography } from '@mui/material'
 import ContractsMenu from './ContractsMenu'
+import Rocket from '../../rocket.png'
 
 interface Props {
   selectProject: (input: any) => void
@@ -17,11 +18,11 @@ const ProjectSelector: React.FC<Props> = ({ selectProject }) => {
   return (
     <Card
       sx={{
-        background: 'rgba( 255, 255, 255, 0.4 )',
-        boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-        backdropFilter: 'blur( 5px )',
+        backgroundColor: "rgba(32,31,39,0.85)",
+        backgroundImage: Rocket,
+        boxShadow: '0 0px 25px 0 #8338EC',
+        backdropFilter: 'blur (2px)',
         borderRadius: 10,
-        border: '1px solid rgba( 255, 255, 255, 0.18 )',
         width: '50%',
         mx: 'auto',
         position: 'fixed',

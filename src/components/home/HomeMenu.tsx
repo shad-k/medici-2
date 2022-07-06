@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const HomeMenu: React.FC<{}> = () => {
     return (
       <section className="w-full md:w-4/5 lg:w-3/5 m-auto flex flex-col items-center justify-center flex-1">
-          <div className="flex flex-col md:grid grid-cols-2 justify-center items-center gap-7 p-5 h-[500px]">
+          <div className="flex flex-col md:grid grid-cols-2 grid-rows-2 auto-rows-max justify-center items-center gap-7 p-5">
             <Link
             to={`/create`}
             className="w-full items-center text-center px-4 py-4 rounded-2xl text-medici-primary transition duration-100 hover:scale-105 bg-zinc-400/5 backdrop-blur-sm hover:backdrop-blur-lg border-white border-[1px] space-y-3 h-full hero-collection"

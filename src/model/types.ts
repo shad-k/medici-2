@@ -129,6 +129,7 @@ export type FormState = {
 
 export type ChainConfigReturn = {
   network: string
+  url: string
   factory: string
   claims: string
 }

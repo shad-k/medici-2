@@ -13,8 +13,6 @@ const PageFive: React.FC<StepperFormProps> = ({
     const [allowlistStrData, setAllowlistStrData] = useState<any>();
 
     const onSubmit = async () => {
-      console.log("submit")
-
       if (allowlistStrData) {
         console.log(allowlistStrData);
         try {
@@ -22,7 +20,7 @@ const PageFive: React.FC<StepperFormProps> = ({
           await handleInputData("whitelistedAddresses", parsedStrings);
           const merkleRoot = await getMerkleRoot(parsedStrings);
           await handleInputData("merkleRoot", merkleRoot);
-          console.log(data);
+          // console.log(data);
           nextStep();
         } catch {
           alert("Allowlist upload failed!")

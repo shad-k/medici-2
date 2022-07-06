@@ -4,23 +4,23 @@ import useWallet from '../hooks/useWallet';
 import ProjectPage from '../components/projects/ProjectPage';
 
 export const ProjectPageRenderer: React.FC<{
-  contractAddress: string
+  contractName: string
   isLaunched?: boolean
-}> = ({ contractAddress, isLaunched }) => {
+}> = ({ contractName, isLaunched }) => {
   switch (isLaunched) {
     default:
-      return <ProjectPage contractAddress={contractAddress} />
+      return <ProjectPage contractName={contractName} />
   }
 }
 
 const Project: React.FC<{}> = () => {
     const { wallet, connect, setChain, connectedChain } = useWallet()
     const params = useParams()
-    const contractaddress = params.contractaddress as string;
+    const contractname = params.contractname as string;
 
     return (
     <div>
-      <ProjectPageRenderer contractAddress={contractaddress} isLaunched={true}/>
+      <ProjectPageRenderer contractName={contractname} isLaunched={true}/>
     </div>
     );
 }
