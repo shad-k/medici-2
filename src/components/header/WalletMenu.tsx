@@ -51,7 +51,6 @@ const WalletMenu: React.FC<{}> = () => {
 
   const handleClose = (chainId: string) => {
     setAnchorEl(null);
-    setChain({ chainId: chainId })
   };
   
   const { wallet, connecting, connectedChain, connect, disconnect, setChain } = useWallet()

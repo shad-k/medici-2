@@ -26,7 +26,7 @@ import DrawerAccordions from '../components/dropEditor/DrawerAccordions';
 import DrawerIcons from '../components/dropEditor/DrawerIcons';
 import ProjectSelector from '../components/dropEditor/ProjectSelector';
 import { ClaimPageRenderer } from '../pages/claimPage';
-import { utils } from 'ethers';
+import { utils, BigNumber } from 'ethers';
 
 const drawerWidth = 320;
 
@@ -202,7 +202,7 @@ const DropEditor: React.FC<{}> = () => {
     if (!wallet) {
       await connect({});
     }
-    return setChain({ chainId: utils.hexlify(parseInt(contract!.chainid)) });
+    return setChain({ chainId: utils.hexValue(BigNumber.from(contract!.chainid)) });
   };
 
   const onConfirm = async () => {
