@@ -35,7 +35,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
   contractName,
   isPreview,
 }) => {
-  const { wallet, connect } = useWallet();
+  const { wallet, connect, setChain } = useWallet();
 
   const connectedWallet = wallet?.accounts[0];
 
@@ -103,6 +103,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
     if (wallet && connectedWallet) {
       setMinting(true);
       try {
+        await setChain({chainId: utils.hexValue(BigNumber.from(claim.chainid))})
         const walletProvider = new ethers.providers.Web3Provider(wallet.provider);
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
@@ -130,6 +131,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
     if (wallet && connectedWallet && isVerified && verifiedProof !== null) {
       setClaiming(true);
       try {
+        await setChain({chainId: BigNumber.from(claim.chainid).toHexString()})
         const walletProvider = new ethers.providers.Web3Provider(wallet.provider)
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
@@ -343,8 +345,8 @@ const FreeTier: React.FC<FreeTierProps> = ({
                   connectedWallet ? () => claimOnContract() : () => 
                   connect({
                     autoSelect: { 
-                      label: BigNumber.from(claim.chainid).toHexString(),
-                      disableModals: true
+                      label: utils.hexValue(BigNumber.from(claim.chainid)),
+                      disableModals: false
                     }
                   })
                 }
@@ -380,8 +382,8 @@ const FreeTier: React.FC<FreeTierProps> = ({
                 connectedWallet ? () => mint() : () => 
                 connect({
                   autoSelect: { 
-                    label: BigNumber.from(claim.chainid).toHexString(),
-                    disableModals: true
+                    label: utils.hexValue(BigNumber.from(claim.chainid)),
+                    disableModals: false
                   }
                 })
               }

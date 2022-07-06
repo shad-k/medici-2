@@ -204,8 +204,8 @@ export const readyToTransact = async (callerWallet: any, connect: any, setChain:
   if (!callerWallet) {
     await connect({});
   }
-  if (callerWallet.chains[0].id !== '0xA' && callerWallet.chains[0].id !== '0x5'){
-    return setChain({ chainId: '0xA' })
+  if (callerWallet.chains[0].id !== '0xa' && callerWallet.chains[0].id !== '0x5'){
+    return setChain({ chainId: '0xa' })
   } else {
     return Promise.resolve(true)
   }
