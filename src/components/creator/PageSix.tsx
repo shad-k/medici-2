@@ -46,7 +46,7 @@ const PageSix: React.FC<StepperFormProps> = ({
     try {
       console.log(data);
       if (await readyCheck()) {
-        if (connectedChain!.id === '0xA') {
+        if (connectedChain!.id === '0xa') {
           setEtherscanURL('https://optimistic.etherscan.io/tx/')
         } else {
           setEtherscanURL('https://goerli.etherscan.io/tx/')
