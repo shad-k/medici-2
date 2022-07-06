@@ -1,27 +1,27 @@
 .number-wrapper {
-    position: relative;
-  }
-  
-  .number-wrapper:after,
-  .number-wrapper:before {
-    position: absolute;
-    right: 5px;
-    width: 1.6em;
-    height: .9em;
-    font-size: 10px;
-    pointer-events: none;
-    background: #fff;
-  }
-  
-  .number-wrapper:after {
-    color: blue;
-    content: "\25B2";
-    margin-top: 1px;
-  }
-  
-  .number-wrapper:before {
-    color: red;
-    content: "\25BC";
-    margin-bottom: 5px;
-    bottom: -.5em;
-  }
+  position: relative;
+}
+
+.number-wrapper:after,
+.number-wrapper:before {
+  position: absolute;
+  right: 5px;
+  width: 1.6em;
+  height: 0.9em;
+  font-size: 10px;
+  pointer-events: none;
+  background: #fff;
+}
+
+.number-wrapper:after {
+  color: blue;
+  content: '\25B2';
+  margin-top: 1px;
+}
+
+.number-wrapper:before {
+  color: red;
+  content: '\25BC';
+  margin-bottom: 5px;
+  bottom: -0.5em;
+}

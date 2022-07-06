@@ -1,25 +1,25 @@
-import React from 'react'
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import Stack from '@mui/material/Stack'
-import TextField from '@mui/material/TextField'
-import FormControl from '@mui/material/FormControl'
-import RadioGroup from '@mui/material/RadioGroup'
-import Radio from '@mui/material/Radio'
-import Box from '@mui/material/Box'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import FontPicker from 'font-picker-react'
-import { ColorPicker } from 'material-ui-color'
+import React from 'react';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
+import Box from '@mui/material/Box';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FontPicker from 'font-picker-react';
+import { ColorPicker } from 'material-ui-color';
 
-import { Accordions, FormState } from '../../model/types'
+import { Accordions, FormState } from '../../model/types';
 
 interface Props {
-  expandedAccordion: string
-  formState: FormState
-  changeFormState: (key: string, value: any) => void
-  setAccordion: (accordion: string) => void
+  expandedAccordion: string;
+  formState: FormState;
+  changeFormState: (key: string, value: any) => void;
+  setAccordion: (accordion: string) => void;
 }
 
 const DrawerAccordions: React.FC<Props> = ({
@@ -32,16 +32,11 @@ const DrawerAccordions: React.FC<Props> = ({
     <Box>
       <Accordion expanded={expandedAccordion === Accordions.DETAIL}>
         <AccordionSummary
-          expandIcon={
-            <ExpandMoreIcon
-              onClick={() =>
-                setAccordion(
-                  expandedAccordion === Accordions.DETAIL
-                    ? ''
-                    : Accordions.DETAIL
-                )
-              }
-            />
+          expandIcon={<ExpandMoreIcon />}
+          onClick={() =>
+            setAccordion(
+              expandedAccordion === Accordions.DETAIL ? '' : Accordions.DETAIL
+            )
           }
         >
           Details
@@ -81,16 +76,11 @@ const DrawerAccordions: React.FC<Props> = ({
       </Accordion>
       <Accordion expanded={expandedAccordion === Accordions.SOCIAL}>
         <AccordionSummary
-          expandIcon={
-            <ExpandMoreIcon
-              onClick={() =>
-                setAccordion(
-                  expandedAccordion === Accordions.SOCIAL
-                    ? ''
-                    : Accordions.SOCIAL
-                )
-              }
-            />
+          expandIcon={<ExpandMoreIcon />}
+          onClick={() =>
+            setAccordion(
+              expandedAccordion === Accordions.SOCIAL ? '' : Accordions.SOCIAL
+            )
           }
         >
           Social Links
@@ -137,20 +127,17 @@ const DrawerAccordions: React.FC<Props> = ({
       </Accordion>
       <Accordion expanded={expandedAccordion === Accordions.FONT}>
         <AccordionSummary
-          expandIcon={
-            <ExpandMoreIcon
-              onClick={() =>
-                setAccordion(
-                  expandedAccordion === Accordions.FONT ? '' : Accordions.FONT
-                )
-              }
-            />
+          expandIcon={<ExpandMoreIcon />}
+          onClick={() =>
+            setAccordion(
+              expandedAccordion === Accordions.FONT ? '' : Accordions.FONT
+            )
           }
         >
           Font
         </AccordionSummary>
         <AccordionDetails>
-          {/* { @ts-expect-error } */}
+          {/* @ts-expect-error */}
           <FontPicker
             apiKey={process.env.REACT_APP_GOOGLE_FONTS_API_KEY!}
             activeFontFamily={formState.fontFamily}
@@ -162,14 +149,11 @@ const DrawerAccordions: React.FC<Props> = ({
       </Accordion>
       <Accordion expanded={expandedAccordion === Accordions.TIER}>
         <AccordionSummary
-          expandIcon={
-            <ExpandMoreIcon
-              onClick={() =>
-                setAccordion(
-                  expandedAccordion === Accordions.TIER ? '' : Accordions.TIER
-                )
-              }
-            />
+          expandIcon={<ExpandMoreIcon />}
+          onClick={() =>
+            setAccordion(
+              expandedAccordion === Accordions.TIER ? '' : Accordions.TIER
+            )
           }
         >
           Claim Tier
@@ -202,16 +186,11 @@ const DrawerAccordions: React.FC<Props> = ({
       </Accordion>
       <Accordion expanded={expandedAccordion === Accordions.COLORS}>
         <AccordionSummary
-          expandIcon={
-            <ExpandMoreIcon
-              onClick={() =>
-                setAccordion(
-                  expandedAccordion === Accordions.COLORS
-                    ? ''
-                    : Accordions.COLORS
-                )
-              }
-            />
+          expandIcon={<ExpandMoreIcon />}
+          onClick={() =>
+            setAccordion(
+              expandedAccordion === Accordions.COLORS ? '' : Accordions.COLORS
+            )
           }
         >
           Colors
@@ -240,23 +219,11 @@ const DrawerAccordions: React.FC<Props> = ({
                 }
               />
             </div>
-            <div id="bg-color-picker">
-              <label htmlFor="bg-color-picker" className="block">
-                Background Color
-              </label>
-              <ColorPicker
-                value={formState.bgColor}
-                // hideTextfield
-                onChange={(event) =>
-                  changeFormState('bgColor', `#${event.hex}`)
-                }
-              />
-            </div>
           </Stack>
         </AccordionDetails>
       </Accordion>
     </Box>
-  )
-}
+  );
+};
 
-export default DrawerAccordions
+export default DrawerAccordions;
