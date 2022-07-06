@@ -22,20 +22,20 @@ const PageSix: React.FC<StepperFormProps> = ({
   const [isValidMasterAddress, setIsValidMasterAddress] = useState<boolean>(false);
   const [ContractCreationResult, setContractCreationResult] = useState<Contract>()
   const [ContractCreationSuccess, setContractCreationSuccess] = useState<boolean>(false)
+  const [etherscanURL, setEtherscanURL] = useState<string>()
   
   const handleOpen = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-    
-    
+  
   const onSubmit = async () => {
-      console.log(data);
-      try {
-        await readyCheck();
-        handleOpen();
-        await generateSmartContract()
-      } catch {
-        alert("Something went wrong!")
-      }
+    console.log(data);
+    try {
+      await readyCheck();
+      handleOpen();
+      await generateSmartContract()
+    } catch {
+      alert("Something went wrong!")
+    }
   }
 
   const readyCheck = async () => {
@@ -46,6 +46,11 @@ const PageSix: React.FC<StepperFormProps> = ({
     try {
       console.log(data);
       if (await readyCheck()) {
+        if (connectedChain!.id === '0xA') {
+          setEtherscanURL('https://optimistic.etherscan.io/tx/')
+        } else {
+          setEtherscanURL('https://goerli.etherscan.io/tx/')
+        }
         await generateNewContract(
           wallet,
           data.merkleRoot,
@@ -83,7 +88,6 @@ const PageSix: React.FC<StepperFormProps> = ({
   },[showModal])
 
   const addressCheck = async (address: string) => {
-    console.log("Checking address" + address);
     try {
       const addressCheck = isValidAddress(address);
       handleInputData("masterAddress", addressCheck);
@@ -96,7 +100,6 @@ const PageSix: React.FC<StepperFormProps> = ({
   useEffect(() => {
     if (wallet) {
       const address = (document.getElementById("input-owner-address") as HTMLInputElement).value;
-      console.log(address);
       addressCheck(address);
     }
   }, [wallet])
@@ -144,11 +147,14 @@ const PageSix: React.FC<StepperFormProps> = ({
             aria-describedby="modal-modal-description"
           >
           <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
-            {(!ContractCreationResult) && <h1 className="text-center text-2xl">Generating your Smart Contract</h1>}
-            {(ContractCreationResult && !ContractCreationSuccess) && <h1 className="text-center text-2xl">Confirming your transaction</h1>}
-            {(ContractCreationResult && !ContractCreationSuccess) && <p>Our platform waits for five blocks to confirm your transaction, to ensure your transaction is secure  </p>}
+            {(!ContractCreationResult) && <h1 id="modal-header" className="text-center text-2xl">Generating your Smart Contract</h1>}
+            {(!ContractCreationResult) && <p id="modal-text">Our platform waits for two blocks to confirm your transaction, to ensure your transaction is secure</p>}
             <br></br>
-            { (ContractCreationSuccess && ContractCreationResult) ? <a href={localenv.network.txEtherscanUrl + ContractCreationResult.txhash}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
+            { (ContractCreationSuccess && ContractCreationResult) ? 
+            <a 
+            target="_blank"
+            rel="noreferrer"
+            href={etherscanURL + ContractCreationResult.txhash}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
           </div>
           </Modal>
       </div>

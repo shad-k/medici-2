@@ -215,7 +215,8 @@ const DropEditor: React.FC<{}> = () => {
   }
 
   const onConfirm = async () => {
-    if (isFormValid && (await readyToTransact())) {
+    // if (isFormValid && (await readyToTransact())) {
+    if (isFormValid) {
       handleOpen()
       const claimReady = await claimsInit(
         wallet,

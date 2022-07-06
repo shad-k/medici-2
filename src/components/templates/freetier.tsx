@@ -7,7 +7,7 @@ import { FaDiscord } from 'react-icons/fa'
 import { Claim, Contract } from '../../model/types'
 import useWallet from '../../hooks/useWallet'
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
-import { verifyMerkleProof } from '../../utils/web3'
+import { getContract, verifyMerkleProof } from '../../utils/web3'
 import { getContractClaimStatus, getContractCover } from '../../utils/retrieve'
 import Countdown from './Countdown'
 const localenv = CONFIG.DEV
@@ -48,9 +48,9 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
   const [contractStatus, setContractStatus] = React.useState<string>()
 
   const getContractStatus = React.useCallback(async () => {
-    if (name && wallet) {
+    if (contract) {
       try {
-        const { success, status } = await getContractClaimStatus(name, wallet);
+        const { success, status } = await getContractClaimStatus(contract.name, contract.chainid)
         if (success) {
           console.log("Status " + status)
           setContractStatus(status)
@@ -59,60 +59,39 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
         alert("Could not get contract status")
       }
     }
-  }, [connectedWallet, contractStatus])
+  }, [contract, contractStatus])
 
   const isAllowlistMember = React.useCallback(async () => {
-    if (connectedWallet && name) {
+    if (connectedWallet && contract) {
       try {
-        const { success, merkleProof } = await verifyMerkleProof(name, connectedWallet.address);
+        const { success, merkleProof } = await verifyMerkleProof(contract.name, connectedWallet.address)
         setIsVerified(success);
         setVerifiedProof(merkleProof);
       } catch {
-        console.log("error getting merkle proof")
         setIsVerified(false)
       }
     }
-  }, [connectedWallet, isVerified, name])
+  }, [connectedWallet, isVerified, contract])
 
   const getName = React.useCallback(async () => {
-    const contract = new ethers.Contract(claim.contract, abi, provider)
-    const collectionName = await contract.name()
+    if (claim && contract) {
+    const currContract = await getContract(claim.contract, contract.chainid)
+    const collectionName = await currContract.name()
     setName(collectionName)
-  }, [claim])
+    }
+  }, [claim, contract])
 
   const getContractOwner = React.useCallback(async () => {
-    const contract = new ethers.Contract(claim.contract, abi, provider)
-    const contractOwner = await contract.masterAddress()
+    if (claim && contract) {
+    const currContract = await getContract(claim.contract, contract.chainid)
+    const contractOwner = await currContract.masterAddress()
     setMasterAddress(contractOwner)
-  }, [claim])
+    }
+  }, [claim, contract])
 
   const getCoverImage = React.useCallback(async () => {
-    // const headers = new Headers()
-    // headers.set('Content-Type', 'application/json')
-    // const res = await fetch(`${API_ENDPOINT}${API_PATHS.CLAIM_COVER}`, {
-    //   method: 'GET',
-    //   headers,
-    //   body: JSON.stringify({
-    //     contractName,
-    //   }),
-    // })
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //       return res.blob()
-    //     } else {
-    //       throw new Error(res.statusText)
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //   })
-
-    // if (res) {
-    //   const imageURl = URL.createObjectURL(res)
-    //   setCover(imageURl)
-    // }
     if (contractName) {
-      const res = await getContractCover(contractName);
+      const res = await getContractCover(contractName)
       setCover(res);
     }
   }, [contractName])
@@ -126,7 +105,9 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
         )
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
+        const price = await contract.price()
         const tx = await contract.mint(connectedWallet?.address, 1, {
+          value: price,
           gasLimit: 30000000,
         })
         const mintResponse = await tx.wait()
@@ -153,7 +134,9 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
         )
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
+        const price = await contract.price()
         const tx = await contract.claim(connectedWallet?.address, 1, verifiedProof, {
+          value: price,
           gasLimit: 30000000,
         })
         const claimResponse = await tx.wait()
@@ -177,7 +160,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
       getContractOwner()
       getCoverImage()
     }
-    if (!isPreview) {
+    if (contractName && !isPreview) {
       isAllowlistMember()
       getContractStatus()
     }
@@ -188,6 +171,7 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
     isAllowlistMember,
     getContractStatus,
     contractName,
+    contract,
     isPreview,
     cover,
     masterAddress,
@@ -215,7 +199,6 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
         console.log(error)
       })
       if (res !== undefined) {
-        // console.log(res)
         const {
           name,
           symbol,
@@ -395,11 +378,16 @@ const FreeTier: React.FC<FreeTierProps> = ({ claim, contractName, isPreview }) =
         { (!(isPreview) && contract && contractStatus === "none") && ( isVerified ? <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.claimsstart}/> until claim starts</div> : <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.mintstart}/> until mint starts</div>)}
         { (!(isPreview) && contract && contractStatus === "claim") && <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.mintstart}/> until mint starts</div> }
         {/* { (!(isPreview) && contract) && <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.mintstart}/> until mint </div> } */}
+        <a 
+          target="_blank"
+          rel="noreferrer"
+          href="/">
         <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">
           powered by{' '}
           <img src="/logo.png" alt="Medici logo" width={20} className="mx-1" />
           Medici
         </div>
+        </a>
       </div>
     </div>
   )
