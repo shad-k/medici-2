@@ -12,7 +12,7 @@ import { getContractClaimStatus, getContractCover } from '../../utils/retrieve'
 import Countdown from './Countdown'
 const localenv = CONFIG.DEV
 
-interface FreeTierProps {
+interface LowTierProps {
   claim: Claim;
   contractName?: string;
   isPreview: boolean;
@@ -30,7 +30,7 @@ const provider = new ethers.providers.JsonRpcProvider(
   'https://rpc.ankr.com/eth_goerli'
 );
 
-const FreeTier: React.FC<FreeTierProps> = ({
+const LowTier: React.FC<LowTierProps> = ({
   claim,
   contractName,
   isPreview,
@@ -455,4 +455,4 @@ const FreeTier: React.FC<FreeTierProps> = ({
   );
 };
 
-export default FreeTier;
+export default LowTier

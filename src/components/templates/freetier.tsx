@@ -17,7 +17,7 @@ interface FreeTierProps {
   isPreview: boolean;
 }
 
-const Free: React.FC<FreeTierProps> = ({
+const FreeTier: React.FC<FreeTierProps> = ({
   claim,
   contractName,
   isPreview,
@@ -384,4 +384,4 @@ const Free: React.FC<FreeTierProps> = ({
   );
 };
 
-export default Free;
+export default FreeTier;
