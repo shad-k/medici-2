@@ -340,7 +340,13 @@ const FreeTier: React.FC<FreeTierProps> = ({
               <button
                 className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
                 onClick={
-                  connectedWallet ? () => claimOnContract() : () => connect({})
+                  connectedWallet ? () => claimOnContract() : () => 
+                  connect({
+                    autoSelect: { 
+                      label: BigNumber.from(claim.chainid).toHexString(),
+                      disableModals: true
+                    }
+                  })
                 }
                 disabled={claiming}
               >
@@ -370,7 +376,14 @@ const FreeTier: React.FC<FreeTierProps> = ({
           ) : (
             <button
               className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
-              onClick={connectedWallet ? () => mint() : () => connect({})
+              onClick={
+                connectedWallet ? () => mint() : () => 
+                connect({
+                  autoSelect: { 
+                    label: BigNumber.from(claim.chainid).toHexString(),
+                    disableModals: true
+                  }
+                })
               }
               disabled={minting}
             >
