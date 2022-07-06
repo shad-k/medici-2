@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { BigNumber, ethers, utils } from 'ethers'
 import React from 'react'
 import FontPicker from 'font-picker-react'
 import { BsTwitter } from 'react-icons/bs'
@@ -56,7 +56,6 @@ const FreeTier: React.FC<FreeTierProps> = ({
       try {
         const { success, status } = await getContractClaimStatus(contract.name, contract.chainid)
         if (success) {
-          console.log('Status ' + status);
           setContractStatus(status);
         }
       } catch {
@@ -371,7 +370,8 @@ const FreeTier: React.FC<FreeTierProps> = ({
           ) : (
             <button
               className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
-              onClick={connectedWallet ? () => mint() : () => connect({})}
+              onClick={connectedWallet ? () => mint() : () => connect({})
+              }
               disabled={minting}
             >
               {' '}
