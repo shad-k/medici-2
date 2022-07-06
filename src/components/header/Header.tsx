@@ -46,10 +46,10 @@ const Header: React.FC<{}> = () => {
   const onConnect = async () => {
     connect({
       autoSelect: { 
-        label: '0xa',
+        label: 'Wallet Connect',
         disableModals: false
-      }})
-    }
+      }
+    })
   }
 
   return (

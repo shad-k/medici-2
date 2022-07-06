@@ -345,7 +345,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
                   connectedWallet ? () => claimOnContract() : () => 
                   connect({
                     autoSelect: { 
-                      label: utils.hexValue(BigNumber.from(claim.chainid)),
+                      label: 'Wallet Connect',
                       disableModals: false
                     }
                   })
@@ -382,8 +382,8 @@ const FreeTier: React.FC<FreeTierProps> = ({
                 connectedWallet ? () => mint() : () => 
                 connect({
                   autoSelect: { 
-                    label: utils.hexValue(BigNumber.from(claim.chainid)),
-                    disableModals: true
+                    label: 'Wallet Connect',
+                    disableModals: false
                   }
                 })
               }

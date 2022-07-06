@@ -65,7 +65,7 @@ const ProjectSelector: React.FC<Props> = ({ selectProject }) => {
             <Button
               onClick={() => connect({
                 autoSelect: { 
-                  label: '0xa',
+                  label: 'Wallet Connect',
                   disableModals: false
                 }
               })
