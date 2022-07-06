@@ -24,7 +24,7 @@ const onboard = init({
   wallets: [injected],
   chains: [
     {
-      id: '0xA',
+      id: '0xa',
       token: 'ETH',
       label: 'Optimistic Mainnet',
       rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04'

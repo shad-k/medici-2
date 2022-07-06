@@ -59,7 +59,7 @@ const NetworkIcon: React.FC<{}> = () => {
 
   const handleClose = async (chainId: string) => {
     setAnchorEl(null);
-    if (chainId === "0xA" || chainId === "0x5") {
+    if (chainId === "0xa" || chainId === "0x5") {
       setSwitchingNetwork(true)
       await setChain({ chainId: chainId })
       setSwitchingNetwork(false)
@@ -134,7 +134,7 @@ const NetworkIcon: React.FC<{}> = () => {
         open={open}
         onClose={handleClose}
       >
-      <MenuItem onClick={event => handleClose("0xA")} disableRipple>
+      <MenuItem onClick={event => handleClose("0xa")} disableRipple>
       <Optimism/> <p className="ml-1">Optimism</p>
       </MenuItem>
       <MenuItem onClick={event => handleClose("0x5")} disableRipple>

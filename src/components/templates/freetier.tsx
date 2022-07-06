@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { BigNumber, ethers, utils } from 'ethers'
 import React from 'react'
 import FontPicker from 'font-picker-react'
 import { BsTwitter } from 'react-icons/bs'
@@ -35,7 +35,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
   contractName,
   isPreview,
 }) => {
-  const { wallet, connect } = useWallet();
+  const { wallet, connect, setChain } = useWallet();
 
   const connectedWallet = wallet?.accounts[0];
 
@@ -56,7 +56,6 @@ const FreeTier: React.FC<FreeTierProps> = ({
       try {
         const { success, status } = await getContractClaimStatus(contract.name, contract.chainid)
         if (success) {
-          console.log('Status ' + status);
           setContractStatus(status);
         }
       } catch {
@@ -104,6 +103,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
     if (wallet && connectedWallet) {
       setMinting(true);
       try {
+        await setChain({chainId: utils.hexValue(BigNumber.from(claim.chainid))})
         const walletProvider = new ethers.providers.Web3Provider(wallet.provider);
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
@@ -131,6 +131,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
     if (wallet && connectedWallet && isVerified && verifiedProof !== null) {
       setClaiming(true);
       try {
+        await setChain({chainId: BigNumber.from(claim.chainid).toHexString()})
         const walletProvider = new ethers.providers.Web3Provider(wallet.provider)
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
@@ -341,7 +342,13 @@ const FreeTier: React.FC<FreeTierProps> = ({
               <button
                 className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
                 onClick={
-                  connectedWallet ? () => claimOnContract() : () => connect({})
+                  connectedWallet ? () => claimOnContract() : () => 
+                  connect({
+                    autoSelect: { 
+                      label: 'Wallet Connect',
+                      disableModals: false
+                    }
+                  })
                 }
                 disabled={claiming}
               >
@@ -371,7 +378,15 @@ const FreeTier: React.FC<FreeTierProps> = ({
           ) : (
             <button
               className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
-              onClick={connectedWallet ? () => mint() : () => connect({})}
+              onClick={
+                connectedWallet ? () => mint() : () => 
+                connect({
+                  autoSelect: { 
+                    label: 'Wallet Connect',
+                    disableModals: false
+                  }
+                })
+              }
               disabled={minting}
             >
               {' '}

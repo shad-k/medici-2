@@ -202,10 +202,16 @@ export const isValidAddress = (address: string) => {
 
 export const readyToTransact = async (callerWallet: any, connect: any, setChain: any): Promise<boolean> => {
   if (!callerWallet) {
-    await connect({});
+    await connect({
+      autoSelect: { 
+        label: '0xa',
+        disableModals: false
+      }
+    })
   }
-  if (callerWallet.chains[0].id !== '0xA' && callerWallet.chains[0].id !== '0x5'){
-    return setChain({ chainId: '0xA' })
+
+  if (callerWallet.chains[0].id !== '0xa' && callerWallet.chains[0].id !== '0x5'){
+    return setChain({ chainId: '0xa' })
   } else {
     return Promise.resolve(true)
   }

@@ -44,8 +44,12 @@ const Header: React.FC<{}> = () => {
   const connectedWallet = wallet?.accounts[0]
   
   const onConnect = async () => {
-    connect({});
-    console.log("wallet connected")
+    connect({
+      autoSelect: { 
+        label: 'Wallet Connect',
+        disableModals: false
+      }
+    })
   }
 
   return (
