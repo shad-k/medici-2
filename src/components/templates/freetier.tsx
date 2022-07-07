@@ -110,7 +110,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
         const price = await contract.price()
         const tx = await contract.mint(connectedWallet?.address, 1, {
           value: price,
-          gasLimit: 30000000,
+          gasLimit: 9000000,
         });
         const mintResponse = await tx.wait();
         console.log(mintResponse);
