@@ -138,7 +138,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
         const price = await contract.price()
         const tx = await contract.claim(connectedWallet?.address, 1, verifiedProof, {
           value: price,
-          gasLimit: 30000000,
+          gasLimit: 9000000,
         })
         const claimResponse = await tx.wait()
         console.log(claimResponse)
