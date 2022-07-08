@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
-
 import FreeTier from '../components/templates/freetier';
+import LowTier from '../components/templates/lowtier';
 import { Claim, TemplateTier } from '../model/types';
 import { API_ENDPOINT, API_PATHS } from '../utils/config';
 
@@ -14,7 +14,7 @@ export const ClaimPageRenderer: React.FC<{
   switch (claim.tier) {
     case TemplateTier.LOW:
       return (
-        <FreeTier
+        <LowTier
           claim={claim}
           contractName={contractName}
           isPreview={isPreview}

@@ -361,6 +361,7 @@ const DropEditor: React.FC<{}> = () => {
         ) : (
           <DrawerIcons
             openDrawerAndExpandAccordion={openDrawerAndExpandAccordion}
+            formState={formState}
           />
         )}
       </Drawer>
