@@ -285,7 +285,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
         )}
         </div>
       </div>
-       <div className="md:aspect-video overflow-hidden rounded-2xl max-h-[500px] drop-shadow-xl">
+       <div className="overflow-hidden rounded-2xl drop-shadow-xl md:w-2/5">
           <img
             src={cover}
             alt=""
