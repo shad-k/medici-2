@@ -11,12 +11,11 @@ import { isValidAddress, generateNewContract, whitelist, getNewLaunchedContract,
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 
 const PageSix: React.FC<StepperFormProps> = ({
-    nextStep,
     handleInputData,
     data
 }) => {
   const localenv = CONFIG.DEV;
-  const { wallet, connect, connectedChain, setChain } = useWallet();
+  const { wallet, connect, setChain, currentChain } = useWallet();
 
   const [showModal, setShowModal] = useState(false);
   const [isValidMasterAddress, setIsValidMasterAddress] = useState<boolean>(false);
@@ -46,11 +45,6 @@ const PageSix: React.FC<StepperFormProps> = ({
     try {
       console.log(data);
       if (await readyCheck()) {
-        if (connectedChain!.id === '0xa') {
-          setEtherscanURL('https://optimistic.etherscan.io/tx/')
-        } else {
-          setEtherscanURL('https://goerli.etherscan.io/tx/')
-        }
         await generateNewContract(
           wallet,
           data.merkleRoot,
@@ -68,7 +62,7 @@ const PageSix: React.FC<StepperFormProps> = ({
         const result = await getNewLaunchedContract(data.masterAddress, wallet);
         setContractCreationResult(result);
         console.log("Get new launched contract " + result.name);
-        await whitelist(data.name, connectedChain!.id, data.whitelistedAddresses, data.merkleRoot);
+        await whitelist(data.name, currentChain!.hexId, data.whitelistedAddresses, data.merkleRoot);
         console.log("Done setting whitelist!")
         setContractCreationSuccess(true);
       }

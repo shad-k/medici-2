@@ -9,7 +9,7 @@ import useWallet from '../../hooks/useWallet'
 import { useWallets } from '@web3-onboard/react'
 
 const Header: React.FC<{}> = () => {
-  const { wallet, connecting, connectedChain, connect, disconnect, setChain } = useWallet()
+  const { wallet, connecting, connect } = useWallet()
   const connectedWallets = useWallets();
 
   useEffect(() => {

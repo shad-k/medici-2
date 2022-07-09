@@ -14,7 +14,7 @@ interface Props {
 }
 
 const ProjectSelector: React.FC<Props> = ({ selectProject }) => {
-  const { wallet, connect } = useWallet()
+  const { wallet, connect, currentChain } = useWallet()
   return (
     <Card
       sx={{
@@ -55,10 +55,10 @@ const ProjectSelector: React.FC<Props> = ({ selectProject }) => {
             : 'Connect wallet to start selecting a project'}
         </Typography>
         <CardActions>
-          {wallet ? (
+          {(wallet && currentChain) ? (
             <ContractsMenu
               masterAddress={wallet.accounts[0].address}
-              connectedChain={wallet.chains[0].id}
+              chainid={currentChain.id}
               selectProject={selectProject}
             />
           ) : (

@@ -11,7 +11,7 @@ const PageTwo: React.FC<StepperFormProps> = ({
   handleInputData,
   data,
 }) => {
-  const { wallet, connect, setChain, connectedChain } = useWallet();
+  const { wallet, connect, setChain, currentChain } = useWallet();
   const [nameChecked, setNameChecked] = useState<boolean>(false);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
   const [timer, setTimer] = useState<any>(null);
@@ -49,7 +49,7 @@ const PageTwo: React.FC<StepperFormProps> = ({
         const newTimer = setTimeout(async () => {
           const isNameAvailable = await getNameAvailability(
             name,
-            connectedChain!.id
+            currentChain!.hexId
           );
           if (isNameAvailable) {
             await handleInputData('name', name);

@@ -113,11 +113,11 @@ export const getContractClaimStatus = async (contractName: string, chainid: stri
 
 export const getAllContracts = async (
   masterAddress: string,
-  connectedChain: string
+  chainid: number
 ): Promise<any> => {
   const request_data = {
     masterAddress: utils.getAddress(masterAddress),
-    chainID: parseInt(connectedChain, 16),
+    chainID: chainid
   };
   return apiClient.post(
     API_PATHS.GET_ALL_LAUNCHED_CONTRACTS,

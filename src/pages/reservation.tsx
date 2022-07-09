@@ -8,7 +8,7 @@ import NFTCard from '../components/reservations/NFTCard';
 import NFTPopup from '../components/reservations/NFTPopup';
 
 const Reservation: React.FC<{}> = () => {
-  const { wallet, connect, connectedChain, setChain } = useWallet();
+  const { wallet, connect, setChain } = useWallet();
 
   const { name: contractName } = useParams();
   const { data, error } = useReservedNFTs(contractName as string);

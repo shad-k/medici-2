@@ -22,7 +22,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
   contractName,
   isPreview,
 }) => {
-  const { wallet, connect, setChain } = useWallet();
+  const { wallet, connect, setChain, currentChain } = useWallet();
 
   const connectedWallet = wallet?.accounts[0];
 

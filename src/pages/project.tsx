@@ -14,7 +14,6 @@ export const ProjectPageRenderer: React.FC<{
 }
 
 const Project: React.FC<{}> = () => {
-    const { wallet, connect, setChain, connectedChain } = useWallet()
     const params = useParams()
     const contractname = params.contractname as string;
 
