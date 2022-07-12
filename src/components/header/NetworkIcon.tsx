@@ -93,7 +93,7 @@ const NetworkIcon: React.FC<{}> = () => {
             backgroundColor: 'black',
           },}}
       >
-      { switchingNetwork ? (<div className="inline-flex gap-2"><MdSwapHoriz style={{height: '25px'}}/><h2 className="hidden md:block ml-2">Switching</h2></div>): <div className="inline-flex gap-2"><img src={currentChain?.icon} width="20px"/><h2 className="hidden md:block ml-2">{currentChain?.label}</h2></div> }
+      { switchingNetwork ? (<div className="inline-flex gap-2"><MdSwapHoriz style={{height: '25px'}}/><h2 className="hidden md:block ml-2">Switching</h2></div>): <div className="inline-flex gap-2"><img src={currentChain?.icon} width="20px"/><h2 className="hidden md:block">{currentChain?.label}</h2></div> }
       </Button>
       <StyledMenu
         id="demo-customized-menu"
@@ -114,7 +114,7 @@ const NetworkIcon: React.FC<{}> = () => {
       <img src={GOERLI.icon} width="20px"/>{GOERLI.label}
       </div>
       </MenuItem>
-      <MenuItem onClick={event => handleSelect(event)} disableRipple>
+      <MenuItem onClick={event => handleSelect(event)} disableRipple disabled={true}>
       <div className="inline-flex gap-2">
       <img src={POLYGON.icon} width="20px"/>{POLYGON.label}
       </div>
