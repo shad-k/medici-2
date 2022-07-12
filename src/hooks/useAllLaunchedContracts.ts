@@ -15,7 +15,7 @@ type UseProjectsReturn = {
 
 const useAllLaunchedContracts = (
   masterAddress: string,
-  connectedChain: string
+  chainid: number
 ): UseProjectsReturn => {
   // console.log("Getting contracts for " + masterAddress + " on chain " + connectedChain)
   const { data, error } = useSWR<Array<Contract>>(
@@ -26,7 +26,7 @@ const useAllLaunchedContracts = (
           url,
           {
             masterAddress: utils.getAddress(masterAddress),
-            chainID: parseInt(connectedChain, 16),
+            chainID: chainid
           },
           {
             headers: { 'Content-Type': 'application/json' },

@@ -1,16 +1,13 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { ClickAwayListener } from '@mui/material';
 import useWallet from '../../hooks/useWallet';
 
-import Ethereum from '../svgComponents/Ethereum';
-import Optimism from '../svgComponents/Optimism';
-import { BsExclamationTriangle } from 'react-icons/bs'
 import { MdSwapHoriz } from 'react-icons/md';
+import { GET_CHAIN_BY_NAME, GOERLI, OPTIMISM, POLYGON } from '../../model/chains'
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -48,48 +45,30 @@ const StyledMenu = styled((props: MenuProps) => (
 
 const NetworkIcon: React.FC<{}> = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [currChainLabel, setCurrChainLabel] = React.useState<string>();
   const [switchingNetwork, setSwitchingNetwork] = React.useState<boolean>(false);
   const open = Boolean(anchorEl);
+
+  const { currentChain, setChain } = useWallet()
   
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-    console.log("handle click")
   };
 
-  const handleClose = async (chainId: string) => {
+  const handleClose = () => {
     setAnchorEl(null);
-    if (chainId === "0xa" || chainId === "0x5") {
+  };
+
+  const handleSelect = async (event: any) => {
+    setAnchorEl(null);
+    const selectedChain = GET_CHAIN_BY_NAME(event.target.textContent);;
+    if (selectedChain) {
+      console.log(selectedChain)
       setSwitchingNetwork(true)
-      await setChain({ chainId: chainId })
+      await setChain({ chainId: selectedChain.hexId })
       setSwitchingNetwork(false)
     }
-  };
-  
-  const { wallet, connecting, connectedChain, connect, setChain } = useWallet()
-  const connectedWallet = wallet?.accounts[0]
+  }
 
-  React.useEffect(() => {
-    if (connectedWallet && connectedChain) {
-      if (connectedChain?.id === '0xa') {
-        setCurrChainLabel("Optimism");
-        document.getElementById("invalid-icon")!.style.display = 'none';
-        document.getElementById("eth-icon")!.style.display = 'none';
-        document.getElementById("optimism-icon")!.style.display = 'block';
-      } else if (connectedChain?.id === '0x5') {
-        setCurrChainLabel("Goerli");
-        document.getElementById("invalid-icon")!.style.display = 'none';
-        document.getElementById("eth-icon")!.style.display = 'block';
-        document.getElementById("optimism-icon")!.style.display = 'none';
-      } else {
-        setCurrChainLabel("Unsupported Network");
-        document.getElementById("invalid-icon")!.style.display = 'block';
-        document.getElementById("eth-icon")!.style.display = 'none';
-        document.getElementById("optimism-icon")!.style.display = 'none';
-      }
-    }
-  }, [connectedChain])
-  
   return (
     <div>
       <Button
@@ -114,16 +93,7 @@ const NetworkIcon: React.FC<{}> = () => {
             backgroundColor: 'black',
           },}}
       >
-      <div id="optimism-icon">
-      { switchingNetwork ? <MdSwapHoriz style={{height: '25px'}}/> : <Optimism/> }
-      </div>
-      <div id="eth-icon">
-      { switchingNetwork ? <MdSwapHoriz style={{height: '25px'}}/> : <Ethereum/>}
-      </div>
-      <div id="invalid-icon">
-      { switchingNetwork ? <MdSwapHoriz style={{height: '25px'}}/> : <BsExclamationTriangle style={{height: '23px', marginRight: '5px'}}/> }
-      </div>
-      { switchingNetwork ? <h2 className="hidden md:block ml-2">Switching</h2> : <h2 className="hidden md:block ml-2">{currChainLabel} </h2> }
+      { switchingNetwork ? (<div className="inline-flex gap-2"><MdSwapHoriz style={{height: '25px'}}/><h2 className="hidden md:block ml-2">Switching</h2></div>): <div className="inline-flex gap-2"><img src={currentChain?.icon} width="20px"/><h2 className="hidden md:block">{currentChain?.label}</h2></div> }
       </Button>
       <StyledMenu
         id="demo-customized-menu"
@@ -134,11 +104,20 @@ const NetworkIcon: React.FC<{}> = () => {
         open={open}
         onClose={handleClose}
       >
-      <MenuItem onClick={event => handleClose("0xa")} disableRipple>
-      <Optimism/> <p className="ml-1">Optimism</p>
+      <MenuItem onClick={event => handleSelect(event)} disableRipple>
+      <div className="inline-flex gap-2">
+      <img src={OPTIMISM.icon} width="20px"/>{OPTIMISM.label}
+      </div>
       </MenuItem>
-      <MenuItem onClick={event => handleClose("0x5")} disableRipple>
-      <Ethereum/> <p className="ml-1">Goerli</p>
+      <MenuItem onClick={event => handleSelect(event)} disableRipple>
+      <div className="inline-flex gap-2">
+      <img src={GOERLI.icon} width="20px"/>{GOERLI.label}
+      </div>
+      </MenuItem>
+      <MenuItem onClick={event => handleSelect(event)} disableRipple disabled={true}>
+      <div className="inline-flex gap-2">
+      <img src={POLYGON.icon} width="20px"/>{POLYGON.label}
+      </div>
       </MenuItem>
       </StyledMenu>
     </div>

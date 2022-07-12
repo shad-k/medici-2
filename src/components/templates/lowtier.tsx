@@ -4,11 +4,12 @@ import FontPicker from 'font-picker-react'
 import { BsTwitter } from 'react-icons/bs'
 import { HiOutlineMail } from 'react-icons/hi'
 import { FaDiscord } from 'react-icons/fa'
-import { Claim, Contract } from '../../model/types'
+import { Claim, Contract, Chain } from '../../model/types'
 import useWallet from '../../hooks/useWallet'
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
 import { getContract, verifyMerkleProof } from '../../utils/web3'
 import { getContractClaimStatus, getContractCover } from '../../utils/retrieve'
+import { GET_CHAIN_BY_ID } from '../../model/chains'
 import Countdown from './Countdown'
 const localenv = CONFIG.DEV
 
@@ -17,18 +18,6 @@ interface LowTierProps {
   contractName?: string;
   isPreview: boolean;
 }
-const abi = [
-  'function tokenURI(uint256 tokenId) public view returns (string memory)',
-  'function name() public view returns (string memory)',
-  'function masterAddress() public view returns (string memory)',
-  'function mint(address account,uint256 numOfTokensToMint) external payable',
-];
-// const provider = new ethers.providers.JsonRpcProvider(
-//   'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04'
-// )
-const provider = new ethers.providers.JsonRpcProvider(
-  'https://rpc.ankr.com/eth_goerli'
-);
 
 const LowTier: React.FC<LowTierProps> = ({
   claim,
@@ -50,6 +39,7 @@ const LowTier: React.FC<LowTierProps> = ({
   const [isVerified, setIsVerified] = React.useState<boolean>();
   const [verifiedProof, setVerifiedProof] = React.useState<string>();
   const [contractStatus, setContractStatus] = React.useState<string>();
+  const [projectChain, setProjectChain] = React.useState<Chain>();
 
   const getContractStatus = React.useCallback(async () => {
     if (contract) {
@@ -77,16 +67,16 @@ const LowTier: React.FC<LowTierProps> = ({
   }, [connectedWallet, isVerified, contract])
 
   const getName = React.useCallback(async () => {
-    if (claim && contract) {
-    const currContract = await getContract(claim.contract, contract.chainid)
+    if (claim && contract && projectChain) {
+    const currContract = await getContract(claim.contract, projectChain)
     const collectionName = await currContract.name()
     setName(collectionName)
     }
   }, [claim, contract])
 
   const getContractOwner = React.useCallback(async () => {
-    if (claim && contract) {
-    const currContract = await getContract(claim.contract, contract.chainid)
+    if (claim && contract && projectChain) {
+    const currContract = await getContract(claim.contract, projectChain)
     const contractOwner = await currContract.masterAddress()
     setMasterAddress(contractOwner)
     }
@@ -100,10 +90,10 @@ const LowTier: React.FC<LowTierProps> = ({
   }, [contractName]);
 
   const mint = async () => {
-    if (wallet && connectedWallet) {
+    if (wallet && connectedWallet && projectChain) {
       setMinting(true);
       try {
-        await setChain({chainId: utils.hexValue(BigNumber.from(claim.chainid))})
+        await setChain({chainId: projectChain.hexId})
         const walletProvider = new ethers.providers.Web3Provider(wallet.provider);
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
@@ -128,14 +118,14 @@ const LowTier: React.FC<LowTierProps> = ({
   };
 
   const claimOnContract = async () => {
-    if (wallet && connectedWallet && isVerified && verifiedProof !== null) {
+    if (wallet && connectedWallet && isVerified && verifiedProof !== null && projectChain) {
       setClaiming(true);
       try {
-        await setChain({chainId: utils.hexValue(BigNumber.from(claim.chainid))})
+        await setChain({chainId: projectChain.hexId})
         const walletProvider = new ethers.providers.Web3Provider(wallet.provider)
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
-        const price = await contract.price()
+        const price = await contract.initialPrice()
         const tx = await contract.claim(connectedWallet?.address, 1, verifiedProof, {
           value: price,
           gasLimit: 30000000,
@@ -165,6 +155,9 @@ const LowTier: React.FC<LowTierProps> = ({
       isAllowlistMember()
       getContractStatus()
     }
+    if (contract && !projectChain) {
+      setProjectChain(GET_CHAIN_BY_ID(parseInt(contract.chainid)))
+    }
   }, [
     getName,
     getContractOwner,
@@ -177,6 +170,8 @@ const LowTier: React.FC<LowTierProps> = ({
     cover,
     masterAddress,
     name,
+    projectChain,
+    setProjectChain
   ]);
 
   React.useEffect(() => {
@@ -288,7 +283,7 @@ const LowTier: React.FC<LowTierProps> = ({
                 <td className="text-right text-white">
                   <a
                     className=""
-                    href={`${localenv.network.addressEtherscanUrl}${claim?.contract}`}
+                    href={`${localenv.network.addressEtherscanUrl}/address/${claim!.contract}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -332,7 +327,7 @@ const LowTier: React.FC<LowTierProps> = ({
             claimTxHash ? (
               <a
                 className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
-                href={`${localenv.network.txEtherscanUrl}${claimTxHash}`}
+                href={`${localenv.network.txEtherscanUrl}/tx/${claimTxHash}`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -369,7 +364,7 @@ const LowTier: React.FC<LowTierProps> = ({
           (txHash ? (
             <a
               className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
-              href={`${localenv.network.txEtherscanUrl}${txHash}`}
+              href={`${localenv.network.txEtherscanUrl}/tx/${txHash}`}
               target="_blank"
               rel="noreferrer"
             >

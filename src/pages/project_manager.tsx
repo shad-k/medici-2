@@ -1,26 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import DashHero from '../components/home/HomeMenu'
 import useWallet from '../hooks/useWallet'
 import { Contract } from '../model/types'
 import { getAllContracts } from '../utils/retrieve'
 import ContractCardV2 from '../components/projects/ContractCardV2'
 
 const ProjectManager: React.FC<{}> = () => {
-const { wallet, connect, setChain, connectedChain } = useWallet()
+const { wallet, currentChain } = useWallet()
 const connectedWallet = wallet?.accounts[0].address;
 
 const [contracts, setContracts] = useState<Contract[]>()
   
 const getContracts = useCallback(async () => {
-  if (connectedWallet && connectedChain) {
-  const { status, contracts } = await getAllContracts(connectedWallet, connectedChain.id);
+  if (connectedWallet && currentChain) {
+  const { contracts } = await getAllContracts(connectedWallet, currentChain.id);
   setContracts(contracts)
   }
-}, [contracts, connectedChain, connectedWallet])
+}, [contracts, currentChain, connectedWallet])
 
 useEffect(() => {
   getContracts()
-}, [connectedWallet, connectedChain])
+}, [connectedWallet, currentChain, getContracts])
 
   return (
     <div className="w-full p-10 md:mt-10 flex flex-col items-center">

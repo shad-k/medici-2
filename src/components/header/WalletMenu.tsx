@@ -53,7 +53,7 @@ const WalletMenu: React.FC<{}> = () => {
     setAnchorEl(null);
   };
   
-  const { wallet, connecting, connectedChain, connect, disconnect, setChain } = useWallet()
+  const { wallet, disconnect } = useWallet()
   const connectedWallet = wallet?.accounts[0]
 
 

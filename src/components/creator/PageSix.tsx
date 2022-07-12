@@ -6,51 +6,31 @@ import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { Contract } from '../../model/types';
-import { CONFIG } from '../../utils/config';
 import { isValidAddress, generateNewContract, whitelist, getNewLaunchedContract, readyToTransact } from '../../utils/web3'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 
 const PageSix: React.FC<StepperFormProps> = ({
-    nextStep,
     handleInputData,
     data
 }) => {
-  const localenv = CONFIG.DEV;
-  const { wallet, connect, connectedChain, setChain } = useWallet();
+  const { wallet, currentChain } = useWallet();
 
   const [showModal, setShowModal] = useState(false);
   const [isValidMasterAddress, setIsValidMasterAddress] = useState<boolean>(false);
   const [ContractCreationResult, setContractCreationResult] = useState<Contract>()
   const [ContractCreationSuccess, setContractCreationSuccess] = useState<boolean>(false)
-  const [etherscanURL, setEtherscanURL] = useState<string>()
   
   const handleOpen = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   
   const onSubmit = async () => {
     console.log(data);
-    try {
-      await readyCheck();
-      handleOpen();
-      await generateSmartContract()
-    } catch {
-      alert("Something went wrong!")
-    }
-  }
-
-  const readyCheck = async () => {
-    return await readyToTransact(wallet, connect, setChain);
+    handleOpen();
+    await generateSmartContract()
   }
     
   const generateSmartContract = async () => {
     try {
-      console.log(data);
-      if (await readyCheck()) {
-        if (connectedChain!.id === '0xa') {
-          setEtherscanURL('https://optimistic.etherscan.io/tx/')
-        } else {
-          setEtherscanURL('https://goerli.etherscan.io/tx/')
-        }
         await generateNewContract(
           wallet,
           data.merkleRoot,
@@ -64,14 +44,12 @@ const PageSix: React.FC<StepperFormProps> = ({
             masterAddress: data.masterAddress,
             claimStartBlock: data.claimStartBlock,
             mintStartBlock: data.mintStartBlock
-          });
+        });
         const result = await getNewLaunchedContract(data.masterAddress, wallet);
         setContractCreationResult(result);
-        console.log("Get new launched contract " + result.name);
-        await whitelist(data.name, connectedChain!.id, data.whitelistedAddresses, data.merkleRoot);
-        console.log("Done setting whitelist!")
+        console.log("Etherscan url: " + `${currentChain?.etherscanUrl}/tx/${result.txhash}`)
+        await whitelist(data.name, currentChain!.hexId, data.whitelistedAddresses, data.merkleRoot);
         setContractCreationSuccess(true);
-      }
     } catch {
         setContractCreationSuccess(false);
         alert("Something went wrong!")
@@ -102,7 +80,10 @@ const PageSix: React.FC<StepperFormProps> = ({
       const address = (document.getElementById("input-owner-address") as HTMLInputElement).value;
       addressCheck(address);
     }
-  }, [wallet])
+    if (ContractCreationResult) {
+      console.log("Etherscan url from contract creation result " + `${currentChain?.etherscanUrl}/tx/${ContractCreationResult.txhash}`)
+    }
+  }, [wallet, ContractCreationResult])
   
 
     return (
@@ -154,7 +135,7 @@ const PageSix: React.FC<StepperFormProps> = ({
             <a 
             target="_blank"
             rel="noreferrer"
-            href={etherscanURL + ContractCreationResult.txhash}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
+            href={`${currentChain!.etherscanUrl}/tx/${ContractCreationResult.txhash}`}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
           </div>
           </Modal>
       </div>

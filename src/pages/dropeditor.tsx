@@ -152,20 +152,38 @@ const DropEditor: React.FC<{}> = () => {
       tier,
     } = currentFormState;
 
-    if (
-      contract &&
-      artist &&
-      description &&
-      primaryColor !== '' &&
-      secondaryColor !== '' &&
-      fontFamily &&
-      tier
-    ) {
-      setIsFormValid(true);
-    } else {
-      setIsFormValid(false);
+    switch (tier) {
+      case TemplateTier.LOW: {
+        if (
+          contract &&
+          artist &&
+          description &&
+          primaryColor !== '' &&
+          secondaryColor !== '' &&
+          fontFamily &&
+          tier
+        ) {
+          setIsFormValid(true);
+        } else {
+          setIsFormValid(false);
+        }
+        break;
+      }
+      default: {
+        if (
+          contract &&
+          primaryColor !== '' &&
+          secondaryColor !== '' &&
+          fontFamily &&
+          tier
+        ) {
+          setIsFormValid(true);
+        } else {
+          setIsFormValid(false);
+        }
+      }
     }
-  };
+  }
 
   const changeFormState = (key: string, value?: string) => {
     const newFormState = {
