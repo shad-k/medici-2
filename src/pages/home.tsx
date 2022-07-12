@@ -11,8 +11,7 @@ const Home: React.FC<{}> = () => {
 
 useEffect(() => {
   toggleModal()
-
-}, [])
+}, [toggleModal])
 
 useEffect(() => {
   if (showModal) {

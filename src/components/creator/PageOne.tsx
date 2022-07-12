@@ -13,7 +13,10 @@ const PageOne: React.FC<StepperFormProps> = ({
 const onSubmit = async () => {
   try {
     if (!wallet) {
-      await connect({})
+      await connect({autoSelect: { 
+        label: 'Wallet Connect',
+        disableModals: false
+      }})
       nextStep();
     }
     else {

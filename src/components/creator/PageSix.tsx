@@ -83,7 +83,7 @@ const PageSix: React.FC<StepperFormProps> = ({
     if (ContractCreationResult) {
       console.log("Etherscan url from contract creation result " + `${currentChain?.etherscanUrl}/tx/${ContractCreationResult.txhash}`)
     }
-  }, [wallet, ContractCreationResult])
+  }, [wallet, ContractCreationResult, currentChain])
   
 
     return (

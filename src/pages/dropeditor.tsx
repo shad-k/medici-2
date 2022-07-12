@@ -218,7 +218,10 @@ const DropEditor: React.FC<{}> = () => {
 
   const readyToTransact = async (): Promise<boolean> => {
     if (!wallet) {
-      await connect({});
+      await connect({autoSelect: { 
+        label: 'Wallet Connect',
+        disableModals: false
+      }})
     }
     return setChain({ chainId: utils.hexValue(BigNumber.from(contract!.chainid)) });
   };
