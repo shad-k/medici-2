@@ -7,7 +7,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import useWallet from '../../hooks/useWallet';
 
 import { MdSwapHoriz } from 'react-icons/md';
-import { GET_CHAIN_BY_NAME, GOERLI, OPTIMISM, POLYGON } from '../../model/chains'
+import { GET_CHAIN_BY_NAME, GOERLI, OPTIMISM } from '../../model/chains'
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -114,11 +114,11 @@ const NetworkIcon: React.FC<{}> = () => {
       <img src={GOERLI.icon} width="20px"/>{GOERLI.label}
       </div>
       </MenuItem>
-      <MenuItem onClick={event => handleSelect(event)} disableRipple disabled={true}>
+      {/* <MenuItem onClick={event => handleSelect(event)} disableRipple disabled={true}>
       <div className="inline-flex gap-2">
       <img src={POLYGON.icon} width="20px"/>{POLYGON.label}
       </div>
-      </MenuItem>
+      </MenuItem> */}
       </StyledMenu>
     </div>
   );
