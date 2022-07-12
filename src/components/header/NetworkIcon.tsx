@@ -7,8 +7,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import useWallet from '../../hooks/useWallet';
 
 import { MdSwapHoriz } from 'react-icons/md';
-import { Chain } from '../../model/types'
-import { GET_CHAIN_BY_NAME, GOERLI, OPTIMISM } from '../../model/chains'
+import { GET_CHAIN_BY_NAME, GOERLI, OPTIMISM, POLYGON } from '../../model/chains'
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -46,11 +45,10 @@ const StyledMenu = styled((props: MenuProps) => (
 
 const NetworkIcon: React.FC<{}> = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [currChain, setCurrChain] = React.useState<Chain>();
   const [switchingNetwork, setSwitchingNetwork] = React.useState<boolean>(false);
   const open = Boolean(anchorEl);
 
-  const { wallet, currentChain, setChain } = useWallet()
+  const { currentChain, setChain } = useWallet()
   
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -64,6 +62,7 @@ const NetworkIcon: React.FC<{}> = () => {
     setAnchorEl(null);
     const selectedChain = GET_CHAIN_BY_NAME(event.target.textContent);;
     if (selectedChain) {
+      console.log(selectedChain)
       setSwitchingNetwork(true)
       await setChain({ chainId: selectedChain.hexId })
       setSwitchingNetwork(false)
@@ -113,6 +112,11 @@ const NetworkIcon: React.FC<{}> = () => {
       <MenuItem onClick={event => handleSelect(event)} disableRipple>
       <div className="inline-flex gap-2">
       <img src={GOERLI.icon} width="20px"/>{GOERLI.label}
+      </div>
+      </MenuItem>
+      <MenuItem onClick={event => handleSelect(event)} disableRipple>
+      <div className="inline-flex gap-2">
+      <img src={POLYGON.icon} width="20px"/>{POLYGON.label}
       </div>
       </MenuItem>
       </StyledMenu>

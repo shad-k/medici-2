@@ -3,12 +3,12 @@ import useWallet from '../../hooks/useWallet';
 import { utils } from 'ethers'
 
 import Modal from '@mui/material/Modal';
-import { Contract } from '../../model/types'
+import { Contract, Chain } from '../../model/types'
 import { getContract, getContractForTransactions } from '../../utils/web3';
 
-const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Contract, action: string}> = ({showModal, handleClose, contract, action}) => {
+const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Contract, chain: Chain, action: string}> = ({showModal, handleClose, contract, chain, action}) => {
   
-  const { wallet, connect, setChain } = useWallet()
+  const { wallet } = useWallet()
   const [newBaseURI, setNewBaseURI] = useState<string>()
   const [currClaimBlock, setCurrClaimBlock] = useState<number>()
   const [currMintBlock, setCurrMintBlock] = useState<number>()
@@ -18,14 +18,14 @@ const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Co
   const [newOwnerAddress, setNewOwnerAddress] = useState<string>()
 
   const getCurrentClaimBlock = async () => {
-    const currContract = await getContract(contract.contractaddress, contract.chainid)
+    const currContract = await getContract(contract.contractaddress, chain)
     const claimBlockVal = await currContract.claimsStartBlock()
     console.log("Current claim block: " + claimBlockVal)
     setCurrClaimBlock(claimBlockVal)
   }
 
   const getCurrentMintBlock = async () => {
-    const currContract = await getContract(contract.contractaddress, contract.chainid)
+    const currContract = await getContract(contract.contractaddress, chain)
     const mintBlockVal = await currContract.mintStartBlock()
     console.log("Current mint block: " + mintBlockVal)
     setCurrMintBlock(mintBlockVal)

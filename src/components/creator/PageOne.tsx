@@ -1,6 +1,5 @@
 import React from 'react'
 import { StepperFormProps } from '../../model/types';
-import { readyToTransact } from '../../utils/web3';
 import useWallet from '../../hooks/useWallet';
 
 /* FIXME: rename components */
@@ -9,15 +8,20 @@ const PageOne: React.FC<StepperFormProps> = ({
     handleInputData,
     data
 }) => {
-  const { wallet, connect, setChain } = useWallet()
+  const { wallet, connect } = useWallet()
 
 const onSubmit = async () => {
-    const ready = await readyToTransact(wallet, connect, setChain);
-    if (ready) {
+  try {
+    if (!wallet) {
+      await connect({})
       nextStep();
-    } else {
-      alert("Please connect your wallet to create a collection!")
     }
+    else {
+      nextStep();
+    }
+  } catch {
+    alert("Please connect your wallet!")
+  }
 }
 
 return (

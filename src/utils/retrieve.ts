@@ -30,6 +30,7 @@ export const getChainConfig = async (chain: string): Promise<ChainConfigReturn> 
     return Promise.resolve(response.data)
   }).catch(function(error) {
     // console.log(error)
+    console.log(error)
     return Promise.reject("Error getting chain config")
   });
 }
@@ -97,7 +98,6 @@ export const getContractClaimStatus = async (contractName: string, chainid: stri
     API_PATHS.RETRIEVE_CONTRACT_STATUS,
     {params: request_data}
     ).then(function (response) {
-      console.log(response)
       return Promise.resolve({
         success: true,
         status: response.data.contractStatus,

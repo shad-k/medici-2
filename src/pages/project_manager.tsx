@@ -3,10 +3,9 @@ import useWallet from '../hooks/useWallet'
 import { Contract } from '../model/types'
 import { getAllContracts } from '../utils/retrieve'
 import ContractCardV2 from '../components/projects/ContractCardV2'
-import { Chain } from '../model/types'
 
 const ProjectManager: React.FC<{}> = () => {
-const { wallet, connect, setChain, currentChain } = useWallet()
+const { wallet, currentChain } = useWallet()
 const connectedWallet = wallet?.accounts[0].address;
 
 const [contracts, setContracts] = useState<Contract[]>()

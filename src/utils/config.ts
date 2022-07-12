@@ -229,6 +229,120 @@ export const CONFIG = {
       ],
       instanceAbi: [
         {
+          "inputs": [],
+          "name": "PRBMathSD59x18__DivInputTooSmall",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "rAbs",
+              "type": "uint256"
+            }
+          ],
+          "name": "PRBMathSD59x18__DivOverflow",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "x",
+              "type": "int256"
+            }
+          ],
+          "name": "PRBMathSD59x18__Exp2InputTooBig",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "x",
+              "type": "int256"
+            }
+          ],
+          "name": "PRBMathSD59x18__ExpInputTooBig",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "x",
+              "type": "int256"
+            }
+          ],
+          "name": "PRBMathSD59x18__FromIntOverflow",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "x",
+              "type": "int256"
+            }
+          ],
+          "name": "PRBMathSD59x18__FromIntUnderflow",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "x",
+              "type": "int256"
+            }
+          ],
+          "name": "PRBMathSD59x18__LogInputTooSmall",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "PRBMathSD59x18__MulInputTooSmall",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "rAbs",
+              "type": "uint256"
+            }
+          ],
+          "name": "PRBMathSD59x18__MulOverflow",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "prod1",
+              "type": "uint256"
+            }
+          ],
+          "name": "PRBMath__MulDivFixedPointOverflow",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "prod1",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "denominator",
+              "type": "uint256"
+            }
+          ],
+          "name": "PRBMath__MulDivOverflow",
+          "type": "error"
+        },
+        {
           "anonymous": false,
           "inputs": [
             {
@@ -371,7 +485,45 @@ export const CONFIG = {
             {
               "indexed": false,
               "internalType": "uint256",
-              "name": "newClaimsStartBlock",
+              "name": "newPrice",
+              "type": "uint256"
+            }
+          ],
+          "name": "GDADisabled",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "startingPrice",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "int256",
+              "name": "scaleFactor",
+              "type": "int256"
+            },
+            {
+              "indexed": false,
+              "internalType": "int256",
+              "name": "decayConstant",
+              "type": "int256"
+            }
+          ],
+          "name": "GDAEnabled",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "newMintStartBlock",
               "type": "uint256"
             }
           ],
@@ -540,6 +692,19 @@ export const CONFIG = {
         {
           "inputs": [
             {
+              "internalType": "bytes32",
+              "name": "_merkleroot",
+              "type": "bytes32"
+            }
+          ],
+          "name": "changeMerkleRoot",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "uint256",
               "name": "newBlock",
               "type": "uint256"
@@ -610,6 +775,42 @@ export const CONFIG = {
             }
           ],
           "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_newStartPrice",
+              "type": "uint256"
+            }
+          ],
+          "name": "disableGDA",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_startingPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "int256",
+              "name": "_scaleFactor",
+              "type": "int256"
+            },
+            {
+              "internalType": "int256",
+              "name": "_decayConstant",
+              "type": "int256"
+            }
+          ],
+          "name": "enableGDA",
+          "outputs": [],
+          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -760,6 +961,25 @@ export const CONFIG = {
         {
           "inputs": [],
           "name": "price",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "numTokens",
+              "type": "uint256"
+            }
+          ],
+          "name": "purchasePrice",
           "outputs": [
             {
               "internalType": "uint256",

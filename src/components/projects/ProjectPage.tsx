@@ -6,10 +6,11 @@ import useWallet from '../../hooks/useWallet'
 import ProjectPopup from './ProjectPopup'
 import { BigNumber, utils } from 'ethers'
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
-import { Contract } from '../../model/types'
+import { Contract, Chain } from '../../model/types'
+import { GET_CHAIN_BY_ID } from '../../model/chains'
 
 const ProjectPage: React.FC<{ contractName: string }> = ({contractName}) => {
-  const { wallet, connect } = useWallet()
+  const { wallet } = useWallet()
   const connectedWallet = wallet?.accounts[0]
   const [contract, setContract] = useState<Contract>()
   
@@ -17,6 +18,7 @@ const ProjectPage: React.FC<{ contractName: string }> = ({contractName}) => {
   const [price, setPrice] = useState<any>()
   const [cover, setCover] = useState<string>()
   const [contractStatus, setContractStatus] = useState<string>()
+  const [projectChain, setProjectChain] = useState<Chain>()
   const [numMinted, setNumMinted] = useState<number>()
   const [maxSupply, setMaxSupply] = useState<number>()
   const [thumbnails, setThumbnails] = useState<Array<string>>()
@@ -48,7 +50,6 @@ const ProjectPage: React.FC<{ contractName: string }> = ({contractName}) => {
       try {
         const { success, status } = await getContractClaimStatus(contract.name, contract.chainid)
         if (success) {
-          console.log("Status " + status)
           setContractStatus(status)
         }
       } catch {
@@ -74,18 +75,21 @@ const ProjectPage: React.FC<{ contractName: string }> = ({contractName}) => {
   }, [contract])
 
   const getContractDetails = useCallback(async () => {
-    if (contract) {
-      const currContract = await getContract(contract.contractaddress, contract.chainid)
+    if (contract && projectChain) {
+      const currContract = await getContract(contract.contractaddress, projectChain)
+      console.log(currContract)
       const balance = await currContract.checkBalance()
       setBalance(utils.formatEther(balance._hex.toString()))
-      const price = await currContract.price();
+      const price = await currContract.price()
       setPrice(utils.formatEther(price._hex));
+      console.log("price: " + price)
       const numMinted = await currContract.totalSupply()
       setNumMinted(numMinted.toString())
       const maxSupply = await currContract.maxSupply()
       setMaxSupply(maxSupply.toString())
+      console.log("num minted " + numMinted + " max supply " + maxSupply)
     }
-  }, [wallet, contract])
+  }, [contract, projectChain])
 
   /* -------------------------- Contract interactions ------------------------- */
 
@@ -167,7 +171,10 @@ useEffect(() => {
     verify()
     if (!cover) getCoverImage()
     if (!contractStatus) getContractStatus()
-    if (!price && !numMinted && !maxSupply && !balance) getContractDetails()
+    if (!price && !numMinted && !maxSupply && !balance && projectChain) getContractDetails()
+    if (!projectChain && contract) {
+      setProjectChain(GET_CHAIN_BY_ID(parseInt(contract.chainid)))
+    } 
     // if (!thumbnails) {getCollectionThumbnails()} else {
     //   console.log(thumbnails[1])
     // }
@@ -178,6 +185,7 @@ useEffect(() => {
   numMinted, maxSupply, balance, price, getContractDetails,
   thumbnails, getCollectionThumbnails,
   contractStatus, getContractStatus,
+  projectChain, setProjectChain
   ])
 
   useEffect(() => {
@@ -216,7 +224,7 @@ useEffect(() => {
           </div>
           <div className="p-5 bg-zinc-400/20 backdrop-blur-sm hover:bg-zinc-50/20 hover:backdrop-blur-lg transition ease-in text-center">
             <h1 className="block text-2xl">Chain</h1>
-            { (contract?.chainid === '5') ? <p>Goerli</p> : <p>Optimism</p> }
+            { projectChain?.label }
           </div>
         </div>
         <h1 className="text-5xl -mt-16">{contractName} ({contract!.symbol})</h1>
@@ -224,7 +232,7 @@ useEffect(() => {
         <div className="flex flex-col md:grid grid-cols-2 grid-rows-2 auto-rows-max justify-center items-center gap-7 p-5 w-4/5 lg:w-3/5 mt-10">
         { withdrawalTxHash ? 
             ( <a className="w-full items-center text-center px-4 py-4 rounded-2xl text-medici-primary transition duration-100 hover:scale-105 bg-zinc-400/5 backdrop-blur-sm hover:backdrop-blur-lg border-white border-[1px] space-y-3 h-full hero-collection text-2xl"
-              href={`https://goerli.etherscan.io/tx/${withdrawalTxHash}`}
+              href={`${projectChain?.etherscanUrl}/tx/${withdrawalTxHash}`}
               target="_blank"
               rel="noreferrer">
               Success: Check transaction
@@ -266,8 +274,8 @@ useEffect(() => {
         </div>
         {/* { thumbnails && <p className="text-6xl">{thumbnails.length}</p>} */}
         <div id="modal-container" className="hidden items-center justify-center text-center h-screen">
-          {contract && action &&
-            <ProjectPopup showModal={showModal} handleClose={handleClose} contract={contract} action={action}/>
+          {contract && action && projectChain && 
+            <ProjectPopup showModal={showModal} handleClose={handleClose} contract={contract} chain={projectChain} action={action}/>
           }
         </div>
       </div>

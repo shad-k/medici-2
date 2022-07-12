@@ -28,7 +28,13 @@ const onboard = init({
       id: '0xa',
       token: 'ETH',
       label: 'Optimistic Mainnet',
-      rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04'
+      rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/aZAch5n6Co6vvepI37ogK-QLiCmofL04',
+    },
+    {
+      id: '0x89',
+      token: 'MATIC',
+      label: 'Polygon Matic',
+      rpcUrl: "https://polygon-mainnet.g.alchemy.com/v2/7-JPJoVkE3meApP_qeQ7SAfYCj_YthdR",
     },
     // {
     // id: '0x1',

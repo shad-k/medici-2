@@ -4,11 +4,12 @@ import FontPicker from 'font-picker-react'
 import { BsTwitter } from 'react-icons/bs'
 import { HiOutlineMail } from 'react-icons/hi'
 import { FaDiscord } from 'react-icons/fa'
-import { Claim, Contract } from '../../model/types'
+import { Chain, Claim, Contract } from '../../model/types'
 import useWallet from '../../hooks/useWallet'
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
 import { getContract, verifyMerkleProof } from '../../utils/web3'
 import { getContractClaimStatus, getContractCover } from '../../utils/retrieve'
+import { GET_CHAIN_BY_ID } from '../../model/chains'
 const localenv = CONFIG.DEV
 
 interface FreeTierProps {
@@ -22,7 +23,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
   contractName,
   isPreview,
 }) => {
-  const { wallet, connect, setChain, currentChain } = useWallet();
+  const { wallet, connect, setChain } = useWallet();
 
   const connectedWallet = wallet?.accounts[0];
 
@@ -37,22 +38,12 @@ const FreeTier: React.FC<FreeTierProps> = ({
   const [isVerified, setIsVerified] = React.useState<boolean>();
   const [verifiedProof, setVerifiedProof] = React.useState<string>();
   const [contractStatus, setContractStatus] = React.useState<string>();
-  const [etherscanUrl, setEtherscanUrl] = React.useState<string>();
-
-  const getEtherscanUrl = React.useCallback(async () => {
-    if (contract) {
-      if (contract.chainid === '5') {
-        setEtherscanUrl("https://goerli.etherscan.io/tx/")
-      } else if (contract.chainid === '10') {
-        setEtherscanUrl("https://optimistic.etherscan.io/tx/")
-      }
-    }
-  }, [contract])
+  const [projectChain, setProjectChain] = React.useState<Chain>();
 
   const getContractStatus = React.useCallback(async () => {
-    if (contract) {
+    if (contract && projectChain) {
       try {
-        const { success, status } = await getContractClaimStatus(contract.name, contract.chainid)
+        const { success, status } = await getContractClaimStatus(contract.name, projectChain.id.toString())
         if (success) {
           setContractStatus(status);
         }
@@ -60,7 +51,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
         alert('Could not get contract status');
       }
     }
-  }, [contract])
+  }, [contract, projectChain])
 
   const isAllowlistMember = React.useCallback(async () => {
     if (connectedWallet && contract) {
@@ -75,20 +66,20 @@ const FreeTier: React.FC<FreeTierProps> = ({
   }, [connectedWallet, contract])
 
   const getName = React.useCallback(async () => {
-    if (claim && contract) {
-    const currContract = await getContract(claim.contract, contract.chainid)
+    if (claim && contract && projectChain) {
+    const currContract = await getContract(claim.contract, projectChain)
     const collectionName = await currContract.name()
     setName(collectionName)
     }
-  }, [claim, contract])
+  }, [claim, contract, projectChain])
 
   const getContractOwner = React.useCallback(async () => {
-    if (claim && contract) {
-    const currContract = await getContract(claim.contract, contract.chainid)
+    if (claim && contract && projectChain) {
+    const currContract = await getContract(claim.contract, projectChain)
     const contractOwner = await currContract.masterAddress()
     setMasterAddress(contractOwner)
     }
-  }, [claim, contract])
+  }, [claim, contract, projectChain])
 
   const getCoverImage = React.useCallback(async () => {
     if (contractName) {
@@ -98,14 +89,14 @@ const FreeTier: React.FC<FreeTierProps> = ({
   }, [contractName]);
 
   const mint = async () => {
-    if (wallet && connectedWallet) {
+    if (wallet && connectedWallet && projectChain) {
       setMinting(true);
       try {
-        await setChain({chainId: utils.hexValue(BigNumber.from(claim.chainid))})
+        await setChain({chainId: projectChain.hexId})
         const walletProvider = new ethers.providers.Web3Provider(wallet.provider);
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
-        const price = await contract.price()
+        const price = await contract.initialPrice()
         const tx = await contract.mint(connectedWallet?.address, 1, {
           value: price,
           gasLimit: 9000000,
@@ -126,10 +117,10 @@ const FreeTier: React.FC<FreeTierProps> = ({
   };
 
   const claimOnContract = async () => {
-    if (wallet && connectedWallet && isVerified && verifiedProof !== null) {
+    if (wallet && connectedWallet && isVerified && verifiedProof !== null && projectChain) {
       setClaiming(true);
       try {
-        await setChain({chainId: utils.hexValue(BigNumber.from(claim.chainid))})
+        await setChain({chainId: projectChain.hexId})
         const walletProvider = new ethers.providers.Web3Provider(wallet.provider)
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
@@ -139,7 +130,6 @@ const FreeTier: React.FC<FreeTierProps> = ({
           gasLimit: 9000000,
         })
         const claimResponse = await tx.wait()
-        console.log(claimResponse)
         setClaimTxHash(claimResponse.transactionHash)
       } catch (error: any) {
         if (error.message) {
@@ -158,13 +148,15 @@ const FreeTier: React.FC<FreeTierProps> = ({
       getName();
       getContractOwner();
       getCoverImage();
-      getEtherscanUrl()
     }
     if (contractName && !isPreview) {
       isAllowlistMember()
     } 
-    if (contract) {
+    if (contract && !contractStatus) {
       getContractStatus()
+    }
+    if (contract && !projectChain) {
+      setProjectChain(GET_CHAIN_BY_ID(parseInt(contract.chainid)))
     }
   }, [
     getName,
@@ -181,8 +173,8 @@ const FreeTier: React.FC<FreeTierProps> = ({
     cover,
     masterAddress,
     name,
-    etherscanUrl,
-    getEtherscanUrl
+    projectChain,
+    setProjectChain
   ]);
 
   React.useEffect(() => {
@@ -251,7 +243,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
         <span className="md:text-xl p-3 rounded-2xl">Contract: 
           <a
             className="mx-2"
-            href={`${etherscanUrl}${claim?.contract}`}
+            href={`${projectChain?.etherscanUrl}/address/${claim?.contract}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -304,7 +296,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
             claimTxHash ? (
               <a
                 className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
-                href={`${etherscanUrl}${claimTxHash}`}
+                href={`${projectChain?.etherscanUrl}/tx/${claimTxHash}`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -341,7 +333,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
           (txHash ? (
             <a
               className="p-4 rounded-3xl text-2xl bg-emerald-800 text-white w-64 mx-auto text-center my-4"
-              href={`${etherscanUrl}${txHash}`}
+              href={`${projectChain?.etherscanUrl}/tx/${txHash}`}
               target="_blank"
               rel="noreferrer"
             >
