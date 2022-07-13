@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import useWallet from '../../hooks/useWallet';
 import { utils } from 'ethers'
 
@@ -16,20 +16,21 @@ const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Co
   const [newClaimBlock, setNewClaimBlock] = useState<string>()
   const [newPrice, setNewPrice] = useState<string>()
   const [newOwnerAddress, setNewOwnerAddress] = useState<string>()
+  const [newMaxMintsPerPerson, setNewMaxMintsPerPerson] = useState<string>()
 
-  const getCurrentClaimBlock = async () => {
+  const getCurrentClaimBlock = useCallback(async () => {
     const currContract = await getContract(contract.contractaddress, chain)
     const claimBlockVal = await currContract.claimsStartBlock()
     console.log("Current claim block: " + claimBlockVal)
     setCurrClaimBlock(claimBlockVal)
-  }
+  }, [chain, contract])
 
-  const getCurrentMintBlock = async () => {
+  const getCurrentMintBlock = useCallback(async () => {
     const currContract = await getContract(contract.contractaddress, chain)
     const mintBlockVal = await currContract.mintStartBlock()
     console.log("Current mint block: " + mintBlockVal)
     setCurrMintBlock(mintBlockVal)
-  }
+  }, [chain, contract])
 
   const onChangeBaseURI = async () => {
     console.log("Changing base URI")
@@ -112,6 +113,21 @@ const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Co
         } else {
           alert('Something went wrong, please try again!')
         }
+      }
+    }
+  }
+
+  const onSetMaxMintsPerPerson = async () => {
+    if (contract && newMaxMintsPerPerson) {
+      try {
+        const myContract = await getContractForTransactions(wallet, contract.contractaddress)
+        await myContract.changeMaxMintPerPerson(newMaxMintsPerPerson)
+        } catch (error: any) {
+          if (error.message) {
+            alert(error.message)
+          } else {
+            alert('Something went wrong, please try again!')
+          }
       }
     }
   }
@@ -206,6 +222,22 @@ const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Co
     </div>
     </Modal>
   )
+  case ("setMaxMintsPerPerson"):
+    return (
+      <Modal
+        open={showModal}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        disableScrollLock
+      >
+      <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center outline-none space-y-5">
+        <label htmlFor="input-field">Set Max Mints Per Person</label>
+        <input id="input-field" className="text-black rounded-sm p-2" onChange={event => setNewMaxMintsPerPerson(event.target.value)}></input>
+        <button className="bg-medici-purple p-3 rounded-2xl" onClick={() => onSetMaxMintsPerPerson()}>Submit</button>
+      </div>
+      </Modal>
+    )
   default:
       return (
         <Modal

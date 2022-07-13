@@ -2,9 +2,7 @@ import type {
   ConnectOptions,
   DisconnectOptions,
   WalletState,
-  ConnectedChain,
 } from '@web3-onboard/core'
-import type { BigNumber, Wallet } from 'ethers'
 
 export type Owner = {
   id: string

@@ -96,6 +96,7 @@ export const generateNewContract = (callerWallet: any, merkleRoot: string, props
         uint256 _mintStartBlock
       ) 
       */
+     console.log(props)
       try {
         const result_contract = await FactoryContract.createContract(
         props.name, // name
@@ -142,11 +143,13 @@ export const whitelist = async (contractName: string, chainId: string, whitelist
 }
 
 /* call to verify backend results */
-export const getNewLaunchedContract = async (masterAddress: string, callerWallet: any): Promise<Contract> => {
+export const getNewLaunchedContract = async (masterAddress: string, chain: Chain): Promise<Contract> => {
   const request_data = {
       "masterAddress": masterAddress,
-      "chainID": parseInt(callerWallet.chains[0].id, 16)
+      "chainID": chain.id
   }
+  console.log("Getting new launched contract")
+  console.log(request_data)
   return apiClient.post(
       localenv.api.paths.getNewLaunchedContract, request_data,
       {

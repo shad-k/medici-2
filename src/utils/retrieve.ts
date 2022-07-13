@@ -1,5 +1,5 @@
 import apiClient from './apiClient';
-import { API_PATHS, CONFIG } from './config';
+import { API_PATHS } from './config';
 import { ChainConfigReturn } from '../model/types';
 import { utils } from 'ethers';
 

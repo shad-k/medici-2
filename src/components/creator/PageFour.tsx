@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { triggerUploadImageData } from '../../utils/upload';
+import { triggerUploadImageData, createZip } from '../../utils/upload';
 
 import Modal from '@mui/material/Modal';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -37,14 +37,15 @@ const PageFour: React.FC<StepperFormProps> = ({
     
     },[showModal])
 
-    const uploadImageData = async (file: File) => {
-      setUploadProgress(0);
-    
-      if (file === null || file === undefined) {
+    const uploadImageData = async (files: FileList) => {
+      if (files === null || files === undefined) {
         setShowLoader(false);
         return;
-      } else {
-        const formdata = new FormData();
+      }
+      console.log(files)
+      const formdata = new FormData();
+      const file = files[0]
+      if (file.name.endsWith(".zip") && files.length === 1) {
         formdata.append("images", file)
         formdata.append("isMetadataUploaded", data.isMetadataUploaded)
         if (!data.isMetadataUploaded) {
@@ -52,20 +53,41 @@ const PageFour: React.FC<StepperFormProps> = ({
         } else {
           formdata.append("renameFiles", "false")
         }
-        setShowLoader(true)
+      } else {
+        const zip = await createZip(files)
+        console.log(zip)
+        formdata.append("images", zip)
+        formdata.append("isMetadataUploaded", data.isMetadataUploaded)
+        if (!data.isMetadataUploaded) {
+        formdata.append("renameFiles", "true")
+        } else {
+          formdata.append("renameFiles", "false")
+        }
+        uploadFormData(formdata)
+      }
+    }
 
+    const uploadFormData = async (formdata: FormData) => {
+      setUploadProgress(0);
+      setShowLoader(true)
+      try {
         const res = await triggerUploadImageData(data.name, formdata, (progressEvent: any) => {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           setUploadProgress(progress);
         })
         setImageUploadResponse(res);
         const metadata = await getMetadata(res.randomMetadataURL);
-        console.log(metadata)
         setMetadataFromIPFS(JSON.stringify(metadata, null, 2));
         await handleInputData("baseURI", res.baseURI);
         await handleInputData("maxSupply", res.totalSupply);
         setShowLoader(false);
         handleOpen()
+      } catch (error: any) {
+        if (error.msg) {
+          alert(error.msg)
+        } else {
+          alert("Something went wrong!")
+        }
       }
     }
 
@@ -80,10 +102,10 @@ const PageFour: React.FC<StepperFormProps> = ({
         <input
             type="file"
             name="collectionImageData"
-            accept=".zip"
             id="collectionImageDataField"
             style={{'display': 'none'}}
-            onChange={(event) => uploadImageData(event.target.files![0])}
+            onChange={(event) => uploadImageData(event.target.files!)}
+            multiple
         />
         <label htmlFor="collectionImageDataField">
             <div className="flex w-full h-2/5 items-center">

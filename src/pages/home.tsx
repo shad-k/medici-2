@@ -7,11 +7,11 @@ import { RiCloseFill } from 'react-icons/ri'
 
 const Home: React.FC<{}> = () => {
   const [showModal, setShowModal] = useState(false);
-  const toggleModal = () => setShowModal(!showModal)
+  const toggleModal = () => {setShowModal(!showModal)}
 
 useEffect(() => {
   toggleModal()
-}, [toggleModal])
+}, [])
 
 useEffect(() => {
   if (showModal) {
@@ -19,7 +19,7 @@ useEffect(() => {
   } else {
     document.getElementById("modal-container")!.style.display = 'none'
   }
-},[showModal])
+}, [showModal, toggleModal])
 
   return (
     <div className="pb-20">

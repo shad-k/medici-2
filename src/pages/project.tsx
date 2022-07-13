@@ -1,6 +1,5 @@
-import React, {useState} from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom';
-import useWallet from '../hooks/useWallet';
 import ProjectPage from '../components/projects/ProjectPage';
 
 export const ProjectPageRenderer: React.FC<{

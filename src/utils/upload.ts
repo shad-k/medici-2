@@ -1,5 +1,7 @@
 import apiClient from './apiClient'
 import { CONFIG } from './config'
+import JSZip from 'jszip';
+import FileSaver from 'file-saver';
 
 const localenv = CONFIG.DEV
 
@@ -80,4 +82,13 @@ export const uploadCoverImage = async (name: string, file: File) => {
     });
 }
 
-
+export const createZip = async (files: FileList) => {
+  const zip = new JSZip();
+  const zipFolder = zip.folder("folder.zip")
+  console.log(zipFolder)
+  for (let i = 0; i < files.length; i++) {
+    zipFolder!.file(files[i].name, files[i])
+  }
+  
+  return zip.generateAsync({ type: 'blob' });
+}
