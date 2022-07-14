@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { triggerUploadMetadata } from '../../utils/upload';
+import { triggerUploadMetadata, createZip } from '../../utils/upload';
 import Modal from '@mui/material/Modal';
 import { LinearProgress } from '@mui/material';
 
@@ -45,29 +45,35 @@ const PageThree: React.FC<StepperFormProps> = ({
     //     handleInputData("hasMetadata", true);
     // }
 
-    const uploadMetadata = async (file: File) => {
+    const uploadMetadata = async (files: FileList) => {
       setUploadProgress(0);
+      const file = files[0]
     
-      if (file === null || file === undefined) {
+      if (files === null || files === undefined) {
         setShowLoader(false);
         return;
-      } else {
-          try {
-            const formdata = new FormData();
-            formdata.append("metadata", file)
-            setShowLoader(true)
-          
-            const res = triggerUploadMetadata(data.name, formdata, (progressEvent: any) => {
-              const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              setUploadProgress(progress);
-            });
-            console.log(res);
-            setHasCustomMetadata(true);
-            setShowLoader(false);
-          } catch {
-            alert("Something went wrong!")
-            setShowLoader(false);
-          }
+      } else if (file.name.endsWith(".zip")){
+        alert("No zip files allowed!")
+        return;
+      }
+
+      try {
+        const formdata = new FormData();
+        const zip = await createZip(files);
+        const zipFile = new File([zip], "metadata", {type: "application/zip"});
+        formdata.append("metadata", zipFile)
+        setShowLoader(true)
+      
+        const res = triggerUploadMetadata(data.name, formdata, (progressEvent: any) => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          setUploadProgress(progress);
+        });
+        console.log(res);
+        setHasCustomMetadata(true);
+        setShowLoader(false);
+      } catch {
+        alert("Something went wrong!")
+        setShowLoader(false);
       }
     }
     
@@ -97,10 +103,9 @@ const PageThree: React.FC<StepperFormProps> = ({
                 <input
                     type="file"
                     name="collectionMetadata"
-                    accept=".zip"
                     id="collectionMetadataField"
                     style={{'display': 'none'}}
-                    onChange={(event) => uploadMetadata(event.target.files![0])}
+                    onChange={(event) => uploadMetadata(event.target.files!)}
                 />
                 <label htmlFor="collectionMetadataField">
                     { !hasCustomMetadata &&

@@ -1,5 +1,5 @@
 import apiClient from './apiClient'
-import { CONFIG } from './config'
+import { API_PATHS, CONFIG } from './config'
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
 
@@ -13,8 +13,37 @@ export const triggerUploadImageData = async (
   name: string,
   formdata: FormData,
   onImageDataProgress: any) => {
+    console.log("Uploading image file " + formdata.get("images"))
   return apiClient.post(
     localenv.api.paths.uploadImageData,
+    formdata,
+    {
+      "headers": {"Content-Type": "form-data"},
+      "params": {"collection": name},
+      "onUploadProgress": onImageDataProgress
+    },
+    ).then((response) => {
+      console.log(response);
+      const res = {
+          baseURI: response.data.baseURI,
+          totalSupply: response.data.totalSupply,
+          randomImageURL: response.data.randomImageURL,
+          randomMetadataURL: response.data.randomMetadataURL
+      }
+      return Promise.resolve(res);
+    }).catch((error) => {
+      console.log(error);
+      return Promise.reject("error");
+  })
+}
+
+export const triggerUploadMusicData= async (
+  name: string,
+  formdata: FormData,
+  onImageDataProgress: any) => {
+  console.log("Uploading music file " + formdata.get("files"))
+  return apiClient.post(
+    API_PATHS.UPLOAD_MUSIC_DATA,
     formdata,
     {
       "headers": {"Content-Type": "form-data"},

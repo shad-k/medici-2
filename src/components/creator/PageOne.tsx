@@ -11,6 +11,7 @@ const PageOne: React.FC<StepperFormProps> = ({
   const { wallet, connect } = useWallet()
 
 const onSubmit = async () => {
+  console.log(data)
   try {
     if (!wallet) {
       await connect({autoSelect: { 
@@ -33,7 +34,7 @@ return (
             <span className="text-[40px] md:text-[60px] text-center font-semibold">I want to launch</span>
             <select id="collection-type" className="bg-transparent text-[40px] md:text-[60px] inline text-center text-[#9403fc] font-semibold p-2 w-[250px]" onChange={event => handleInputData("collection_type", event.target.value)}>
                 <option>image</option>
-                <option disabled={true} className="w-3/5">music - coming soon</option>
+                <option className="w-3/5">music</option>
                 <option disabled={true} className="w-3/5">video - coming soon</option>
             </select>
             <span className="text-[40px] md:text-[60px] text-center font-semibold">NFTs that are all </span>

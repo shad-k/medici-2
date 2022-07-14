@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { triggerUploadImageData, createZip } from '../../utils/upload';
+import { triggerUploadImageData, createZip, triggerUploadMusicData } from '../../utils/upload';
 
 import Modal from '@mui/material/Modal';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -42,22 +42,16 @@ const PageFour: React.FC<StepperFormProps> = ({
         setShowLoader(false);
         return;
       }
-      console.log(files)
       const formdata = new FormData();
       const file = files[0]
-      if (file.name.endsWith(".zip") && files.length === 1) {
-        formdata.append("images", file)
-        formdata.append("isMetadataUploaded", data.isMetadataUploaded)
-        if (!data.isMetadataUploaded) {
-        formdata.append("renameFiles", "true")
-        } else {
-          formdata.append("renameFiles", "false")
-        }
+      if (file.name.endsWith(".zip")){
+        alert("No zip files allowed!")
+        return;
       } else {
-        const zip = await createZip(files)
-        const zipFile = new File([zip], "images.zip", {type: "application/zip"});
-        console.log(zipFile)
-        formdata.append("images", zipFile)
+        const zip = await createZip(files);
+        const filename = (data.collection_type === "image") ? "images" : "files";
+        const zipFile = new File([zip], filename, {type: "application/zip"});
+        (data.collection_type === "image") ? formdata.append("images", zipFile) : formdata.append("files", zipFile)
         formdata.append("isMetadataUploaded", data.isMetadataUploaded)
         if (!data.isMetadataUploaded) {
         formdata.append("renameFiles", "true")
@@ -71,8 +65,11 @@ const PageFour: React.FC<StepperFormProps> = ({
     const uploadFormData = async (formdata: FormData) => {
       setUploadProgress(0);
       setShowLoader(true)
+
+      const f = (data.collection_type === "image") ? triggerUploadImageData : triggerUploadMusicData
+
       try {
-        const res = await triggerUploadImageData(data.name, formdata, (progressEvent: any) => {
+        const res = await f(data.name, formdata, (progressEvent: any) => {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           setUploadProgress(progress);
         })
