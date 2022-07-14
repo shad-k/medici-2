@@ -55,8 +55,9 @@ const PageFour: React.FC<StepperFormProps> = ({
         }
       } else {
         const zip = await createZip(files)
-        console.log(zip)
-        formdata.append("images", zip)
+        const zipFile = new File([zip], "images.zip", {type: "application/zip"});
+        console.log(zipFile)
+        formdata.append("images", zipFile)
         formdata.append("isMetadataUploaded", data.isMetadataUploaded)
         if (!data.isMetadataUploaded) {
         formdata.append("renameFiles", "true")

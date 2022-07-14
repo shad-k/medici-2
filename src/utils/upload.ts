@@ -84,11 +84,11 @@ export const uploadCoverImage = async (name: string, file: File) => {
 
 export const createZip = async (files: FileList) => {
   const zip = new JSZip();
-  const zipFolder = zip.folder("folder.zip")
-  console.log(zipFolder)
+  const zipFolder = zip.folder("folder")
+
   for (let i = 0; i < files.length; i++) {
     zipFolder!.file(files[i].name, files[i])
   }
-  
-  return zip.generateAsync({ type: 'blob' });
+  console.log(zip)
+  return zipFolder!.generateAsync({ type: 'blob' });
 }

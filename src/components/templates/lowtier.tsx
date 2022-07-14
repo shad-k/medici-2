@@ -125,7 +125,7 @@ const LowTier: React.FC<LowTierProps> = ({
         const walletProvider = new ethers.providers.Web3Provider(wallet.provider)
         const signer = walletProvider.getSigner(connectedWallet?.address)
         const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
-        const price = await contract.initialPrice()
+        const price = await contract.price()
         const tx = await contract.claim(connectedWallet?.address, 1, verifiedProof, {
           value: price,
           gasLimit: 30000000,
