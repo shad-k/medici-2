@@ -24,6 +24,7 @@ const Creator: React.FC<{}> = () => {
     merkleRoot: '',
     claimStartBlock: '0',
     mintStartBlock: '0',
+    numCopies: '1'
   });
 
   const nextStep = () => {

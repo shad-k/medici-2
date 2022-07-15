@@ -17,11 +17,12 @@ const PageFour: React.FC<StepperFormProps> = ({
     const [uploadProgress, setUploadProgress] = useState<number>(0);
     const [showLoader, setShowLoader] = useState<boolean>(false);
     const [imageUploadResponse, setImageUploadResponse] = useState<any>();
+    const [imageUploadSuccess, setImageUploadSuccess] = useState<boolean>(false)
     const [metadataFromIPFS, setMetadataFromIPFS] = useState<any>();
 
     const onSubmit = () => {
       // handleOpen();
-      if (!imageUploadResponse) {
+      if (!imageUploadSuccess) {
         alert("Please upload your project!")
       } else {
         nextStep();
@@ -58,6 +59,7 @@ const PageFour: React.FC<StepperFormProps> = ({
         } else {
           formdata.append("renameFiles", "false")
         }
+        formdata.append("numberOfCopies", data.numCopies)
         uploadFormData(formdata)
       }
     }
@@ -80,11 +82,13 @@ const PageFour: React.FC<StepperFormProps> = ({
         await handleInputData("maxSupply", res.totalSupply);
         setShowLoader(false);
         handleOpen()
+        setImageUploadSuccess(true)
       } catch (error: any) {
         if (error.msg) {
           alert(error.msg)
         } else {
           alert("Something went wrong!")
+          setImageUploadSuccess(false)
         }
       }
     }
@@ -95,8 +99,16 @@ const PageFour: React.FC<StepperFormProps> = ({
           <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text text-[#9403fc] font-semibold">Upload your collection media</h1>
           <h2 className="text-zinc-500">This is where you upload the content for your collection. If you’re not sure about our format, check our docs here.</h2>
       </div>
-      { !imageUploadResponse ?
-      <div className="m-10">
+      { !imageUploadSuccess ?
+      <div className="m-10 space-y-10">
+        { (data.token_type === "identical") && (
+        <div className="m-5">
+          <label
+            htmlFor="numCopies"
+            className="block py-2 text-transparent tracking-wide bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold"
+          >Number of Copies</label>
+          <input type="number" name="numCopies" className="text-black p-2" onChange={(event) => handleInputData("numCopies", parseInt(event.target.value))}></input>
+        </div>) }
         <input
             type="file"
             name="collectionImageData"
@@ -110,7 +122,8 @@ const PageFour: React.FC<StepperFormProps> = ({
                 <span className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl m-auto text-center whitespace-nowrap">Upload Collection</span>
             </div>
         </label>
-      </div> :
+      </div> 
+      :
       <div className="m-10">
         <div className="flex w-full h-2/5 items-center">
           <span className="bg-slate-500 p-3 rounded-3xl m-auto text-center whitespace-nowrap">Upload Collection</span>

@@ -40,7 +40,7 @@ return (
             <span className="text-[40px] md:text-[60px] text-center font-semibold">NFTs that are all </span>
             <select id="token-type" className="bg-transparent text-[40px] md:text-[60px] inline w-fit text-center tracking-wide text-transparent bg-clip-text text-[#9403fc] font-semibold" onChange={event => handleInputData("token_type", event.target.value)}>
                 <option>unique</option>
-                <option disabled={true}>identical</option>
+                <option>identical</option>
             </select>
             <div className="block m-10">
               <button className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[100px]" onClick={onSubmit}>Let's go!</button>
