@@ -14,10 +14,12 @@ const onSubmit = async () => {
   console.log(data)
   try {
     if (!wallet) {
-      await connect({autoSelect: { 
-        label: 'Wallet Connect',
-        disableModals: false
-      }})
+      await connect({
+        autoSelect: { 
+          label: 'Wallet Connect',
+          disableModals: false
+        }
+      })
       nextStep();
     }
     else {
