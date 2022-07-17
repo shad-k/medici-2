@@ -58,11 +58,12 @@ const PageFive: React.FC<StepperFormProps> = ({
     <div className="w-full flex flex-col items-center p-10 h-screen">
         <div className="text-center w-4/5 mt-10 md:mt-52">
           <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-[#9403fc] font-semibold">Does your collection have an allowlist?</h1>
+          <h2 className="text-zinc-500">Reward community members and fans with a guranteed mint!</h2>
         </div>
         <div id="menu-options" className="flex flex-col space-y-4 m-10 items-center">
+        <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">No</button>
         <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={onUploadAllowlist}>Yes</button>
-          <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">No</button>
-          <a href="https://docs.medicilabs.xyz/docs/Minting/overview#allow-listing" className="bg-[#2e2c38] hover:bg-gradient-to-br text-center from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">What's that?</a>
+          <a href="https://docs.medicilabs.xyz/docs/Minting/overview#allow-listing" target="_blank"  className="bg-[#2e2c38] hover:bg-gradient-to-br text-center from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">What's that?</a>
         </div>
         <div id="allowlist-options" className="m-10 items-center hidden space-y-5 w-3/5">
           <div id="allowlist-upload">
