@@ -52,7 +52,7 @@ const LowTier: React.FC<LowTierProps> = ({
         alert('Could not get contract status');
       }
     }
-  }, [contract, contractStatus])
+  }, [contract])
 
   const isAllowlistMember = React.useCallback(async () => {
     if (connectedWallet && contract) {
@@ -64,7 +64,7 @@ const LowTier: React.FC<LowTierProps> = ({
         setIsVerified(false)
       }
     }
-  }, [connectedWallet, isVerified, contract])
+  }, [connectedWallet, contract])
 
   const getName = React.useCallback(async () => {
     if (claim && contract && projectChain) {
@@ -72,7 +72,7 @@ const LowTier: React.FC<LowTierProps> = ({
     const collectionName = await currContract.name()
     setName(collectionName)
     }
-  }, [claim, contract])
+  }, [claim, contract, projectChain])
 
   const getContractOwner = React.useCallback(async () => {
     if (claim && contract && projectChain) {
@@ -80,7 +80,7 @@ const LowTier: React.FC<LowTierProps> = ({
     const contractOwner = await currContract.masterAddress()
     setMasterAddress(contractOwner)
     }
-  }, [claim, contract])
+  }, [claim, contract, projectChain])
 
   const getCoverImage = React.useCallback(async () => {
     if (contractName) {

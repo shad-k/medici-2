@@ -4,8 +4,8 @@ import { getThumbnails } from '../../utils/reservations'
 import { getContract, getContractForTransactions } from '../../utils/web3'
 import useWallet from '../../hooks/useWallet'
 import ProjectPopup from './ProjectPopup'
-import { BigNumber, utils } from 'ethers'
-import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
+import { utils } from 'ethers'
+import { API_ENDPOINT, API_PATHS } from '../../utils/config'
 import { Contract, Chain } from '../../model/types'
 import { GET_CHAIN_BY_ID } from '../../model/chains'
 
@@ -164,7 +164,7 @@ const ProjectPage: React.FC<{ contractName: string }> = ({contractName}) => {
   }
   })()
   
-}, [contract, setContract])
+}, [contract, contractName, setContract])
 
 useEffect(() => {
   if (contract) {
@@ -218,10 +218,15 @@ useEffect(() => {
           <h1 className="block text-2xl">Minted</h1>
           { (numMinted && maxSupply) && <p className="text-lg">{numMinted} / {maxSupply} </p> }
           </div>
+          <a href={`${projectChain?.etherscanUrl}/address/${contract?.contractaddress}`}
+            target="_blank"
+            rel="noreferrer"
+          >
           <div className="p-5 bg-zinc-400/20 backdrop-blur-sm hover:bg-zinc-50/20 hover:backdrop-blur-lg transition ease-in text-center">
             <h1 className="block text-2xl">Address</h1>
             <p className="text-lg overflow-hidden overflow-ellipsis block w-full">{contract?.contractaddress}</p>
           </div>
+          </a>
           <div className="p-5 bg-zinc-400/20 backdrop-blur-sm hover:bg-zinc-50/20 hover:backdrop-blur-lg transition ease-in text-center">
             <h1 className="block text-2xl">Chain</h1>
             { projectChain?.label }
@@ -264,12 +269,17 @@ useEffect(() => {
           <button
             className="w-full items-center text-center px-4 py-4 rounded-2xl text-medici-primary transition duration-100 hover:scale-105 bg-zinc-400/5 backdrop-blur-sm hover:backdrop-blur-lg border-white border-[1px] space-y-3 h-full hero-collection"
             onClick={() => { setCurrAction("changePrice"); handleOpen()}}>
-            <h1 className="text-2xl">Change Price</h1>
+            <h1 className="text-2xl">Set Price</h1>
           </button>
           <button
             className="w-full items-center text-center px-4 py-4 rounded-2xl text-medici-primary transition duration-100 hover:scale-105 bg-zinc-400/5 backdrop-blur-sm hover:backdrop-blur-lg border-white border-[1px] space-y-3 h-full hero-collection"
             onClick={() => { setCurrAction("transferOwnership"); handleOpen()}}>
             <h1 className="text-2xl">Transfer Ownership</h1>
+          </button>
+          <button
+            className="w-full items-center text-center px-4 py-4 rounded-2xl text-medici-primary transition duration-100 hover:scale-105 bg-zinc-400/5 backdrop-blur-sm hover:backdrop-blur-lg border-white border-[1px] space-y-3 h-full hero-collection"
+            onClick={() => { setCurrAction("setMaxMintsPerPerson"); handleOpen()}}>
+            <h1 className="text-2xl">Set Max # Mints Per Person</h1>
           </button>
         </div>
         {/* { thumbnails && <p className="text-6xl">{thumbnails.length}</p>} */}

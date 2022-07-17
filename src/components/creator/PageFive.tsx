@@ -1,16 +1,60 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { getMerkleRoot, readyToTransact } from '../../utils/web3'
+import { getMerkleRoot, readyToTransact, generateNewContract, getNewLaunchedContract, whitelist } from '../../utils/web3'
 import { parseData } from '../../utils/parse'
 import useWallet from '../../hooks/useWallet'
+import { Contract } from '../../model/types';
+import { Modal, CircularProgress } from '@mui/material';
+import { utils } from 'ethers'
 
 const PageFive: React.FC<StepperFormProps> = ({
     nextStep,
     handleInputData,
     data
 }) => {
-    const { wallet, connect, setChain } = useWallet();
+    const { wallet, connect, setChain, currentChain } = useWallet();
+    const connectedWallet = wallet?.accounts[0]
     const [allowlistStrData, setAllowlistStrData] = useState<any>();
+    const [showModal, setShowModal] = useState(false);
+    const [ContractCreationResult, setContractCreationResult] = useState<Contract>()
+    const [ContractCreationSuccess, setContractCreationSuccess] = useState<boolean>(false)
+    const toggleModal = () => setShowModal(!showModal)
+
+    const generateSmartContract = async () => {
+      try {
+          await generateNewContract(
+            wallet,
+            data.merkleRoot,
+            { 
+              name: data.name,
+              symbol: data.symbol,
+              baseuri: data.baseURI,
+              maxSupply: data.maxSupply,
+              price: "0.01",
+              maxMintsPerPerson: 1,
+              masterAddress: utils.getAddress(connectedWallet!.address),
+              claimStartBlock: "0",
+              mintStartBlock: "0"
+          });
+          const result = await getNewLaunchedContract(utils.getAddress(connectedWallet!.address), currentChain!);
+          setContractCreationResult(result);
+          console.log("Etherscan url: " + `${currentChain?.etherscanUrl}/tx/${result.txhash}`)
+          await whitelist(data.name, currentChain!.hexId, data.whitelistedAddresses, data.merkleRoot);
+          setContractCreationSuccess(true);
+      } catch {
+          setContractCreationSuccess(false);
+          alert("Something went wrong!")
+      }
+    }
+    
+    useEffect(() => {
+      if (showModal) {
+        document.getElementById("modal-container")!.style.display = 'block'
+      } else {
+        document.getElementById("modal-container")!.style.display = 'none'
+      }
+    
+    },[showModal])
 
     const onSubmit = async () => {
       if (allowlistStrData) {
@@ -20,16 +64,14 @@ const PageFive: React.FC<StepperFormProps> = ({
           await handleInputData("whitelistedAddresses", parsedStrings);
           const merkleRoot = await getMerkleRoot(parsedStrings);
           await handleInputData("merkleRoot", merkleRoot);
-          // console.log(data);
-          nextStep();
         } catch {
           alert("Allowlist upload failed!")
         }
+        toggleModal()
+        await generateSmartContract()
       } else {
-        console.log("no allow list provided")
         if (!wallet) {
           alert("Please connect your wallet and try again!")
-          await readyToTransact(wallet, connect, setChain);
         }
         else {
           /* medici wallet address as second address for merkle tree */
@@ -37,7 +79,9 @@ const PageFive: React.FC<StepperFormProps> = ({
           await handleInputData("whitelistedAddresses", parsedStrings);
           const merkleRoot = await getMerkleRoot(parsedStrings);
           await handleInputData("merkleRoot", merkleRoot);
-          nextStep();
+          console.log(data);
+          toggleModal()
+          await generateSmartContract()
         }
       }
     }
@@ -91,6 +135,25 @@ const PageFive: React.FC<StepperFormProps> = ({
         <div id="back-button" className="hidden justify-start absolute bottom-24 left-10">
           <button className="text-[#8E00FF] text-2xl" onClick={onBack}>Back</button>
         </div>
+        <div id="modal-container" className="flex items-center justify-center text-center h-screen">
+          <Modal
+            open={showModal}
+            onClose={toggleModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+          <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
+            {(!ContractCreationResult) && <h1 id="modal-header" className="text-center text-2xl">Generating your Smart Contract</h1>}
+            {(!ContractCreationResult) && <p id="modal-text">Our platform waits for two blocks to confirm your transaction, to ensure your transaction is secure</p>}
+            <br></br>
+            { (ContractCreationSuccess && ContractCreationResult) ? 
+            <a 
+            target="_blank"
+            rel="noreferrer"
+            href={`${currentChain!.etherscanUrl}/tx/${ContractCreationResult.txhash}`}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
+          </div>
+          </Modal>
+      </div>
     </div>
     );
 }

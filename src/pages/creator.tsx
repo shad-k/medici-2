@@ -11,7 +11,7 @@ const Creator: React.FC<{}> = () => {
   const [step, setStep] = useState<number>(1);
 
   const [params, setParams] = useState<any>({
-    collection_type: '',
+    collection_type: 'image',
     token_type: '',
     name: '',
     symbol: '',
@@ -22,8 +22,9 @@ const Creator: React.FC<{}> = () => {
     maxMintsPerPerson: '',
     masterAddress: '',
     merkleRoot: '',
-    claimStartBlock: '',
-    mintStartBlock: '',
+    claimStartBlock: '0',
+    mintStartBlock: '0',
+    numCopies: '1'
   });
 
   const nextStep = () => {

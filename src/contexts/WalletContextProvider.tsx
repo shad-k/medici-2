@@ -1,12 +1,10 @@
 import React from 'react'
 import { init, useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
-import { CONFIG } from '../utils/config'
 import { GET_CHAIN_BY_HEX_ID } from '../model/chains'
 
 import { WalletContextReturn } from '../model/types'
 
-const localenv = CONFIG.DEV;
 const injected = injectedModule()
 
 const initialValue: WalletContextReturn = {

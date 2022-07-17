@@ -94,7 +94,7 @@ const PageTwo: React.FC<StepperFormProps> = ({
           )}
         </label>
       </div>
-      <div className="text-center p-10 md:mt-10">
+      <div className="text-center p-10 md:mt-[20%] m-10">
         <div className="space-y-5">
           <h1 className="text-3xl md:text-5xl bg-transparent inline w-fit text-center tracking-wide text-transparent bg-clip-text text-[#9403fc] font-semibold">
             What will you name your project?
