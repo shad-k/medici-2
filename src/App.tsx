@@ -7,7 +7,7 @@ import Project from './pages/project'
 import ProjectManager from './pages/project_manager'
 import Creator from './pages/creator'
 import Reservation from './pages/reservation'
-import { version } from '../package.json';
+import info from '../package.json';
 
 
 import Header from './components/header/Header'
@@ -40,7 +40,7 @@ document.body.addEventListener("click", event => {
 })
 
 const App: React.FC<{}> = () => {
-  console.log("Starting Launch by Medici Version : ", version)
+  console.log("Starting Launch by Medici Version : ", info.version)
   return (
     <ThemeProvider theme={customTheme}>
       <WalletContextProvider>
