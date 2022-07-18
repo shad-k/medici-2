@@ -154,7 +154,7 @@ const PageFour: React.FC<StepperFormProps> = ({
       >
       <div className="relative top-[20%] mx-auto p-5 w-96 h-[550px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center outline-none">
       <h1 className="text-center text-4xl mb-5">Upload Preview</h1>
-      {imageUploadResponse && <img src={imageUploadResponse.randomImageURL}/>}
+      {imageUploadResponse && <img src={imageUploadResponse.randomFileURL}/>}
       {(imageUploadResponse && metadataFromIPFS) &&
       <div className="flex flex-col w-[300px] overflow-scroll border-[1px] border-white p-2 mt-3">
       <p>{JSON.stringify(metadataFromIPFS)}</p>

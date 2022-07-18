@@ -1,17 +1,38 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import HomeMenu from '../components/home/HomeMenu'
 import AlphaBanner from '../components/home/AlphaBanner'
 import { Modal } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import { RiCloseFill } from 'react-icons/ri'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 const Home: React.FC<{}> = () => {
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => {setShowModal(!showModal)}
+  const [visited, setVisited] = useLocalStorage("visited", false);
+
+  const navigateAway = useCallback(() => {
+    setVisited(true)
+  }, [setVisited])
+  
+  useEffect(() => {
+    // if user navigates away to a completely different site
+    // or refreshes the page etc
+    window.addEventListener("beforeunload", navigateAway);
+  
+    // if user navigates to another page on the same site
+    return () => {
+      navigateAway();
+      window.removeEventListener("beforeunload", navigateAway);
+    };
+  }, [navigateAway]);
+  
 
 useEffect(() => {
-  toggleModal()
-}, [])
+  if (visited === false) {
+    toggleModal()
+  }
+}, [visited])
 
 useEffect(() => {
   if (showModal) {

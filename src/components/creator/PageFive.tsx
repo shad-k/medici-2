@@ -15,16 +15,17 @@ const PageFive: React.FC<StepperFormProps> = ({
     const { wallet, connect, setChain, currentChain } = useWallet();
     const connectedWallet = wallet?.accounts[0]
     const [allowlistStrData, setAllowlistStrData] = useState<any>();
+    const [hasAllowlist, setHasAllowlist] = useState<boolean>(false);
     const [showModal, setShowModal] = useState(false);
     const [ContractCreationResult, setContractCreationResult] = useState<Contract>()
     const [ContractCreationSuccess, setContractCreationSuccess] = useState<boolean>(false)
     const toggleModal = () => setShowModal(!showModal)
 
-    const generateSmartContract = async () => {
+    const generateSmartContract = async (merkleRoot: string, whitelistedAddresses: string[]) => {
       try {
           await generateNewContract(
             wallet,
-            data.merkleRoot,
+            merkleRoot,
             { 
               name: data.name,
               symbol: data.symbol,
@@ -38,8 +39,7 @@ const PageFive: React.FC<StepperFormProps> = ({
           });
           const result = await getNewLaunchedContract(utils.getAddress(connectedWallet!.address), currentChain!);
           setContractCreationResult(result);
-          console.log("Etherscan url: " + `${currentChain?.etherscanUrl}/tx/${result.txhash}`)
-          await whitelist(data.name, currentChain!.hexId, data.whitelistedAddresses, data.merkleRoot);
+          await whitelist(data.name, currentChain!.hexId, whitelistedAddresses, merkleRoot);
           setContractCreationSuccess(true);
       } catch {
           setContractCreationSuccess(false);
@@ -57,31 +57,22 @@ const PageFive: React.FC<StepperFormProps> = ({
     },[showModal])
 
     const onSubmit = async () => {
-      if (allowlistStrData) {
+      if (allowlistStrData && hasAllowlist) {
         console.log(allowlistStrData);
-        try {
-          const parsedStrings = await parseData(allowlistStrData);
-          await handleInputData("whitelistedAddresses", parsedStrings);
-          const merkleRoot = await getMerkleRoot(parsedStrings);
-          await handleInputData("merkleRoot", merkleRoot);
-        } catch {
-          alert("Allowlist upload failed!")
-        }
+        const parsedStrings = await parseData(allowlistStrData);
+        const merkleRoot = await getMerkleRoot(parsedStrings);
         toggleModal()
-        await generateSmartContract()
-      } else {
+        await generateSmartContract(merkleRoot, parsedStrings)
+      } else if (!hasAllowlist) {
         if (!wallet) {
           alert("Please connect your wallet and try again!")
         }
         else {
           /* medici wallet address as second address for merkle tree */
           const parsedStrings = [wallet.accounts[0].address, '0xABeF33AA09593Ee532Cf203074Df2f19f9C61f8f'];
-          await handleInputData("whitelistedAddresses", parsedStrings);
           const merkleRoot = await getMerkleRoot(parsedStrings);
-          await handleInputData("merkleRoot", merkleRoot);
-          console.log(data);
           toggleModal()
-          await generateSmartContract()
+          await generateSmartContract(merkleRoot, parsedStrings)
         }
       }
     }
@@ -90,6 +81,7 @@ const PageFive: React.FC<StepperFormProps> = ({
       document.getElementById("menu-options")!.style.display = 'none';
       document.getElementById("allowlist-options")!.style.display = 'block';
       document.getElementById("back-button")!.style.display = 'block';
+      setHasAllowlist(true)
     }
 
     const onBack = () => {
@@ -105,7 +97,7 @@ const PageFive: React.FC<StepperFormProps> = ({
         </div>
         <div id="menu-options" className="flex flex-col space-y-4 m-10 items-center">
         <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={onUploadAllowlist}>Yes</button>
-          <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">No</button>
+          <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={() => setHasAllowlist(false)}>No</button>
           <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">What's that?</button>
         </div>
         <div id="allowlist-options" className="m-10 items-center hidden space-y-5 w-3/5">
