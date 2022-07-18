@@ -47,6 +47,7 @@ const LowTier: React.FC<LowTierProps> = ({
         const { success, status } = await getContractClaimStatus(contract.name, contract.chainid)
         if (success) {
           setContractStatus(status);
+          console.log("contract status " + status)
         }
       } catch {
         alert('Could not get contract status');
@@ -151,7 +152,7 @@ const LowTier: React.FC<LowTierProps> = ({
       getContractOwner();
       getCoverImage();
     }
-    if (contractName && !isPreview) {
+    if (contractName && !contractStatus) {
       isAllowlistMember()
       getContractStatus()
     }
@@ -166,7 +167,6 @@ const LowTier: React.FC<LowTierProps> = ({
     getContractStatus,
     contractName,
     contract,
-    isPreview,
     cover,
     masterAddress,
     name,
@@ -414,7 +414,7 @@ const LowTier: React.FC<LowTierProps> = ({
           </button>
         ))
         } */}
-        {!isPreview &&
+        {
           contract &&
           contractStatus === 'none' &&
           (isVerified ? (
@@ -428,22 +428,25 @@ const LowTier: React.FC<LowTierProps> = ({
               starts
             </div>
           ))}
-        {!isPreview && contract && contractStatus === 'claim' && (
+        {contract && contractStatus && ( contractStatus === 'claim' || contractStatus === 'none') && (
           <div className="inline-flex gap-1">
             <Countdown countdownBlock={contract?.mintstart} /> until mint starts
           </div>
         )}
         {/* { (!(isPreview) && contract) && <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.mintstart}/> until mint </div> } */}
-        <a 
+       
+          <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">
+          <a 
           target="_blank"
           rel="noreferrer"
           href="/">
-        <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">
+          <div className="flex w-fit">
           powered by{' '}
           <img src="/logo.png" alt="Medici logo" width={20} className="mx-1" />
           Medici
+          </div>
+          </a>
         </div>
-        </a>
       </div>
     </div>
   );
