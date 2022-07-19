@@ -1,4 +1,4 @@
-import { BigNumber, ethers, utils } from 'ethers'
+import { ethers } from 'ethers'
 import React from 'react'
 import FontPicker from 'font-picker-react'
 import { BsTwitter } from 'react-icons/bs'
@@ -6,10 +6,15 @@ import { HiOutlineMail } from 'react-icons/hi'
 import { FaDiscord } from 'react-icons/fa'
 import { Chain, Claim, Contract } from '../../model/types'
 import useWallet from '../../hooks/useWallet'
+import { getThumbnails } from '../../utils/reservations'
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
 import { getContract, verifyMerkleProof } from '../../utils/web3'
 import { getContractClaimStatus, getContractCover } from '../../utils/retrieve'
 import { GET_CHAIN_BY_ID } from '../../model/chains'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+
 const localenv = CONFIG.DEV
 
 interface FreeTierProps {
@@ -31,6 +36,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
   const [contract, setContract] = React.useState<Contract>();
   const [masterAddress, setMasterAddress] = React.useState<string>();
   const [cover, setCover] = React.useState<string>();
+  const [thumbnails, setThumbnails] = React.useState<string[]>();
   const [minting, setMinting] = React.useState<boolean>(false);
   const [txHash, setTxHash] = React.useState<string>();
   const [claiming, setClaiming] = React.useState<boolean>(false);
@@ -39,6 +45,15 @@ const FreeTier: React.FC<FreeTierProps> = ({
   const [verifiedProof, setVerifiedProof] = React.useState<string>();
   const [contractStatus, setContractStatus] = React.useState<string>();
   const [projectChain, setProjectChain] = React.useState<Chain>();
+
+  const stackSettings = {
+    dots: false,
+    infinite: true,
+    fade: true,
+    speed: 600,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
   const getContractStatus = React.useCallback(async () => {
     if (contract && projectChain) {
@@ -87,6 +102,17 @@ const FreeTier: React.FC<FreeTierProps> = ({
       setCover(res);
     }
   }, [contractName]);
+
+  const getCollectionThumbnails = React.useCallback(async () => {
+    try {
+      if (contractName) {
+        const res = await getThumbnails(contractName);
+        setThumbnails(res);
+      }
+    } catch (error: any) {
+     console.log(error.message)
+    } 
+  }, [contractName])
 
   const mint = async () => {
     if (wallet && connectedWallet && projectChain) {
@@ -155,6 +181,9 @@ const FreeTier: React.FC<FreeTierProps> = ({
     if (contract && !contractStatus) {
       getContractStatus()
     }
+    if (contractName && !thumbnails) {
+      getCollectionThumbnails()
+    }
     if (contract && !projectChain) {
       setProjectChain(GET_CHAIN_BY_ID(parseInt(contract.chainid)))
     }
@@ -171,6 +200,8 @@ const FreeTier: React.FC<FreeTierProps> = ({
     contract,
     isPreview,
     cover,
+    thumbnails,
+    getCollectionThumbnails,
     masterAddress,
     name,
     projectChain,
@@ -276,12 +307,28 @@ const FreeTier: React.FC<FreeTierProps> = ({
         )}
         </div>
       </div>
-       <div className="overflow-hidden rounded-2xl drop-shadow-xl md:w-2/5">
-          <img
-            src={cover}
-            alt=""
-            className="object-cover"
-          />
+       <div className="w-[500px] z-30">
+        <Slider {...stackSettings}>
+          <div className="flex rounded-2xl w-full max-h-[500px] outline-none overflow-hidden">
+            <img
+              src={cover}
+              alt=""
+              className="object-cover h-full w-full rounded-2xl"
+            />
+          </div>
+          {thumbnails && 
+          (Object.keys(thumbnails).map((i: string) => (
+            <div key={`${contractName}-${i}`} className="flex rounded-2xl h-[500px] outline-none overflow-hidden">
+              <img
+              key={`${contractName}-${i}`}
+              alt={`${i}`}
+              src={thumbnails[parseInt(i)]}
+              title={`${contractName}-${i}`}
+              className="object-cover h-full w-full rounded-2xl"
+              />
+            </div>)))
+          } 
+        </Slider>
         </div>
         {contractStatus === 'none' && 
           (
