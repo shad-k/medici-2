@@ -98,7 +98,7 @@ const PageFour: React.FC<StepperFormProps> = ({
       <div className="text-center w-4/5 mt-10 md:mt-52">
           <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text text-[#9403fc] font-semibold">Upload your collection media</h1>
           <br></br>
-          <a href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500">This is where you upload the content for your collection. All media must be uploaded in a folder. </a>
+          <a href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500">This is where you upload the content for your collection.</a>
           <br></br>
           <a href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500"> <u> Check our docs here for more information on upload formats.</u></a>
           
