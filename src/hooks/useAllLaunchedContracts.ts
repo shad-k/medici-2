@@ -1,7 +1,6 @@
-import React from 'react';
 import useSWR from 'swr';
 import apiClient from '../utils/apiClient';
-import { ethers, utils } from 'ethers';
+import { utils } from 'ethers';
 import { CONFIG } from '../utils/config';
 
 import { Contract } from '../model/types';

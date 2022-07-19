@@ -226,7 +226,6 @@ const FreeTier: React.FC<FreeTierProps> = ({
   return (
     <div className="w-full h-full flex flex-col items-center justify-center text-white relative md:overflow-hidden px-0 md:px-8 apply-font">
       <div className="hidden">
-        {/* @ts-expect-error */}
         <FontPicker
           activeFontFamily={(claim.fontFamily as string) ?? undefined}
           apiKey={process.env.REACT_APP_GOOGLE_FONTS_API_KEY!}

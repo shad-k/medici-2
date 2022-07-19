@@ -14,6 +14,7 @@ export enum API_PATHS {
   CLAIM_SETUP = '/claims/setup',
   UPLOAD_COVER = '/upload/cover',
   UPLOAD_COLLECTION_DATA = '/upload/collection',
+  UPLOAD_MUSIC_DATA = '/upload/musicCollection',
   CHECK_NAME = '/claims/checkNameAvailability',
   RESERVE_NFT = '/reservations/reserve',
   GET_RESERVED_NFTS = '/reservations/status',

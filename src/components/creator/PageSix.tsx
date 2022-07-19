@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { useReward } from 'react-rewards';
 import useWallet from '../../hooks/useWallet'
 import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -45,7 +44,7 @@ const PageSix: React.FC<StepperFormProps> = ({
             claimStartBlock: data.claimStartBlock,
             mintStartBlock: data.mintStartBlock
         });
-        const result = await getNewLaunchedContract(data.masterAddress, wallet);
+        const result = await getNewLaunchedContract(data.masterAddress, currentChain!);
         setContractCreationResult(result);
         console.log("Etherscan url: " + `${currentChain?.etherscanUrl}/tx/${result.txhash}`)
         await whitelist(data.name, currentChain!.hexId, data.whitelistedAddresses, data.merkleRoot);
@@ -83,7 +82,7 @@ const PageSix: React.FC<StepperFormProps> = ({
     if (ContractCreationResult) {
       console.log("Etherscan url from contract creation result " + `${currentChain?.etherscanUrl}/tx/${ContractCreationResult.txhash}`)
     }
-  }, [wallet, ContractCreationResult])
+  }, [wallet, ContractCreationResult, currentChain, addressCheck])
   
 
     return (

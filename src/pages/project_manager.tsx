@@ -15,7 +15,7 @@ const getContracts = useCallback(async () => {
   const { contracts } = await getAllContracts(connectedWallet, currentChain.id);
   setContracts(contracts)
   }
-}, [contracts, currentChain, connectedWallet])
+}, [currentChain, connectedWallet])
 
 useEffect(() => {
   getContracts()

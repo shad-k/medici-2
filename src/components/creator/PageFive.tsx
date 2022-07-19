@@ -1,43 +1,78 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { getMerkleRoot, readyToTransact } from '../../utils/web3'
+import { getMerkleRoot, readyToTransact, generateNewContract, getNewLaunchedContract, whitelist } from '../../utils/web3'
 import { parseData } from '../../utils/parse'
 import useWallet from '../../hooks/useWallet'
+import { Contract } from '../../model/types';
+import { Modal, CircularProgress } from '@mui/material';
+import { utils } from 'ethers'
 
 const PageFive: React.FC<StepperFormProps> = ({
     nextStep,
     handleInputData,
     data
 }) => {
-    const { wallet, connect, setChain } = useWallet();
+    const { wallet, connect, setChain, currentChain } = useWallet();
+    const connectedWallet = wallet?.accounts[0]
     const [allowlistStrData, setAllowlistStrData] = useState<any>();
+    const [hasAllowlist, setHasAllowlist] = useState<boolean>(false);
+    const [showModal, setShowModal] = useState(false);
+    const [ContractCreationResult, setContractCreationResult] = useState<Contract>()
+    const [ContractCreationSuccess, setContractCreationSuccess] = useState<boolean>(false)
+    const toggleModal = () => setShowModal(!showModal)
+
+    const generateSmartContract = async (merkleRoot: string, whitelistedAddresses: string[]) => {
+      try {
+          await generateNewContract(
+            wallet,
+            merkleRoot,
+            { 
+              name: data.name,
+              symbol: data.symbol,
+              baseuri: data.baseURI,
+              maxSupply: data.maxSupply,
+              price: "0.01",
+              maxMintsPerPerson: 1,
+              masterAddress: utils.getAddress(connectedWallet!.address),
+              claimStartBlock: "0",
+              mintStartBlock: "0"
+          });
+          const result = await getNewLaunchedContract(utils.getAddress(connectedWallet!.address), currentChain!);
+          setContractCreationResult(result);
+          await whitelist(data.name, currentChain!.hexId, whitelistedAddresses, merkleRoot);
+          setContractCreationSuccess(true);
+      } catch {
+          setContractCreationSuccess(false);
+          alert("Something went wrong!")
+      }
+    }
+    
+    useEffect(() => {
+      if (showModal) {
+        document.getElementById("modal-container")!.style.display = 'block'
+      } else {
+        document.getElementById("modal-container")!.style.display = 'none'
+      }
+    
+    },[showModal])
 
     const onSubmit = async () => {
-      if (allowlistStrData) {
+      if (allowlistStrData && hasAllowlist) {
         console.log(allowlistStrData);
-        try {
-          const parsedStrings = await parseData(allowlistStrData);
-          await handleInputData("whitelistedAddresses", parsedStrings);
-          const merkleRoot = await getMerkleRoot(parsedStrings);
-          await handleInputData("merkleRoot", merkleRoot);
-          // console.log(data);
-          nextStep();
-        } catch {
-          alert("Allowlist upload failed!")
-        }
-      } else {
-        console.log("no allow list provided")
+        const parsedStrings = await parseData(allowlistStrData);
+        const merkleRoot = await getMerkleRoot(parsedStrings);
+        toggleModal()
+        await generateSmartContract(merkleRoot, parsedStrings)
+      } else if (!hasAllowlist) {
         if (!wallet) {
           alert("Please connect your wallet and try again!")
-          await readyToTransact(wallet, connect, setChain);
         }
         else {
           /* medici wallet address as second address for merkle tree */
           const parsedStrings = [wallet.accounts[0].address, '0xABeF33AA09593Ee532Cf203074Df2f19f9C61f8f'];
-          await handleInputData("whitelistedAddresses", parsedStrings);
           const merkleRoot = await getMerkleRoot(parsedStrings);
-          await handleInputData("merkleRoot", merkleRoot);
-          nextStep();
+          toggleModal()
+          await generateSmartContract(merkleRoot, parsedStrings)
         }
       }
     }
@@ -46,6 +81,7 @@ const PageFive: React.FC<StepperFormProps> = ({
       document.getElementById("menu-options")!.style.display = 'none';
       document.getElementById("allowlist-options")!.style.display = 'block';
       document.getElementById("back-button")!.style.display = 'block';
+      setHasAllowlist(true)
     }
 
     const onBack = () => {
@@ -92,6 +128,25 @@ const PageFive: React.FC<StepperFormProps> = ({
         <div id="back-button" className="hidden justify-start absolute bottom-24 left-10">
           <button className="text-[#8E00FF] text-2xl" onClick={onBack}>Back</button>
         </div>
+        <div id="modal-container" className="flex items-center justify-center text-center h-screen">
+          <Modal
+            open={showModal}
+            onClose={toggleModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+          <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
+            {(!ContractCreationResult) && <h1 id="modal-header" className="text-center text-2xl">Generating your Smart Contract</h1>}
+            {(!ContractCreationResult) && <p id="modal-text">Our platform waits for two blocks to confirm your transaction, to ensure your transaction is secure</p>}
+            <br></br>
+            { (ContractCreationSuccess && ContractCreationResult) ? 
+            <a 
+            target="_blank"
+            rel="noreferrer"
+            href={`${currentChain!.etherscanUrl}/tx/${ContractCreationResult.txhash}`}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
+          </div>
+          </Modal>
+      </div>
     </div>
     );
 }

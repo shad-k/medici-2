@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { triggerUploadImageData } from '../../utils/upload';
+import { triggerUploadImageData, createZip, triggerUploadMusicData } from '../../utils/upload';
 
 import Modal from '@mui/material/Modal';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -17,11 +17,12 @@ const PageFour: React.FC<StepperFormProps> = ({
     const [uploadProgress, setUploadProgress] = useState<number>(0);
     const [showLoader, setShowLoader] = useState<boolean>(false);
     const [imageUploadResponse, setImageUploadResponse] = useState<any>();
+    const [imageUploadSuccess, setImageUploadSuccess] = useState<boolean>(false)
     const [metadataFromIPFS, setMetadataFromIPFS] = useState<any>();
 
     const onSubmit = () => {
       // handleOpen();
-      if (!imageUploadResponse) {
+      if (!imageUploadSuccess) {
         alert("Please upload your project!")
       } else {
         nextStep();
@@ -37,35 +38,58 @@ const PageFour: React.FC<StepperFormProps> = ({
     
     },[showModal])
 
-    const uploadImageData = async (file: File) => {
-      setUploadProgress(0);
-    
-      if (file === null || file === undefined) {
+    const uploadImageData = async (files: FileList) => {
+      if (files === null || files === undefined) {
         setShowLoader(false);
         return;
+      }
+      const formdata = new FormData();
+      const file = files[0]
+      if (file.name.endsWith(".zip")){
+        alert("No zip files allowed!")
+        return;
       } else {
-        const formdata = new FormData();
-        formdata.append("images", file)
+        const zip = await createZip(files);
+        const filename = (data.collection_type === "image") ? "images" : "files";
+        const zipFile = new File([zip], filename, {type: "application/zip"});
+        (data.collection_type === "image") ? formdata.append("images", zipFile) : formdata.append("files", zipFile)
         formdata.append("isMetadataUploaded", data.isMetadataUploaded)
         if (!data.isMetadataUploaded) {
         formdata.append("renameFiles", "true")
         } else {
           formdata.append("renameFiles", "false")
         }
-        setShowLoader(true)
+        formdata.append("numberOfCopies", data.numCopies)
+        uploadFormData(formdata)
+      }
+    }
 
-        const res = await triggerUploadImageData(data.name, formdata, (progressEvent: any) => {
+    const uploadFormData = async (formdata: FormData) => {
+      setUploadProgress(0);
+      setShowLoader(true)
+
+      const f = (data.collection_type === "image") ? triggerUploadImageData : triggerUploadMusicData
+
+      try {
+        const res = await f(data.name, formdata, (progressEvent: any) => {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           setUploadProgress(progress);
         })
         setImageUploadResponse(res);
         const metadata = await getMetadata(res.randomMetadataURL);
-        console.log(metadata)
         setMetadataFromIPFS(JSON.stringify(metadata, null, 2));
         await handleInputData("baseURI", res.baseURI);
         await handleInputData("maxSupply", res.totalSupply);
         setShowLoader(false);
         handleOpen()
+        setImageUploadSuccess(true)
+      } catch (error: any) {
+        if (error.msg) {
+          alert(error.msg)
+        } else {
+          alert("Something went wrong!")
+          setImageUploadSuccess(false)
+        }
       }
     }
 
@@ -79,22 +103,31 @@ const PageFour: React.FC<StepperFormProps> = ({
           <a href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500"> <u> Check our docs here for more information on upload formats.</u></a>
           
       </div>
-      { !imageUploadResponse ?
-      <div className="m-10">
+      { !imageUploadSuccess ?
+      <div className="m-10 space-y-10">
+        { (data.token_type === "identical") && (
+        <div className="m-5">
+          <label
+            htmlFor="numCopies"
+            className="block py-2 text-transparent tracking-wide bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 font-semibold"
+          >Number of Copies</label>
+          <input type="number" name="numCopies" className="text-black p-2" onChange={(event) => handleInputData("numCopies", parseInt(event.target.value))}></input>
+        </div>) }
         <input
             type="file"
             name="collectionImageData"
-            accept=".zip"
             id="collectionImageDataField"
             style={{'display': 'none'}}
-            onChange={(event) => uploadImageData(event.target.files![0])}
+            onChange={(event) => uploadImageData(event.target.files!)}
+            multiple
         />
         <label htmlFor="collectionImageDataField">
             <div className="flex w-full h-2/5 items-center">
                 <span className="bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl m-auto text-center whitespace-nowrap">Upload Collection</span>
             </div>
         </label>
-      </div> :
+      </div> 
+      :
       <div className="m-10">
         <div className="flex w-full h-2/5 items-center">
           <span className="bg-slate-500 p-3 rounded-3xl m-auto text-center whitespace-nowrap">Upload Collection</span>
@@ -125,7 +158,7 @@ const PageFour: React.FC<StepperFormProps> = ({
       >
       <div className="relative top-[20%] mx-auto p-5 w-96 h-[550px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center outline-none">
       <h1 className="text-center text-4xl mb-5">Upload Preview</h1>
-      {imageUploadResponse && <img src={imageUploadResponse.randomImageURL}/>}
+      {imageUploadResponse && <img src={imageUploadResponse.randomFileURL}/>}
       {(imageUploadResponse && metadataFromIPFS) &&
       <div className="flex flex-col w-[300px] overflow-scroll border-[1px] border-white p-2 mt-3">
       <p>{JSON.stringify(metadataFromIPFS)}</p>
