@@ -44,19 +44,32 @@ export const makeReservation = async (contractName: string, tokenID: number, con
 
 }
 
-export const getThumbnails = async (contractName: string) => {
+export const getThumbnails = async (contractName: string): Promise<any> => {
     const request_data = {
       "collection": contractName
     };
-  
+
     return apiClient.get(
       API_PATHS.RETRIEVE_THUMBNAILS,
       { params: request_data }
-    ).then(function(response) {
-        console.log(response.data)
-        return Promise.resolve(response.data)
+    ).then(function(response: any) {
+      return Promise.resolve(response.data)
     }).catch(function(error) {
-        console.log(error);
-        return Promise.reject("Error getting thumbnails")
+      return Promise.reject(["Error getting thumbnails"])
     });
+}
+
+export const getPreviews = async (contractName: string): Promise<any> => {
+  const request_data = {
+    "collection": contractName
+  };
+  
+  return apiClient.get(
+    API_PATHS.RETRIEVE_PREVIEW,
+    { params: request_data }
+  ).then(function(response: any) {
+    return Promise.resolve(response.data)
+  }).catch(function(error) {
+    return Promise.reject(["Error getting previews"])
+  });
 }

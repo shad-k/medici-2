@@ -19,6 +19,7 @@ export enum API_PATHS {
   RESERVE_NFT = '/reservations/reserve',
   GET_RESERVED_NFTS = '/reservations/status',
   RETRIEVE_THUMBNAILS = '/retrieve/thumbnails',
+  RETRIEVE_PREVIEW = '/retrieve/preview',
   RETRIEVE_CHAIN_CONFIG = '/retrieve/chainConfig',
   RETRIEVE_CONTRACT_STATUS = '/retrieve/contractStatus'
 }
