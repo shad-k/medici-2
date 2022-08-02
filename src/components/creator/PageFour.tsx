@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { triggerUploadImageData, createZip, triggerUploadMusicData } from '../../utils/upload';
+import { triggerUploadImageData, createZip, triggerUploadMusicData, getUploadPreview } from '../../utils/upload';
 
 import Modal from '@mui/material/Modal';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -75,15 +75,19 @@ const PageFour: React.FC<StepperFormProps> = ({
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           setUploadProgress(progress);
         })
-        setImageUploadResponse(res);
-        const metadata = await getMetadata(res.randomMetadataURL);
+        if (res) {
+        setTimeout(async () => {
+        const preview = await getUploadPreview(data.name);
+        setImageUploadResponse(preview);
+        const metadata = await getMetadata(preview.randomMetadataURL);
         setMetadataFromIPFS(JSON.stringify(metadata, null, 2));
-        await handleInputData("baseURI", res.baseURI);
-        await handleInputData("maxSupply", res.totalSupply);
+        await handleInputData("baseURI", preview.baseURI);
+        await handleInputData("maxSupply", preview.totalSupply);
         setShowLoader(false);
-        handleOpen()
-        setImageUploadSuccess(true)
-      } catch (error: any) {
+        handleOpen();
+        setImageUploadSuccess(true);
+      }, 5000);
+      }} catch (error: any) {
         if (error.msg) {
           alert(error.msg)
         } else {

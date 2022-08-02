@@ -13,6 +13,7 @@ export enum API_PATHS {
   CLAIM_COVER = '/retrieve/cover',
   CLAIM_SETUP = '/claims/setup',
   UPLOAD_COVER = '/upload/cover',
+  GET_UPLOAD_PREVIEW = '/upload/preview',
   UPLOAD_COLLECTION_DATA = '/upload/collection',
   UPLOAD_MUSIC_DATA = '/upload/musicCollection',
   CHECK_NAME = '/claims/checkNameAvailability',
