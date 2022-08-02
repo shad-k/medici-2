@@ -5,6 +5,7 @@ import FreeTier from '../components/templates/freetier';
 import LowTier from '../components/templates/lowtier';
 import { Claim, TemplateTier } from '../model/types';
 import { API_ENDPOINT, API_PATHS } from '../utils/config';
+import Music from '../components/templates/music';
 
 export const ClaimPageRenderer: React.FC<{
   claim: Claim;
@@ -15,6 +16,14 @@ export const ClaimPageRenderer: React.FC<{
     case TemplateTier.LOW:
       return (
         <LowTier
+          claim={claim}
+          contractName={contractName}
+          isPreview={isPreview}
+        />
+      );
+    case TemplateTier.MUSIC:
+      return (
+        <Music
           claim={claim}
           contractName={contractName}
           isPreview={isPreview}
