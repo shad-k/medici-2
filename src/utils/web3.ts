@@ -1,5 +1,5 @@
 import { BigNumber, ethers, utils } from 'ethers';
-import { ContractCreationProps, Contract, TemplateTier } from '../model/types';
+import { ContractCreationProps, Contract, TemplateTier, PaymentTier } from '../model/types';
 
 import { API_PATHS, CONFIG } from './config';
 import apiClient from './apiClient';
@@ -223,9 +223,9 @@ export const getTierPricing = async (
 export const claimsInit = async (
   callerWallet: any,
   contractAddress: string,
-  tier: TemplateTier
+  tier: PaymentTier
 ): Promise<boolean> => {
-  if ([TemplateTier.FREE, TemplateTier.MUSIC].includes(tier)) {
+  if ([PaymentTier.FREE].includes(tier)) {
     return Promise.resolve(true);
   } else {
     const claimsContract = await getClaimsContract(callerWallet);

@@ -230,7 +230,7 @@ const DropEditor: React.FC<{}> = () => {
       const claimReady = await claimsInit(
         wallet,
         contract!.contractaddress,
-        formState.template as TemplateTier
+        formState.tier as PaymentTier
       );
 
       if (claimReady) {
