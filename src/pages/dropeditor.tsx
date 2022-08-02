@@ -20,7 +20,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import useWallet from '../hooks/useWallet';
 import apiClient from '../utils/apiClient';
 import { API_PATHS, CONFIG } from '../utils/config';
-import { Contract, FormState, TemplateTier } from '../model/types';
+import { Contract, FormState, PaymentTier, TemplateTier } from '../model/types';
 import { claimsInit } from '../utils/web3';
 import DrawerAccordions from '../components/dropEditor/DrawerAccordions';
 import DrawerIcons from '../components/dropEditor/DrawerIcons';
@@ -112,7 +112,8 @@ const formInitialState: FormState = {
   secondaryColor: '#1b1a1f',
   bgColor: '',
   fontFamily: '',
-  tier: TemplateTier.FREE,
+  tier: PaymentTier.FREE,
+  template: TemplateTier.FREE,
   chainid: '',
 };
 
@@ -150,9 +151,10 @@ const DropEditor: React.FC<{}> = () => {
       secondaryColor,
       fontFamily,
       tier,
+      template
     } = currentFormState;
 
-    switch (tier) {
+    switch (template) {
       case TemplateTier.LOW: {
         if (
           contract &&
@@ -228,7 +230,7 @@ const DropEditor: React.FC<{}> = () => {
       const claimReady = await claimsInit(
         wallet,
         contract!.contractaddress,
-        formState.tier as TemplateTier
+        formState.template as TemplateTier
       );
 
       if (claimReady) {
@@ -244,6 +246,7 @@ const DropEditor: React.FC<{}> = () => {
           bgColor,
           fontFamily,
           tier,
+          template
         } = formState;
         const params = {
           contract: contract,
@@ -256,7 +259,8 @@ const DropEditor: React.FC<{}> = () => {
           email: email,
           twitter: twitter,
           discord: discord,
-          template: tier,
+          tier: tier,
+          template: formState.template
         };
         apiClient
           .post(API_PATHS.CLAIM_SETUP, params, {

@@ -12,7 +12,7 @@ export const ClaimPageRenderer: React.FC<{
   contractName?: string;
   isPreview: boolean;
 }> = ({ claim, contractName, isPreview }) => {
-  switch (claim.tier) {
+  switch (claim.template) {
     case TemplateTier.LOW:
       return (
         <LowTier
@@ -83,6 +83,7 @@ const ClaimPage: React.FC<{}> = () => {
           secondarycolor,
           tier,
           chainid,
+          template,
         } = res[0];
         setClaim({
           artist,
@@ -97,6 +98,7 @@ const ClaimPage: React.FC<{}> = () => {
           secondaryColor: secondarycolor,
           tier,
           chainid,
+          template,
         });
       }
     })();

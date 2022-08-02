@@ -82,6 +82,10 @@ export interface StepperFormProps {
   data: any
 }
 
+export enum PaymentTier {
+  FREE = 'free',
+}
+
 export enum TemplateTier {
   FREE = 'free',
   LOW = 'low',
@@ -90,7 +94,8 @@ export enum TemplateTier {
 
 export type Claim = {
   contract: string
-  tier: TemplateTier | null
+  tier: PaymentTier | null
+  template: TemplateTier | null
   fontFamily: string | null
   primaryColor: string | null
   secondaryColor: string | null
@@ -122,7 +127,8 @@ export type FormState = {
   secondaryColor: string
   bgColor: string
   fontFamily: string
-  tier: TemplateTier | null
+  tier: PaymentTier | null
+  template: TemplateTier | null
   chainid: string
 }
 

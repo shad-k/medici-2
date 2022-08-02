@@ -231,7 +231,7 @@ const DrawerAccordions: React.FC<Props> = ({
 
   const audio = null;
 
-  switch (formState.tier) {
+  switch (formState.template) {
     case TemplateTier.LOW:
       return (
         <Box>

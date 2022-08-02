@@ -13,7 +13,7 @@ interface Props {
 }
 
 const DrawerIcons: React.FC<Props> = ({ openDrawerAndExpandAccordion, formState }) => {
-  switch (formState.tier) {
+  switch (formState.template) {
   case TemplateTier.LOW:
     return (
     <>
