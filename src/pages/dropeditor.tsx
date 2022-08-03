@@ -246,7 +246,6 @@ const DropEditor: React.FC<{}> = () => {
           bgColor,
           fontFamily,
           tier,
-          template
         } = formState;
         const params = {
           contract: contract,

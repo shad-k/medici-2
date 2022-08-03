@@ -30,6 +30,7 @@ export const ClaimPageRenderer: React.FC<{
         />
       );
     default:
+      console.log(claim)
       return (
         <FreeTier
           claim={claim}

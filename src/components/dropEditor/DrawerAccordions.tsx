@@ -165,7 +165,7 @@ const DrawerAccordions: React.FC<Props> = ({
             value={formState.tier}
             name="claim-tier"
             id="tier-select"
-            onChange={(event) => changeFormState('tier', event.target.value)}
+            onChange={(event) => changeFormState('template', event.target.value)}
           >
             <FormControlLabel value="free" control={<Radio />} label="Free" />
             <FormControlLabel value="low" control={<Radio />} label="Low" />

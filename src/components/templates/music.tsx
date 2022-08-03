@@ -13,6 +13,7 @@ import {
   getContractAudioSamples,
 } from '../../utils/retrieve';
 import { getTierPricing } from '../../utils/web3';
+import { Link } from 'react-router-dom';
 const localenv = CONFIG.DEV;
 
 interface MusicProps {
@@ -179,7 +180,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
             isPreview ? 'absolute' : 'fixed'
           } top-0 left-0 flex items-start justify-between w-full p-4`}
         >
-          <div className="flex flex-1 items-center space-x-2 w-full">
+          <div className="flex flex-1 items-center space-x-2 w-full z-10">
             {claim.discord && (
               <a
                 href={claim.discord}
@@ -359,6 +360,8 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
               Success: Check transaction
             </a>
           )}
+          <Link
+          to={"/"}>
           <div className="text-right text-sm text-white flex justify-end mt-4">
             powered by{' '}
             <img
@@ -369,6 +372,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
             />
             Medici
           </div>
+          </Link>
         </Box>
       </div>
     </div>
