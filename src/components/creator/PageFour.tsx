@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { triggerUploadImageData, createZip, triggerUploadMusicData } from '../../utils/upload';
+import { triggerUploadImageData, createZip, triggerUploadMusicData, getUploadPreview } from '../../utils/upload';
 
 import Modal from '@mui/material/Modal';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -75,15 +75,19 @@ const PageFour: React.FC<StepperFormProps> = ({
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           setUploadProgress(progress);
         })
-        setImageUploadResponse(res);
-        const metadata = await getMetadata(res.randomMetadataURL);
+        if (res) {
+        setTimeout(async () => {
+        const preview = await getUploadPreview(data.name);
+        setImageUploadResponse(preview);
+        const metadata = await getMetadata(preview.randomMetadataURL);
         setMetadataFromIPFS(JSON.stringify(metadata, null, 2));
-        await handleInputData("baseURI", res.baseURI);
-        await handleInputData("maxSupply", res.totalSupply);
+        await handleInputData("baseURI", preview.baseURI);
+        await handleInputData("maxSupply", preview.totalSupply);
         setShowLoader(false);
-        handleOpen()
-        setImageUploadSuccess(true)
-      } catch (error: any) {
+        handleOpen();
+        setImageUploadSuccess(true);
+      }, 5000);
+      }} catch (error: any) {
         if (error.msg) {
           alert(error.msg)
         } else {
@@ -97,7 +101,11 @@ const PageFour: React.FC<StepperFormProps> = ({
       <div className="w-full flex flex-col items-center p-10 h-screen">
       <div className="text-center w-4/5 mt-10 md:mt-52">
           <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text text-[#9403fc] font-semibold">Upload your collection media</h1>
-          <h2 className="text-zinc-500">This is where you upload the content for your collection. If you’re not sure about our format, check our docs here.</h2>
+          <br></br>
+          <a href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500">This is where you upload the content for your collection.</a>
+          <br></br>
+          <a href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500"> <u> Check our docs here for more information on upload formats.</u></a>
+          
       </div>
       { !imageUploadSuccess ?
       <div className="m-10 space-y-10">

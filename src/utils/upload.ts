@@ -23,17 +23,11 @@ export const triggerUploadImageData = async (
       "onUploadProgress": onImageDataProgress
     },
     ).then((response) => {
-      console.log(response);
-      const res = {
-          baseURI: response.data.baseURI,
-          totalSupply: response.data.totalSupply,
-          randomImageURL: response.data.randomImageURL,
-          randomMetadataURL: response.data.randomMetadataURL
-      }
-      return Promise.resolve(res);
+      console.log(response)
+      return Promise.resolve(true);
     }).catch((error) => {
       console.log(error);
-      return Promise.reject("error");
+      return Promise.reject(false);
   })
 }
 
@@ -51,17 +45,10 @@ export const triggerUploadMusicData= async (
       "onUploadProgress": onImageDataProgress
     },
     ).then((response) => {
-      console.log(response);
-      const res = {
-          baseURI: response.data.baseURI,
-          totalSupply: response.data.totalSupply,
-          randomImageURL: response.data.randomImageURL,
-          randomMetadataURL: response.data.randomMetadataURL
-      }
-      return Promise.resolve(res);
+      return Promise.resolve(true);
     }).catch((error) => {
       console.log(error);
-      return Promise.reject("error");
+      return Promise.reject(false);
   })
 }
 
@@ -109,6 +96,30 @@ export const uploadCoverImage = async (name: string, file: File) => {
     }).catch(function(error){
       return Promise.resolve(false);
     });
+}
+
+export const getUploadPreview = async (name: string) => {
+  console.log("Getting previews for collection " + name)
+
+  return apiClient.get(
+    API_PATHS.GET_UPLOAD_PREVIEW,
+    {
+    "headers": {"Content-Type": "application/json"},
+    "params": {"collection": name},
+    },
+    ).then((response) => {
+    console.log(response);
+    const res = {
+        baseURI: response.data.baseURI,
+        totalSupply: response.data.totalSupply,
+        randomFileURL: response.data.randomFileURL,
+        randomMetadataURL: response.data.randomMetadataURL
+    }
+    return Promise.resolve(res);
+    }).catch((error) => {
+    console.log(error)
+    return Promise.reject("error");
+  })
 }
 
 export const createZip = async (files: FileList) => {
