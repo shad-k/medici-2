@@ -16,7 +16,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import '../css/dropeditor.css';
 import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Accordions } from '../model/types'
+import { Accordions } from '../model/types';
 
 import useWallet from '../hooks/useWallet';
 import apiClient from '../utils/apiClient';
@@ -129,7 +129,9 @@ const DropEditor: React.FC<{}> = () => {
   const [claimCreationSuccess, setClaimCreationSuccess] = useState(false);
   const [open, setOpen] = React.useState(true);
 
-  const [expandedAccordion, setExpandedAccordion] = React.useState<string>(Accordions.TIER);
+  const [expandedAccordion, setExpandedAccordion] = React.useState<string>(
+    Accordions.TIER
+  );
   const [formState, setFormState] = React.useState(formInitialState);
 
   const handleDrawerOpen = () => {
@@ -154,7 +156,7 @@ const DropEditor: React.FC<{}> = () => {
       secondaryColor,
       fontFamily,
       tier,
-      template
+      template,
     } = currentFormState;
 
     switch (template) {
@@ -226,22 +228,22 @@ const DropEditor: React.FC<{}> = () => {
       chainId: utils.hexValue(BigNumber.from(contract!.chainid)),
     });
   };
-  
-  const getCollectionType = useCallback(async() => {
-  if (contract) {
-    const { success, type }  = await getResourceType(contract.name);
-    console.log("Getting collection type for " + contract.name);
+
+  const getCollectionType = useCallback(async () => {
+    if (contract) {
+      const { success, type } = await getResourceType(contract.name);
+      console.log('Getting collection type for ' + contract.name);
       if (success) {
-        setCollectionType(type)
+        setCollectionType(type);
       } else {
-        alert("Error getting contract type")
+        alert('Error getting contract type');
       }
     }
-  }, [contract])
+  }, [contract]);
 
   useEffect(() => {
-  if (!collectionType) getCollectionType();
-  }, [collectionType, getCollectionType])
+    if (!collectionType) getCollectionType();
+  }, [collectionType, getCollectionType]);
 
   const onConfirm = async () => {
     if (isFormValid && (await readyToTransact())) {
@@ -278,7 +280,7 @@ const DropEditor: React.FC<{}> = () => {
           twitter: twitter,
           discord: discord,
           tier: tier,
-          template: formState.template
+          template: formState.template,
         };
         apiClient
           .post(API_PATHS.CLAIM_SETUP, params, {
@@ -414,11 +416,7 @@ const DropEditor: React.FC<{}> = () => {
             selectProject={(contract) => changeProject(contract)}
           />
         )}
-        <Box
-          sx={{
-            height: 'calc(100vh - 128px)',
-          }}
-        >
+        <Box>
           <ClaimPageRenderer
             claim={formState}
             contractName={contract?.name}
