@@ -263,7 +263,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
               )}
               <tr>
                 <td>Blockchain</td>
-                <td className="text-right">Optimism</td>
+                <td className="text-right">{projectChain.label}</td>
               </tr>
             </tbody>
           </table>
