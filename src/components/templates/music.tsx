@@ -7,7 +7,7 @@ import { FaDiscord } from 'react-icons/fa';
 import { Claim, TemplateTier } from '../../model/types';
 import useWallet from '../../hooks/useWallet';
 import { CONFIG } from '../../utils/config';
-import { Box, Button } from '@mui/material';
+import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
 import {
   getContractCover,
   getContractAudioSamples,
@@ -46,6 +46,9 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
 
   const connectedWallet = wallet?.accounts[0];
 
+  const theme = useTheme();
+  const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
+
   const audioElementRef = React.useRef<HTMLAudioElement>();
 
   const [playing, setPlaying] = React.useState(true);
@@ -79,7 +82,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
   const getPrice = React.useCallback(async () => {
     const price = await getTierPricing(wallet, claim.tier!);
     setPrice(price);
-  }, [wallet]);
+  }, [wallet, claim.tier]);
 
   const getAudioSamplesPlaylist = React.useCallback(async () => {
     if (contractName) {
@@ -159,7 +162,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
   }, [playing]);
 
   return (
-    <div className="w-full h-full flex flex-col md:flex-row items-center justify-between text-white relative md:overflow-hidden px-0 apply-font">
+    <div className="w-full md:min-h-screen h-full flex flex-col md:flex-row items-center justify-between text-white relative md:overflow-hidden px-0 apply-font">
       {/* Added so that the page is rendered using the font */}
       <div className="hidden">
         <FontPicker
@@ -220,7 +223,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
         </header>
       }
       <div
-        className={`flex flex-col items-start relative z-1 w-full md:w-1/4 h-full py-20 pt-40 px-2 md:mt-20 ${
+        className={`flex flex-col items-start relative z-1 w-full md:w-1/2 lg:w-1/4 h-full py-20 pt-40 px-2 md:mt-20 ${
           isPreview ? 'md:px-6' : 'md:px-12'
         } scrollbar-hide md:overflow-auto`}
       >
@@ -263,11 +266,11 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
           </table>
         </div>
       </div>
-      <div className="flex justify-around items-start relative z-1 w-2/3 h-[600px] p-8 pt-0 pb-2 md:pb-8">
-        <div className="h-full p-10 rounded-xl bg-zinc-100/5 backdrop-blur-sm min-w-[655px]">
-          <div className="relative flex w-full h-[300px] md:h-[450px]">
+      <div className="flex flex-col lg:flex-row justify-around items-start relative z-1 w-full md:w-1/2 lg:w-2/3 h-[600px] lg:p-8 md:mt-20 pt-0 pb-2">
+        <div className="h-full p-2 lg:p-10 rounded-xl bg-zinc-100/5 backdrop-blur-sm min-w-full lg:min-w-[655px]">
+          <div className="relative flex w-full h-[250px] lg:h-[450px]">
             <div
-              className="bg-black/95 w-[300px] md:w-[450px] h-full animate-spin-slow overflow-hidden rounded-full relative flex items-center justify-center"
+              className="bg-black/95 min-w-[250px] w-[250px] lg:w-[450px] h-full animate-spin-slow overflow-hidden rounded-full relative flex items-center justify-center"
               style={{
                 animationPlayState: playing ? 'running' : 'paused',
               }}
@@ -288,7 +291,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
             </div>
             <img
               src="https://vinylblade.com/_nuxt/img/arm.f195722.png"
-              className={`h-[300px] md:h-[450px] transition-transform ease-in-out duration-500 ${
+              className={`h-[250px] lg:h-[450px] transition-transform ease-in-out duration-500 ${
                 playing ? 'rotate-45' : ''
               }`}
               style={{
@@ -322,12 +325,15 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'flex-end',
+            justifyContent: 'flex-start',
             alignItems: 'flex-end',
             flexDirection: 'column',
             marginTop: '40px',
             padding: '0 10px 0 20px',
             height: '100%',
+            ...(matchesMD && {
+              justifyContent: 'flex-end',
+            }),
           }}
         >
           <Button
@@ -361,20 +367,20 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
             </a>
           )}
           <a
-            href={"https://launch.medicilabs.xyz"}
+            href={'https://launch.medicilabs.xyz'}
             target="_blank"
             rel="nofollow, noreferrer"
           >
-          <div className="text-right text-sm text-white flex justify-end mt-4 whitespace-nowrap">
-            powered by{' '}
-            <img
-              src="/logo.png"
-              alt="Medici logo"
-              width={20}
-              className="mx-1"
-            />
-            Medici
-          </div>
+            <div className="text-right text-sm text-white flex justify-end mt-4 whitespace-nowrap">
+              powered by{' '}
+              <img
+                src="/logo.png"
+                alt="Medici logo"
+                width={20}
+                className="mx-1"
+              />
+              Medici
+            </div>
           </a>
         </Box>
       </div>
