@@ -287,7 +287,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
                 {/* {name} */}
               </div>
               <div className="text-xl text-white z-10 absolute bottom-8 break-all w-1/2 text-center">
-                {claim.artist}
+                {/* {claim.artist} */}
               </div>
               <div className="h-[100px] w-[100px] rounded-full z-10 bg-black absolute " />
               <div className="h-[30px] w-[30px] rounded-full z-10 bg-gray-500 absolute " />
