@@ -162,7 +162,7 @@ const DrawerAccordions: React.FC<Props> = ({
       <AccordionDetails>
         <FormControl>
           <RadioGroup
-            value={formState.tier}
+            value={formState.template}
             name="claim-tier"
             id="tier-select"
             onChange={(event) => changeFormState('template', event.target.value)}

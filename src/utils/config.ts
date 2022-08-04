@@ -25,6 +25,7 @@ export enum API_PATHS {
   RETRIEVE_PREVIEW = '/retrieve/preview',
   RETRIEVE_CHAIN_CONFIG = '/retrieve/chainConfig',
   RETRIEVE_CONTRACT_STATUS = '/retrieve/contractStatus',
+  RETRIEVE_PROJECT_RESOURCE_TYPE = '/retrieve/resourceType'
 }
 
 export const CONFIG = {

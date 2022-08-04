@@ -65,6 +65,30 @@ export const getNameAvailability = async (
     });
 };
 
+
+export const getResourceType = async (contract: string) => {
+  // console.log("Getting contract cover for " + contract);
+  const request_data = {
+    collection: contract
+  };
+
+  return apiClient
+    .get(API_PATHS.RETRIEVE_PROJECT_RESOURCE_TYPE, { params: request_data })
+    .then(function (response) {
+      console.log(response)
+      return Promise.resolve({
+        success: true,
+        status: response.data,
+      });
+    })
+    .catch(function (error) {
+      return Promise.reject({
+        success: false,
+        status: 'Error getting contract resource type',
+      });
+    });
+};
+
 export const getContractCover = async (contract: string) => {
   // console.log("Getting contract cover for " + contract);
   const request_data = {

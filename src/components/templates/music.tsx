@@ -77,7 +77,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
   }, [contractName]);
 
   const getPrice = React.useCallback(async () => {
-    const price = await getTierPricing(wallet, TemplateTier.MUSIC);
+    const price = await getTierPricing(wallet, claim.tier!);
     setPrice(price);
   }, [wallet]);
 
@@ -180,7 +180,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
             isPreview ? 'absolute' : 'fixed'
           } top-0 left-0 flex items-start justify-between w-full p-4`}
         >
-          <div className="flex flex-1 items-center space-x-2 w-full z-10">
+          <div className="flex flex-1 items-center space-x-2 w-full z-30">
             {claim.discord && (
               <a
                 href={claim.discord}
@@ -220,7 +220,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
         </header>
       }
       <div
-        className={`flex flex-col items-start relative z-1 w-full md:w-1/4 h-full py-20 pt-40 px-2 ${
+        className={`flex flex-col items-start relative z-1 w-full md:w-1/4 h-full py-20 pt-40 px-2 md:mt-20 ${
           isPreview ? 'md:px-6' : 'md:px-12'
         } scrollbar-hide md:overflow-auto`}
       >
@@ -278,7 +278,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
                 alt={name}
               />
               <div className="text-3xl text-white z-10 absolute top-8 break-all w-1/2 text-center">
-                {name}
+                {/* {name} */}
               </div>
               <div className="text-xl text-white z-10 absolute bottom-8 break-all w-1/2 text-center">
                 {claim.artist}
@@ -360,9 +360,12 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
               Success: Check transaction
             </a>
           )}
-          <Link
-          to={"/"}>
-          <div className="text-right text-sm text-white flex justify-end mt-4">
+          <a
+            href={"https://launch.medicilabs.xyz"}
+            target="_blank"
+            rel="nofollow, noreferrer"
+          >
+          <div className="text-right text-sm text-white flex justify-end mt-4 whitespace-nowrap">
             powered by{' '}
             <img
               src="/logo.png"
@@ -372,7 +375,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
             />
             Medici
           </div>
-          </Link>
+          </a>
         </Box>
       </div>
     </div>
