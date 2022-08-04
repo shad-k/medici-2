@@ -1,17 +1,17 @@
-import { BigNumber, ethers, utils } from 'ethers'
-import React from 'react'
-import FontPicker from 'font-picker-react'
-import { BsTwitter } from 'react-icons/bs'
-import { HiOutlineMail } from 'react-icons/hi'
-import { FaDiscord } from 'react-icons/fa'
-import { Claim, Contract, Chain } from '../../model/types'
-import useWallet from '../../hooks/useWallet'
-import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config'
-import { getContract, verifyMerkleProof } from '../../utils/web3'
-import { getContractClaimStatus, getContractCover } from '../../utils/retrieve'
-import { GET_CHAIN_BY_ID } from '../../model/chains'
-import Countdown from './Countdown'
-const localenv = CONFIG.DEV
+import { BigNumber, ethers, utils } from 'ethers';
+import React from 'react';
+import FontPicker from 'font-picker-react';
+import { BsTwitter } from 'react-icons/bs';
+import { HiOutlineMail } from 'react-icons/hi';
+import { FaDiscord } from 'react-icons/fa';
+import { Claim, Contract, Chain } from '../../model/types';
+import useWallet from '../../hooks/useWallet';
+import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config';
+import { getContract, verifyMerkleProof } from '../../utils/web3';
+import { getContractClaimStatus, getContractCover } from '../../utils/retrieve';
+import { GET_CHAIN_BY_ID } from '../../model/chains';
+import Countdown from './Countdown';
+const localenv = CONFIG.DEV;
 
 interface LowTierProps {
   claim: Claim;
@@ -44,48 +44,54 @@ const LowTier: React.FC<LowTierProps> = ({
   const getContractStatus = React.useCallback(async () => {
     if (contract) {
       try {
-        const { success, status } = await getContractClaimStatus(contract.name, contract.chainid)
+        const { success, status } = await getContractClaimStatus(
+          contract.name,
+          contract.chainid
+        );
         if (success) {
           setContractStatus(status);
-          console.log("contract status " + status)
+          console.log('contract status ' + status);
         }
       } catch {
         alert('Could not get contract status');
       }
     }
-  }, [contract])
+  }, [contract]);
 
   const isAllowlistMember = React.useCallback(async () => {
     if (connectedWallet && contract) {
       try {
-        const { success, merkleProof } = await verifyMerkleProof(contract.name, connectedWallet.address)
+        const { success, merkleProof } = await verifyMerkleProof(
+          contract.name,
+          connectedWallet.address
+        );
         setIsVerified(success);
         setVerifiedProof(merkleProof);
       } catch {
-        setIsVerified(false)
+        setIsVerified(false);
       }
     }
-  }, [connectedWallet, contract])
+  }, [connectedWallet, contract]);
 
   const getName = React.useCallback(async () => {
     if (claim && contract && projectChain) {
-    const currContract = await getContract(claim.contract, projectChain)
-    const collectionName = await currContract.name()
-    setName(collectionName)
+      const currContract = await getContract(claim.contract, projectChain);
+      const collectionName = await currContract.name();
+      setName(collectionName);
     }
-  }, [claim, contract, projectChain])
+  }, [claim, contract, projectChain]);
 
   const getContractOwner = React.useCallback(async () => {
     if (claim && contract && projectChain) {
-    const currContract = await getContract(claim.contract, projectChain)
-    const contractOwner = await currContract.masterAddress()
-    setMasterAddress(contractOwner)
+      const currContract = await getContract(claim.contract, projectChain);
+      const contractOwner = await currContract.masterAddress();
+      setMasterAddress(contractOwner);
     }
-  }, [claim, contract, projectChain])
+  }, [claim, contract, projectChain]);
 
   const getCoverImage = React.useCallback(async () => {
     if (contractName) {
-      const res = await getContractCover(contractName)
+      const res = await getContractCover(contractName);
       setCover(res);
     }
   }, [contractName]);
@@ -94,11 +100,17 @@ const LowTier: React.FC<LowTierProps> = ({
     if (wallet && connectedWallet && projectChain) {
       setMinting(true);
       try {
-        await setChain({chainId: projectChain.hexId})
-        const walletProvider = new ethers.providers.Web3Provider(wallet.provider);
-        const signer = walletProvider.getSigner(connectedWallet?.address)
-        const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
-        const price = await contract.price()
+        await setChain({ chainId: projectChain.hexId });
+        const walletProvider = new ethers.providers.Web3Provider(
+          wallet.provider
+        );
+        const signer = walletProvider.getSigner(connectedWallet?.address);
+        const contract = new ethers.Contract(
+          claim.contract,
+          localenv.contract.instanceAbi,
+          signer
+        );
+        const price = await contract.price();
         const tx = await contract.mint(connectedWallet?.address, 1, {
           value: price,
           gasLimit: 30000000,
@@ -119,21 +131,38 @@ const LowTier: React.FC<LowTierProps> = ({
   };
 
   const claimOnContract = async () => {
-    if (wallet && connectedWallet && isVerified && verifiedProof !== null && projectChain) {
+    if (
+      wallet &&
+      connectedWallet &&
+      isVerified &&
+      verifiedProof !== null &&
+      projectChain
+    ) {
       setClaiming(true);
       try {
-        await setChain({chainId: projectChain.hexId})
-        const walletProvider = new ethers.providers.Web3Provider(wallet.provider)
-        const signer = walletProvider.getSigner(connectedWallet?.address)
-        const contract = new ethers.Contract(claim.contract, localenv.contract.instanceAbi, signer)
-        const price = await contract.price()
-        const tx = await contract.claim(connectedWallet?.address, 1, verifiedProof, {
-          value: price,
-          gasLimit: 30000000,
-        })
-        const claimResponse = await tx.wait()
-        console.log(claimResponse)
-        setClaimTxHash(claimResponse.transactionHash)
+        await setChain({ chainId: projectChain.hexId });
+        const walletProvider = new ethers.providers.Web3Provider(
+          wallet.provider
+        );
+        const signer = walletProvider.getSigner(connectedWallet?.address);
+        const contract = new ethers.Contract(
+          claim.contract,
+          localenv.contract.instanceAbi,
+          signer
+        );
+        const price = await contract.price();
+        const tx = await contract.claim(
+          connectedWallet?.address,
+          1,
+          verifiedProof,
+          {
+            value: price,
+            gasLimit: 30000000,
+          }
+        );
+        const claimResponse = await tx.wait();
+        console.log(claimResponse);
+        setClaimTxHash(claimResponse.transactionHash);
       } catch (error: any) {
         if (error.message) {
           alert(error.message);
@@ -153,11 +182,11 @@ const LowTier: React.FC<LowTierProps> = ({
       getCoverImage();
     }
     if (contractName && !contractStatus) {
-      isAllowlistMember()
-      getContractStatus()
+      isAllowlistMember();
+      getContractStatus();
     }
     if (contract && !projectChain) {
-      setProjectChain(GET_CHAIN_BY_ID(parseInt(contract.chainid)))
+      setProjectChain(GET_CHAIN_BY_ID(parseInt(contract.chainid)));
     }
   }, [
     getName,
@@ -171,54 +200,59 @@ const LowTier: React.FC<LowTierProps> = ({
     masterAddress,
     name,
     projectChain,
-    setProjectChain
+    setProjectChain,
   ]);
 
   React.useEffect(() => {
-    ;(async () => {
+    (async () => {
       if (contractName) {
-      const params = new URLSearchParams({
-        collection: contractName
-      })
-      const headers = new Headers()
-      headers.set('Content-Type', 'application/json')
-      const res = await fetch(`${API_ENDPOINT}${API_PATHS.GET_CONTRACT_BY_NAME}?` + params, {
-        method: 'GET',
-        headers,
-      }).then((res) => {
-        if (res.status === 200) {
-          return res.json()
-        } else {
-          throw new Error(res.statusText)
+        const params = new URLSearchParams({
+          collection: contractName,
+        });
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        const res = await fetch(
+          `${API_ENDPOINT}${API_PATHS.GET_CONTRACT_BY_NAME}?` + params,
+          {
+            method: 'GET',
+            headers,
+          }
+        )
+          .then((res) => {
+            if (res.status === 200) {
+              return res.json();
+            } else {
+              throw new Error(res.statusText);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        if (res !== undefined) {
+          const {
+            name,
+            symbol,
+            masteraddress,
+            contractaddress,
+            txhash,
+            chainid,
+            claimsstart,
+            mintstart,
+          } = res;
+          setContract({
+            name,
+            symbol,
+            masteraddress,
+            contractaddress,
+            txhash,
+            chainid,
+            claimsstart,
+            mintstart,
+          });
         }
-      }).catch((error) => {
-        console.log(error)
-      })
-      if (res !== undefined) {
-        const {
-          name,
-          symbol,
-          masteraddress,
-          contractaddress,
-          txhash,
-          chainid,
-          claimsstart,
-          mintstart,
-        } = res
-        setContract({
-          name,
-          symbol,
-          masteraddress,
-          contractaddress,
-          txhash,
-          chainid,
-          claimsstart,
-          mintstart
-        })
       }
-    }
-    })()
-  }, [contractName])
+    })();
+  }, [contractName]);
 
   // console.log(
   //   `linear-gradient(180deg, ${claim.primaryColor} 0%, ${claim.secondaryColor} 100%)`
@@ -282,7 +316,9 @@ const LowTier: React.FC<LowTierProps> = ({
                 <td className="text-right text-white">
                   <a
                     className=""
-                    href={`${localenv.network.addressEtherscanUrl}/address/${claim!.contract}`}
+                    href={`${localenv.network.addressEtherscanUrl}/address/${
+                      claim!.contract
+                    }`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -336,13 +372,15 @@ const LowTier: React.FC<LowTierProps> = ({
               <button
                 className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
                 onClick={
-                  connectedWallet ? () => claimOnContract() : () => 
-                  connect({
-                    autoSelect: { 
-                      label: 'Wallet Connect',
-                      disableModals: false
-                    }
-                  })
+                  connectedWallet
+                    ? () => claimOnContract()
+                    : () =>
+                        connect({
+                          autoSelect: {
+                            label: 'Wallet Connect',
+                            disableModals: false,
+                          },
+                        })
                 }
                 disabled={claiming}
               >
@@ -373,13 +411,15 @@ const LowTier: React.FC<LowTierProps> = ({
             <button
               className="px-5 py-2 rounded-2xl text-sm bg-[#1b1a1f] text-white w-40 mx-auto my-4 disabled:bg-gray-500"
               onClick={
-                connectedWallet ? () => mint() : () => 
-                connect({
-                  autoSelect: { 
-                    label: 'Wallet Connect',
-                    disableModals: false
-                  }
-                })
+                connectedWallet
+                  ? () => mint()
+                  : () =>
+                      connect({
+                        autoSelect: {
+                          label: 'Wallet Connect',
+                          disableModals: false,
+                        },
+                      })
               }
               disabled={minting}
             >
@@ -414,8 +454,7 @@ const LowTier: React.FC<LowTierProps> = ({
           </button>
         ))
         } */}
-        {
-          contract &&
+        {contract &&
           contractStatus === 'none' &&
           (isVerified ? (
             <div className="inline-flex gap-1">
@@ -428,23 +467,28 @@ const LowTier: React.FC<LowTierProps> = ({
               starts
             </div>
           ))}
-        {contract && contractStatus && ( contractStatus === 'claim' || contractStatus === 'none') && (
-          <div className="inline-flex gap-1">
-            <Countdown countdownBlock={contract?.mintstart} /> until mint starts
-          </div>
-        )}
+        {contract &&
+          contractStatus &&
+          (contractStatus === 'claim' || contractStatus === 'none') && (
+            <div className="inline-flex gap-1">
+              <Countdown countdownBlock={contract?.mintstart} /> until mint
+              starts
+            </div>
+          )}
         {/* { (!(isPreview) && contract) && <div className="inline-flex gap-1"><Countdown countdownBlock={contract?.mintstart}/> until mint </div> } */}
-       
-          <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">
-          <a 
-          target="_blank"
-          rel="noreferrer"
-          href="/">
-          <div className="flex w-fit">
-          powered by{' '}
-          <img src="/logo.png" alt="Medici logo" width={20} className="mx-1" />
-          Medici
-          </div>
+
+        <div className="text-right text-sm text-white flex justify-end mt-4 md:mt-0">
+          <a target="_blank" rel="noreferrer" href="/">
+            <div className="flex w-fit">
+              powered by{' '}
+              <img
+                src="/logo.png"
+                alt="Medici logo"
+                width={20}
+                className="mx-1"
+              />
+              Medici
+            </div>
           </a>
         </div>
       </div>
@@ -452,4 +496,4 @@ const LowTier: React.FC<LowTierProps> = ({
   );
 };
 
-export default LowTier
+export default LowTier;

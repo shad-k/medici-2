@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useReward } from 'react-rewards';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -16,17 +16,19 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import '../css/dropeditor.css';
 import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Accordions } from '../model/types';
 
 import useWallet from '../hooks/useWallet';
 import apiClient from '../utils/apiClient';
 import { API_PATHS, CONFIG } from '../utils/config';
-import { Contract, FormState, TemplateTier } from '../model/types';
+import { Contract, FormState, PaymentTier, TemplateTier } from '../model/types';
 import { claimsInit } from '../utils/web3';
 import DrawerAccordions from '../components/dropEditor/DrawerAccordions';
 import DrawerIcons from '../components/dropEditor/DrawerIcons';
 import ProjectSelector from '../components/dropEditor/ProjectSelector';
 import { ClaimPageRenderer } from '../pages/claimPage';
 import { utils, BigNumber } from 'ethers';
+import { getResourceType } from '../utils/retrieve';
 
 const drawerWidth = 320;
 
@@ -112,7 +114,8 @@ const formInitialState: FormState = {
   secondaryColor: '#1b1a1f',
   bgColor: '',
   fontFamily: '',
-  tier: TemplateTier.FREE,
+  tier: PaymentTier.FREE,
+  template: TemplateTier.FREE,
   chainid: '',
 };
 
@@ -121,11 +124,14 @@ const DropEditor: React.FC<{}> = () => {
 
   const { wallet, setChain, connect } = useWallet();
   const [contract, setContract] = useState<Contract>();
+  const [collectionType, setCollectionType] = useState<string>();
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [claimCreationSuccess, setClaimCreationSuccess] = useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
-  const [expandedAccordion, setExpandedAccordion] = React.useState<string>('');
+  const [expandedAccordion, setExpandedAccordion] = React.useState<string>(
+    Accordions.TIER
+  );
   const [formState, setFormState] = React.useState(formInitialState);
 
   const handleDrawerOpen = () => {
@@ -150,9 +156,10 @@ const DropEditor: React.FC<{}> = () => {
       secondaryColor,
       fontFamily,
       tier,
+      template,
     } = currentFormState;
 
-    switch (tier) {
+    switch (template) {
       case TemplateTier.LOW: {
         if (
           contract &&
@@ -183,7 +190,7 @@ const DropEditor: React.FC<{}> = () => {
         }
       }
     }
-  }
+  };
 
   const changeFormState = (key: string, value?: string) => {
     const newFormState = {
@@ -208,25 +215,34 @@ const DropEditor: React.FC<{}> = () => {
   const handleOpen = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
-  // useEffect(() => {
-  //   if (showModal) {
-  //     document.getElementById('modal-container')!.style.display = 'block'
-  //   } else {
-  //     document.getElementById('modal-container')!.style.display = 'none'
-  //   }
-  // }, [showModal])
-
   const readyToTransact = async (): Promise<boolean> => {
     if (!wallet) {
       await connect({
-        autoSelect: { 
+        autoSelect: {
           label: 'Wallet Connect',
-          disableModals: false
-        }
-      })
+          disableModals: false,
+        },
+      });
     }
-    return setChain({ chainId: utils.hexValue(BigNumber.from(contract!.chainid)) });
+    return setChain({
+      chainId: utils.hexValue(BigNumber.from(contract!.chainid)),
+    });
   };
+
+  const getCollectionType = useCallback(async () => {
+    if (contract) {
+      try {
+        const { success, type } = await getResourceType(contract.name);
+        setCollectionType(type);
+      } catch {
+        alert('Error getting contract type');
+      }
+    }
+  }, [contract]);
+
+  useEffect(() => {
+    if (!collectionType) getCollectionType();
+  }, [collectionType, getCollectionType]);
 
   const onConfirm = async () => {
     if (isFormValid && (await readyToTransact())) {
@@ -234,7 +250,7 @@ const DropEditor: React.FC<{}> = () => {
       const claimReady = await claimsInit(
         wallet,
         contract!.contractaddress,
-        formState.tier as string
+        formState.tier as PaymentTier
       );
 
       if (claimReady) {
@@ -249,6 +265,7 @@ const DropEditor: React.FC<{}> = () => {
           secondaryColor,
           bgColor,
           fontFamily,
+          tier,
         } = formState;
         const params = {
           contract: contract,
@@ -261,7 +278,8 @@ const DropEditor: React.FC<{}> = () => {
           email: email,
           twitter: twitter,
           discord: discord,
-          template: formState.tier
+          tier: tier,
+          template: formState.template,
         };
         apiClient
           .post(API_PATHS.CLAIM_SETUP, params, {
@@ -379,6 +397,7 @@ const DropEditor: React.FC<{}> = () => {
           <DrawerAccordions
             expandedAccordion={expandedAccordion}
             changeFormState={changeFormState}
+            collectionType={collectionType}
             formState={formState}
             setAccordion={(accordion) => setExpandedAccordion(accordion)}
           />
@@ -396,11 +415,7 @@ const DropEditor: React.FC<{}> = () => {
             selectProject={(contract) => changeProject(contract)}
           />
         )}
-        <Box
-          sx={{
-            height: 'calc(100vh - 128px)',
-          }}
-        >
+        <Box>
           <ClaimPageRenderer
             claim={formState}
             contractName={contract?.name}

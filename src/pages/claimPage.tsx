@@ -5,16 +5,25 @@ import FreeTier from '../components/templates/freetier';
 import LowTier from '../components/templates/lowtier';
 import { Claim, TemplateTier } from '../model/types';
 import { API_ENDPOINT, API_PATHS } from '../utils/config';
+import Music from '../components/templates/music';
 
 export const ClaimPageRenderer: React.FC<{
   claim: Claim;
   contractName?: string;
   isPreview: boolean;
 }> = ({ claim, contractName, isPreview }) => {
-  switch (claim.tier) {
+  switch (claim.template) {
     case TemplateTier.LOW:
       return (
         <LowTier
+          claim={claim}
+          contractName={contractName}
+          isPreview={isPreview}
+        />
+      );
+    case TemplateTier.MUSIC:
+      return (
+        <Music
           claim={claim}
           contractName={contractName}
           isPreview={isPreview}
@@ -74,6 +83,7 @@ const ClaimPage: React.FC<{}> = () => {
           secondarycolor,
           tier,
           chainid,
+          template,
         } = res[0];
         setClaim({
           artist,
@@ -88,6 +98,7 @@ const ClaimPage: React.FC<{}> = () => {
           secondaryColor: secondarycolor,
           tier,
           chainid,
+          template,
         });
       }
     })();
@@ -96,7 +107,7 @@ const ClaimPage: React.FC<{}> = () => {
     return null;
   }
   return (
-    <Box sx={{ height: '100vh', marginTop: '-64px' }}>
+    <Box sx={{ minHeight: '100vh', marginTop: '-64px' }}>
       <ClaimPageRenderer
         claim={claim}
         contractName={contractName as string}
