@@ -303,7 +303,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
         }}
       />
       <div className="flex flex-col items-center relative z-1 w-full h-full py-20 px-2 md:px-12 scrollbar-hide md:overflow-auto">
-        <div className="flex items-center p-2 m-10 gap-2 rounded-3xl bg-[#1b1a1f] drop-shadow-lg">
+        <div className="flex items-center p-2 mb-5 gap-2 rounded-3xl bg-[#1b1a1f] drop-shadow-lg">
           <span className="md:text-xl p-3 rounded-2xl">
             Contract:
             <a

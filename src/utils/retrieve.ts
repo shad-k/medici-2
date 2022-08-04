@@ -75,16 +75,15 @@ export const getResourceType = async (contract: string) => {
   return apiClient
     .get(API_PATHS.RETRIEVE_PROJECT_RESOURCE_TYPE, { params: request_data })
     .then(function (response) {
-      console.log(response)
       return Promise.resolve({
         success: true,
-        status: response.data,
+        type: response.data,
       });
     })
     .catch(function (error) {
       return Promise.reject({
         success: false,
-        status: 'Error getting contract resource type',
+        type: 'Error getting contract resource type',
       });
     });
 };

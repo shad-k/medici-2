@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useReward } from 'react-rewards';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -16,6 +16,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import '../css/dropeditor.css';
 import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Accordions } from '../model/types'
 
 import useWallet from '../hooks/useWallet';
 import apiClient from '../utils/apiClient';
@@ -27,6 +28,7 @@ import DrawerIcons from '../components/dropEditor/DrawerIcons';
 import ProjectSelector from '../components/dropEditor/ProjectSelector';
 import { ClaimPageRenderer } from '../pages/claimPage';
 import { utils, BigNumber } from 'ethers';
+import { getResourceType } from '../utils/retrieve';
 
 const drawerWidth = 320;
 
@@ -122,11 +124,12 @@ const DropEditor: React.FC<{}> = () => {
 
   const { wallet, setChain, connect } = useWallet();
   const [contract, setContract] = useState<Contract>();
+  const [collectionType, setCollectionType] = useState<string>();
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [claimCreationSuccess, setClaimCreationSuccess] = useState(false);
   const [open, setOpen] = React.useState(true);
 
-  const [expandedAccordion, setExpandedAccordion] = React.useState<string>('');
+  const [expandedAccordion, setExpandedAccordion] = React.useState<string>(Accordions.TIER);
   const [formState, setFormState] = React.useState(formInitialState);
 
   const handleDrawerOpen = () => {
@@ -223,6 +226,22 @@ const DropEditor: React.FC<{}> = () => {
       chainId: utils.hexValue(BigNumber.from(contract!.chainid)),
     });
   };
+  
+  const getCollectionType = useCallback(async() => {
+  if (contract) {
+    const { success, type }  = await getResourceType(contract.name);
+    console.log("Getting collection type for " + contract.name);
+      if (success) {
+        setCollectionType(type)
+      } else {
+        alert("Error getting contract type")
+      }
+    }
+  }, [contract])
+
+  useEffect(() => {
+  if (!collectionType) getCollectionType();
+  }, [collectionType, getCollectionType])
 
   const onConfirm = async () => {
     if (isFormValid && (await readyToTransact())) {
@@ -377,6 +396,7 @@ const DropEditor: React.FC<{}> = () => {
           <DrawerAccordions
             expandedAccordion={expandedAccordion}
             changeFormState={changeFormState}
+            collectionType={collectionType}
             formState={formState}
             setAccordion={(accordion) => setExpandedAccordion(accordion)}
           />

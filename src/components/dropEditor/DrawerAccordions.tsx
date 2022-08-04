@@ -18,6 +18,7 @@ import { Accordions, FormState, TemplateTier } from '../../model/types';
 interface Props {
   expandedAccordion: string;
   formState: FormState;
+  collectionType: string | undefined;
   changeFormState: (key: string, value: any) => void;
   setAccordion: (accordion: string) => void;
 }
@@ -25,6 +26,7 @@ interface Props {
 const DrawerAccordions: React.FC<Props> = ({
   expandedAccordion,
   formState,
+  collectionType,
   changeFormState,
   setAccordion,
 }) => {
@@ -147,8 +149,44 @@ const DrawerAccordions: React.FC<Props> = ({
     </Accordion>
   );
 
-  const tiers = (
+  const tiers = (collectionType === 'music') ? (
     <Accordion expanded={expandedAccordion === Accordions.TIER}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        onClick={() =>
+          setAccordion(
+            expandedAccordion === Accordions.TIER ? '' : Accordions.TIER
+          )
+        }
+      >
+        Claim Tier
+      </AccordionSummary>
+      <AccordionDetails>
+        <FormControl>
+          <RadioGroup
+            value={formState.template}
+            name="claim-tier"
+            id="tier-select"
+            onChange={(event) => changeFormState('template', event.target.value)}
+          >
+            <FormControlLabel value="music" control={<Radio />} label="Music" />
+            <FormControlLabel
+              value="mid"
+              control={<Radio />}
+              label="Mid (coming soon!)"
+              disabled
+            />
+            <FormControlLabel
+              value="high"
+              control={<Radio />}
+              label="High (coming soon!)"
+              disabled
+            />
+          </RadioGroup>
+        </FormControl>
+      </AccordionDetails>
+    </Accordion>) :
+    (<Accordion expanded={expandedAccordion === Accordions.TIER}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         onClick={() =>
@@ -169,7 +207,6 @@ const DrawerAccordions: React.FC<Props> = ({
           >
             <FormControlLabel value="free" control={<Radio />} label="Free" />
             <FormControlLabel value="low" control={<Radio />} label="Low" />
-            <FormControlLabel value="music" control={<Radio />} label="Music" />
             <FormControlLabel
               value="mid"
               control={<Radio />}
@@ -185,8 +222,8 @@ const DrawerAccordions: React.FC<Props> = ({
           </RadioGroup>
         </FormControl>
       </AccordionDetails>
-    </Accordion>
-  );
+    </Accordion>)
+  ;
 
   const colors = (
     <Accordion expanded={expandedAccordion === Accordions.COLORS}>
