@@ -223,7 +223,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
         </header>
       }
       <div
-        className={`flex flex-col items-start relative z-1 w-full md:w-1/2 lg:w-1/4 h-full py-20 pt-40 px-2 md:mt-20 ${
+        className={`flex flex-col items-start relative z-1 w-full md:w-1/2 lg:w-1/3 h-full mt-40 mb-10 p-10 md:mt-0 ${
           isPreview ? 'md:px-6' : 'md:px-12'
         } scrollbar-hide md:overflow-auto`}
       >
