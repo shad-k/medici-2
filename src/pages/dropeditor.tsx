@@ -231,11 +231,10 @@ const DropEditor: React.FC<{}> = () => {
 
   const getCollectionType = useCallback(async () => {
     if (contract) {
-      const { success, type } = await getResourceType(contract.name);
-      console.log('Getting collection type for ' + contract.name);
-      if (success) {
+      try {
+        const { success, type } = await getResourceType(contract.name);
         setCollectionType(type);
-      } else {
+      } catch {
         alert('Error getting contract type');
       }
     }

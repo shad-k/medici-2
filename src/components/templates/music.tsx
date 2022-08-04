@@ -12,8 +12,9 @@ import {
   getContractCover,
   getContractAudioSamples,
 } from '../../utils/retrieve';
-import { getTierPricing } from '../../utils/web3';
-import { Link } from 'react-router-dom';
+import { getContract } from '../../utils/web3';
+import { GET_CHAIN_BY_ID } from '../../model/chains';
+import { utils } from 'ethers';
 const localenv = CONFIG.DEV;
 
 interface MusicProps {
@@ -51,7 +52,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
 
   const audioElementRef = React.useRef<HTMLAudioElement>();
 
-  const [playing, setPlaying] = React.useState(true);
+  const [playing, setPlaying] = React.useState(false);
   const [name, setName] = React.useState<string>();
   const [masterAddress, setMasterAddress] = React.useState<string>();
   const [cover, setCover] = React.useState<string>();
@@ -59,6 +60,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
   const [minting, setMinting] = React.useState<boolean>(false);
   const [txHash, setTxHash] = React.useState<string>();
   const [price, setPrice] = React.useState<string>();
+  const projectChain = GET_CHAIN_BY_ID(parseInt(claim.chainid));
 
   const getName = React.useCallback(async () => {
     const contract = new ethers.Contract(claim.contract, abi, provider);
@@ -80,7 +82,8 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
   }, [contractName]);
 
   const getPrice = React.useCallback(async () => {
-    const price = await getTierPricing(wallet, claim.tier!);
+    const contract = await getContract(claim.contract, projectChain);
+    const price = await contract.price()
     setPrice(price);
   }, [wallet, claim.tier]);
 
@@ -208,7 +211,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
               </a>
             )}
           </div>
-          <div className="flex-1 text-2xl">{price && `${price} ETH`}</div>
+          <div className="flex-1 text-2xl">{price && `${utils.formatEther(price)} ETH`}</div>
           <button
             className="p-4 rounded-full bg-[#1b1a1f] text-white w-36 mx-auto disabled:bg-gray-500 drop-shadow-lg"
             onClick={connectedWallet ? () => mint() : () => connect({})}
@@ -223,7 +226,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
         </header>
       }
       <div
-        className={`flex flex-col items-start relative z-1 w-full md:w-1/2 lg:w-1/3 h-full mt-40 mb-10 p-10 md:mt-0 ${
+        className={`flex flex-col items-start relative z-1 w-full md:w-1/2 lg:w-1/3 h-full my-20 p-5 md:mt-0 lg:mt-20 ${
           isPreview ? 'md:px-6' : 'md:px-12'
         } scrollbar-hide md:overflow-auto`}
       >
@@ -284,7 +287,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
                 {/* {name} */}
               </div>
               <div className="text-xl text-white z-10 absolute bottom-8 break-all w-1/2 text-center">
-                {/* {claim.artist} */}
+                {claim.artist}
               </div>
               <div className="h-[100px] w-[100px] rounded-full z-10 bg-black absolute " />
               <div className="h-[30px] w-[30px] rounded-full z-10 bg-gray-500 absolute " />
@@ -315,6 +318,12 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
                       ? 0
                       : (val?.nextPlayingIndex as number) + 1,
                 }));
+              }}
+              onPlay={() => {
+                setPlaying(true)
+              }}
+              onPause={() => {
+                setPlaying(false)
               }}
               onCanPlay={() => {
                 audioElementRef?.current?.play();
