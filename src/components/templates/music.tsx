@@ -4,7 +4,7 @@ import FontPicker from 'font-picker-react';
 import { BsTwitter } from 'react-icons/bs';
 import { HiOutlineMail } from 'react-icons/hi';
 import { FaDiscord } from 'react-icons/fa';
-import { Claim } from '../../model/types';
+import { Claim, Chain } from '../../model/types';
 import useWallet from '../../hooks/useWallet';
 import { CONFIG } from '../../utils/config';
 import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
@@ -20,6 +20,7 @@ import { utils } from 'ethers';
 interface MusicProps {
   claim: Claim;
   contractName?: string;
+  chainid?: Chain;
   isPreview: boolean;
 }
 
@@ -42,7 +43,7 @@ const provider = new ethers.providers.JsonRpcProvider(
   'https://rpc.ankr.com/eth_goerli'
 );
 
-const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
+const Music: React.FC<MusicProps> = ({ claim, contractName, chainid, isPreview }) => {
   const { wallet, connect, setChain } = useWallet();
 
   const connectedWallet = wallet?.accounts[0];
@@ -65,7 +66,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
   const [verifiedProof, setVerifiedProof] = React.useState<string>();
   const [contractStatus, setContractStatus] = React.useState<string>();
   const [price, setPrice] = React.useState<string>();
-  const projectChain = GET_CHAIN_BY_ID(parseInt(claim.chainid));
+  const projectChain = isPreview ? chainid : GET_CHAIN_BY_ID(parseInt(claim.chainid));
 
   const getContractStatus = React.useCallback(async () => {
     if (contractName && projectChain) {
@@ -99,13 +100,13 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
   }, [contractName, connectedWallet]);
 
   const getName = React.useCallback(async () => {
-    const contract = await getContract(claim.contract, projectChain);
+    const contract = await getContract(claim.contract, projectChain!);
     const collectionName = await contract.name();
     setName(collectionName);
   }, [claim]);
 
   const getContractOwner = React.useCallback(async () => {
-    const contract = await getContract(claim.contract, projectChain);
+    const contract = await getContract(claim.contract, projectChain!);
     const contractOwner = await contract.masterAddress();
     setMasterAddress(contractOwner);
   }, [claim]);
@@ -118,7 +119,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
   }, [contractName]);
 
   const getPrice = React.useCallback(async () => {
-    const contract = await getContract(claim.contract, projectChain);
+    const contract = await getContract(claim.contract, projectChain!);
     const price = await contract.price()
     setPrice(price);
   }, [projectChain, claim.contract]);
@@ -290,13 +291,13 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
               </a>
             )}
             {claim.email && (
-              <a href={claim.email} target="_blank" rel="nofollow, noreferrer">
+              <a href={`mailto:${claim.email}`} target="_blank" rel="nofollow, noreferrer">
                 <HiOutlineMail size="30" />
               </a>
             )}
             {claim.twitter && (
               <a
-                href={claim.twitter}
+                href={(claim.twitter.endsWith(".com")) ? claim.twitter : `https://twitter.com/${claim.twitter}`}
                 target="_blank"
                 rel="nofollow, noreferrer"
               >
@@ -384,7 +385,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
                
                 <td className="text-right text-white">
                 <a
-                  href={`${projectChain.etherscanUrl}/address/${
+                  href={`${projectChain!.etherscanUrl}/address/${
                     claim!.contract
                   }`}
                   target="_blank"
@@ -408,7 +409,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
               )}
               <tr>
                 <td>Blockchain</td>
-                <td className="text-right">{projectChain.label}</td>
+                <td className="text-right">{projectChain!.label}</td>
               </tr>
             </tbody>
           </table>
