@@ -3,15 +3,16 @@ import { useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import FreeTier from '../components/templates/freetier';
 import LowTier from '../components/templates/lowtier';
-import { Claim, TemplateTier } from '../model/types';
+import { Chain, Claim, TemplateTier } from '../model/types';
 import { API_ENDPOINT, API_PATHS } from '../utils/config';
 import Music from '../components/templates/music';
 
 export const ClaimPageRenderer: React.FC<{
   claim: Claim;
   contractName?: string;
+  chainid?: Chain;
   isPreview: boolean;
-}> = ({ claim, contractName, isPreview }) => {
+}> = ({ claim, contractName, chainid, isPreview }) => {
   switch (claim.template) {
     case TemplateTier.LOW:
       return (
@@ -26,6 +27,7 @@ export const ClaimPageRenderer: React.FC<{
         <Music
           claim={claim}
           contractName={contractName}
+          chainid={chainid}
           isPreview={isPreview}
         />
       );

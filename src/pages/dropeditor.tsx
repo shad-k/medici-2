@@ -120,9 +120,7 @@ const formInitialState: FormState = {
 };
 
 const DropEditor: React.FC<{}> = () => {
-  const localenv = CONFIG.DEV;
-
-  const { wallet, setChain, connect } = useWallet();
+  const { wallet, setChain, connect, currentChain } = useWallet();
   const [contract, setContract] = useState<Contract>();
   const [collectionType, setCollectionType] = useState<string>();
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
@@ -419,6 +417,7 @@ const DropEditor: React.FC<{}> = () => {
           <ClaimPageRenderer
             claim={formState}
             contractName={contract?.name}
+            chainid={currentChain!}
             isPreview={true}
           />
         </Box>
