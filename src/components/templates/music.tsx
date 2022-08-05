@@ -4,7 +4,7 @@ import FontPicker from 'font-picker-react';
 import { BsTwitter } from 'react-icons/bs';
 import { HiOutlineMail } from 'react-icons/hi';
 import { FaDiscord } from 'react-icons/fa';
-import { Claim, TemplateTier } from '../../model/types';
+import { Claim } from '../../model/types';
 import useWallet from '../../hooks/useWallet';
 import { CONFIG } from '../../utils/config';
 import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
@@ -12,10 +12,10 @@ import {
   getContractCover,
   getContractAudioSamples,
 } from '../../utils/retrieve';
-import { getContract } from '../../utils/web3';
+import { getContractClaimStatus } from '../../utils/retrieve';
+import { getContract, verifyMerkleProof, getContractForTransactions } from '../../utils/web3';
 import { GET_CHAIN_BY_ID } from '../../model/chains';
 import { utils } from 'ethers';
-const localenv = CONFIG.DEV;
 
 interface MusicProps {
   claim: Claim;
@@ -43,7 +43,7 @@ const provider = new ethers.providers.JsonRpcProvider(
 );
 
 const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
-  const { wallet, connect } = useWallet();
+  const { wallet, connect, setChain } = useWallet();
 
   const connectedWallet = wallet?.accounts[0];
 
@@ -59,17 +59,53 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
   const [audio, setAudio] = React.useState<AudioSamples>();
   const [minting, setMinting] = React.useState<boolean>(false);
   const [txHash, setTxHash] = React.useState<string>();
+  const [claiming, setClaiming] = React.useState<boolean>(false);
+  const [claimTxHash, setClaimTxHash] = React.useState<string>();
+  const [isVerified, setIsVerified] = React.useState<boolean>();
+  const [verifiedProof, setVerifiedProof] = React.useState<string>();
+  const [contractStatus, setContractStatus] = React.useState<string>();
   const [price, setPrice] = React.useState<string>();
   const projectChain = GET_CHAIN_BY_ID(parseInt(claim.chainid));
 
+  const getContractStatus = React.useCallback(async () => {
+    if (contractName && projectChain) {
+      try {
+        const { success, status } = await getContractClaimStatus(
+          contractName,
+          projectChain.id.toString()
+        );
+        if (success) {
+          setContractStatus(status);
+        }
+      } catch {
+        alert('Could not get contract status');
+      }
+    }
+  }, [contractName, projectChain]);
+
+  const isAllowlistMember = React.useCallback(async () => {
+    if (contractName && connectedWallet) {
+      try {
+        const { success, merkleProof } = await verifyMerkleProof(
+          contractName,
+          connectedWallet.address
+        );
+        setIsVerified(success);
+        setVerifiedProof(merkleProof);
+      } catch {
+        setIsVerified(false);
+      }
+    }
+  }, [contractName, connectedWallet]);
+
   const getName = React.useCallback(async () => {
-    const contract = new ethers.Contract(claim.contract, abi, provider);
+    const contract = await getContract(claim.contract, projectChain);
     const collectionName = await contract.name();
     setName(collectionName);
   }, [claim]);
 
   const getContractOwner = React.useCallback(async () => {
-    const contract = new ethers.Contract(claim.contract, abi, provider);
+    const contract = await getContract(claim.contract, projectChain);
     const contractOwner = await contract.masterAddress();
     setMasterAddress(contractOwner);
   }, [claim]);
@@ -85,7 +121,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
     const contract = await getContract(claim.contract, projectChain);
     const price = await contract.price()
     setPrice(price);
-  }, [wallet, claim.tier]);
+  }, [projectChain, claim.contract]);
 
   const getAudioSamplesPlaylist = React.useCallback(async () => {
     if (contractName) {
@@ -99,18 +135,65 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
     }
   }, [contractName]);
 
+  const claimOnContract = async () => {
+    if (
+      wallet &&
+      connectedWallet &&
+      isVerified &&
+      verifiedProof !== null &&
+      projectChain
+    ) {
+      setClaiming(true);
+      try {
+        await setChain({ chainId: projectChain.hexId });
+        // const walletProvider = new ethers.providers.Web3Provider(
+        //   wallet.provider
+        // );
+        // const signer = walletProvider.getSigner(connectedWallet?.address);
+        // const contract = new ethers.Contract(
+        //   claim.contract,
+        //   localenv.contract.instanceAbi,
+        //   signer
+        // );
+        const contract = await getContractForTransactions(wallet, claim.contract);
+        const price = await contract.price();
+        const tx = await contract.claim(
+          connectedWallet?.address,
+          1,
+          verifiedProof,
+          {
+            value: price,
+            gasLimit: 9000000,
+          }
+        );
+        const claimResponse = await tx.wait();
+        setClaimTxHash(claimResponse.transactionHash);
+      } catch (error: any) {
+        if (error.message) {
+          alert(error.message);
+        } else {
+          alert('Something went wrong, please try again!');
+        }
+      } finally {
+        setClaiming(false);
+      }
+    }
+  };
+
   const mint = async () => {
     if (wallet && connectedWallet) {
       setMinting(true);
       try {
-        const walletProvider = new ethers.providers.Web3Provider(
-          wallet.provider
-        );
-        const signer = walletProvider.getSigner(connectedWallet?.address);
-        const contract = new ethers.Contract(claim.contract, abi, signer);
-        const tx = await contract.mint(connectedWallet?.address, 1, {
-          gasLimit: 30000000,
-        });
+        // const walletProvider = new ethers.providers.Web3Provider(
+        //   wallet.provider
+        // );
+        // const signer = walletProvider.getSigner(connectedWallet?.address);
+        // const contract = new ethers.Contract(claim.contract, abi, signer);
+        const contract = await getContractForTransactions(wallet, claim.contract);
+        const tx = await contract.mint(connectedWallet?.address, 1,{
+          value: price,
+          gasLimit: 9000000,
+        })
         const mintResponse = await tx.wait();
 
         setTxHash(mintResponse.transactionHash);
@@ -133,6 +216,12 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
       getCoverImage();
       getAudioSamplesPlaylist();
     }
+    if (contractName && !isPreview) {
+      isAllowlistMember();
+    }
+    if (contractName && !contractStatus) {
+      getContractStatus()
+    }
   }, [
     getName,
     getContractOwner,
@@ -142,6 +231,10 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
     cover,
     masterAddress,
     name,
+    isAllowlistMember,
+    isPreview,
+    contractStatus,
+    getContractStatus
   ]);
 
   React.useEffect(() => {
@@ -212,7 +305,50 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
             )}
           </div>
           <div className="flex-1 text-2xl">{price && `${utils.formatEther(price)} ETH`}</div>
-          <button
+          {contractStatus === 'none' && (
+            <button
+            className="p-4 rounded-full bg-[#1b1a1f] text-white w-36 mx-auto disabled:bg-gray-500 drop-shadow-lg"
+          >
+          Mint not active
+          </button>
+          )}
+          {contractStatus === 'claim' && 
+          ( isVerified ? ( claimTxHash ? (
+            <a
+              className="p-4 rounded-2xl text-sm bg-emerald-800 text-white mx-auto"
+              href={`${projectChain?.etherscanUrl}/tx/${txHash}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Success: Check transaction
+            </a>
+          ) : (<button
+            className="p-4 rounded-full bg-[#1b1a1f] text-white w-36 mx-auto disabled:bg-gray-500 drop-shadow-lg"
+            onClick={connectedWallet ? () => claimOnContract() : () => connect({})}
+            disabled={claiming}
+          >
+            {connectedWallet
+              ? claiming
+                ? 'Claiming...'
+                : 'Claim Now'
+              : 'Connect Wallet'}
+          </button>)) : (<button
+            className="p-4 rounded-full bg-[#1b1a1f] text-white w-36 mx-auto disabled:bg-gray-500 drop-shadow-lg"
+          >
+          Mint not active
+          </button>))
+          }
+          {contractStatus === 'mint' && 
+          ( txHash ? (
+            <a
+              className="p-4 rounded-2xl text-sm bg-emerald-800 text-white mx-auto"
+              href={`${projectChain?.etherscanUrl}/tx/${txHash}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Success: Check transaction
+            </a>
+          ) : (<button
             className="p-4 rounded-full bg-[#1b1a1f] text-white w-36 mx-auto disabled:bg-gray-500 drop-shadow-lg"
             onClick={connectedWallet ? () => mint() : () => connect({})}
             disabled={minting}
@@ -222,7 +358,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
                 ? 'Minting...'
                 : 'Mint Now'
               : 'Connect Wallet'}
-          </button>
+          </button>))}
         </header>
       }
       <div
@@ -245,8 +381,17 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
             <tbody>
               <tr>
                 <td>Contract Address</td>
+               
                 <td className="text-right text-white">
-                  {claim?.contract?.slice(0, 6)}...{claim?.contract?.slice(-6)}
+                <a
+                  href={`${projectChain.etherscanUrl}/address/${
+                    claim!.contract
+                  }`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                {claim?.contract?.slice(0, 6)}...{claim?.contract?.slice(-6)}
+                </a>
                 </td>
               </tr>
               <tr>
@@ -263,7 +408,7 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
               )}
               <tr>
                 <td>Blockchain</td>
-                <td className="text-right">Optimism</td>
+                <td className="text-right">{projectChain.label}</td>
               </tr>
             </tbody>
           </table>
@@ -365,16 +510,6 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, isPreview }) => {
             ></div>
             Start/Stop
           </Button>
-          {txHash && (
-            <a
-              className="px-5 py-2 rounded-2xl text-sm bg-emerald-800 text-white w-64 mx-auto text-center my-4"
-              href={`${localenv.network.txEtherscanUrl}${txHash}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Success: Check transaction
-            </a>
-          )}
           <a
             href={'https://launch.medicilabs.xyz'}
             target="_blank"
