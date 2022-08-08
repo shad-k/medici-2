@@ -141,10 +141,10 @@ const PageFive: React.FC<StepperFormProps> = ({
             {(!ContractCreationResult) && <p id="modal-text">Our platform waits for two blocks to confirm your transaction, to ensure your transaction is secure</p>}
             <br></br>
             { (ContractCreationSuccess && ContractCreationResult) ? 
-             <div className="flex flex-col gap-2">
+             <div className="flex flex-col gap-2 space-y-2 items-center">
              <Link
              to={`/project/${data.name}`}
-             className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]"
+             className="bg-medici-purple text-white  p-3 rounded-3xl min-w-[100px] whitespace-nowrap"
              >
              Manage your Project
             </Link>
