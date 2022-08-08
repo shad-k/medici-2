@@ -66,6 +66,8 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, chainid, isPreview }
   const [verifiedProof, setVerifiedProof] = React.useState<string>();
   const [contractStatus, setContractStatus] = React.useState<string>();
   const [price, setPrice] = React.useState<string>();
+  const [numMinted, setNumMinted] = React.useState<number>();
+  const [totalSupply, setTotalSupply] = React.useState<number>();
   const projectChain = isPreview ? chainid : GET_CHAIN_BY_ID(parseInt(claim.chainid));
 
   const getContractStatus = React.useCallback(async () => {
@@ -135,6 +137,17 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, chainid, isPreview }
       });
     }
   }, [contractName]);
+
+  const getContractDetails = React.useCallback(async () => {
+    if (claim && projectChain) {
+      const currContract = await getContract(claim.contract, projectChain)
+      const numMinted = await currContract.totalSupply()
+      setNumMinted(numMinted.toString())
+      const totalSupply = await currContract.maxSupply()
+      setTotalSupply(totalSupply.toString())
+    }
+  }, [claim, projectChain])
+
 
   const claimOnContract = async () => {
     if (
@@ -223,6 +236,9 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, chainid, isPreview }
     if (contractName && !contractStatus) {
       getContractStatus()
     }
+    if (contractName && !numMinted) {
+      getContractDetails()
+    }
   }, [
     getName,
     getContractOwner,
@@ -235,7 +251,10 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, chainid, isPreview }
     isAllowlistMember,
     isPreview,
     contractStatus,
-    getContractStatus
+    getContractStatus,
+    getContractDetails,
+    totalSupply,
+    numMinted
   ]);
 
   React.useEffect(() => {
@@ -410,6 +429,10 @@ const Music: React.FC<MusicProps> = ({ claim, contractName, chainid, isPreview }
               <tr>
                 <td>Blockchain</td>
                 <td className="text-right">{projectChain!.label}</td>
+              </tr>
+              <tr>
+                <td>Number Minted</td>
+                <td className="text-right">{numMinted}/{totalSupply}</td>
               </tr>
             </tbody>
           </table>

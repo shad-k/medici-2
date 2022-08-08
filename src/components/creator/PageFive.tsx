@@ -6,6 +6,7 @@ import useWallet from '../../hooks/useWallet'
 import { Contract } from '../../model/types';
 import { Modal, CircularProgress } from '@mui/material';
 import { utils } from 'ethers'
+import { Link } from 'react-router-dom'
 
 const PageFive: React.FC<StepperFormProps> = ({
     nextStep,
@@ -57,6 +58,7 @@ const PageFive: React.FC<StepperFormProps> = ({
     },[showModal])
 
     const onSubmit = async () => {
+      console.log(data)
       if (allowlistStrData && hasAllowlist) {
         console.log(allowlistStrData);
         const parsedStrings = await parseData(allowlistStrData);
@@ -94,12 +96,11 @@ const PageFive: React.FC<StepperFormProps> = ({
     <div className="w-full flex flex-col items-center p-10 h-screen">
         <div className="text-center w-4/5 mt-10 md:mt-52">
           <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-[#9403fc] font-semibold">Does your collection have an allowlist?</h1>
-          <h2 className="text-zinc-500">Reward community members and fans with a guranteed mint!</h2>
         </div>
         <div id="menu-options" className="flex flex-col space-y-4 m-10 items-center">
-        <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={() => setHasAllowlist(false)}>No</button>
         <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={onUploadAllowlist}>Yes</button>
-          <a href="https://docs.medicilabs.xyz/docs/Minting/overview#allow-listing" target="_blank"  className="bg-[#2e2c38] hover:bg-gradient-to-br text-center from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">What's that?</a>
+          <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={() => { setHasAllowlist(false); onSubmit()}}>No</button>
+          <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">What's that?</button>
         </div>
         <div id="allowlist-options" className="m-10 items-center hidden space-y-5 w-3/5">
           <div id="allowlist-upload">
@@ -140,10 +141,19 @@ const PageFive: React.FC<StepperFormProps> = ({
             {(!ContractCreationResult) && <p id="modal-text">Our platform waits for two blocks to confirm your transaction, to ensure your transaction is secure</p>}
             <br></br>
             { (ContractCreationSuccess && ContractCreationResult) ? 
-            <a 
-            target="_blank"
-            rel="noreferrer"
-            href={`${currentChain!.etherscanUrl}/tx/${ContractCreationResult.txhash}`}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
+             <div className="flex flex-col gap-2 space-y-2 items-center">
+             <Link
+             to={`/project/${data.name}`}
+             className="bg-medici-purple text-white  p-3 rounded-3xl min-w-[100px] whitespace-nowrap"
+             >
+             Manage your Project
+            </Link>
+             <a 
+             target="_blank"
+             rel="noreferrer"
+             href={`${currentChain!.etherscanUrl}/tx/${ContractCreationResult.txhash}`}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">View on Etherscan</span></a>
+             </div>
+            : <CircularProgress sx={{color: '#B81CD4'}}/>}
           </div>
           </Modal>
       </div>

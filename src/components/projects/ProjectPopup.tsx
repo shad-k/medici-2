@@ -166,7 +166,7 @@ const ProjectPopup: React.FC<{showModal: boolean, handleClose: any, contract: Co
         disableScrollLock
       >
       <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center outline-none space-y-5">
-        <label htmlFor="input-field">New Price</label>
+        <label htmlFor="input-field">New Price (wei)</label>
         <input id="input-field" className="text-black rounded-sm p-2" onChange={event => setNewPrice(event.target.value)}></input>
         <button className="bg-medici-purple p-3 rounded-2xl" onClick={() => onChangePrice()}>Submit</button>
       </div>
