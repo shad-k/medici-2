@@ -44,6 +44,8 @@ const FreeTier: React.FC<FreeTierProps> = ({
   const [isVerified, setIsVerified] = React.useState<boolean>();
   const [verifiedProof, setVerifiedProof] = React.useState<string>();
   const [contractStatus, setContractStatus] = React.useState<string>();
+  const [numMinted, setNumMinted] = React.useState<number>();
+  const [totalSupply, setTotalSupply] = React.useState<number>();
   const [projectChain, setProjectChain] = React.useState<Chain>();
 
   const stackSettings = {
@@ -119,6 +121,16 @@ const FreeTier: React.FC<FreeTierProps> = ({
       console.log(error.message);
     }
   }, [contractName]);
+
+  const getContractDetails = React.useCallback(async () => {
+    if (claim && projectChain) {
+      const currContract = await getContract(claim.contract, projectChain)
+      const numMinted = await currContract.totalSupply()
+      setNumMinted(numMinted.toString())
+      const totalSupply = await currContract.maxSupply()
+      setTotalSupply(totalSupply.toString())
+    }
+  }, [claim, projectChain])
 
   const mint = async () => {
     if (wallet && connectedWallet && projectChain) {
@@ -213,6 +225,9 @@ const FreeTier: React.FC<FreeTierProps> = ({
     if (contractName && !thumbnails) {
       getCollectionThumbnails();
     }
+    if (contractName && !numMinted) {
+      getContractDetails();
+    }
     if (contract && !projectChain) {
       setProjectChain(GET_CHAIN_BY_ID(parseInt(contract.chainid)));
     }
@@ -235,6 +250,9 @@ const FreeTier: React.FC<FreeTierProps> = ({
     name,
     projectChain,
     setProjectChain,
+    numMinted,
+    totalSupply,
+    getContractDetails
   ]);
 
   React.useEffect(() => {
@@ -289,7 +307,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
   }, [contractName]);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center text-white relative md:overflow-hidden px-0 md:px-8 apply-font">
+    <div className="w-full flex flex-col items-center justify-center text-white relative md:overflow-hidden px-0 md:px-8 apply-font h-screen">
       <div className="hidden">
         <FontPicker
           activeFontFamily={(claim.fontFamily as string) ?? undefined}
@@ -404,7 +422,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
                 {connectedWallet
                   ? claiming
                     ? 'Claiming...'
-                    : 'Claim Now'
+                    : `Claim Now ${numMinted}/${totalSupply}`
                   : 'Connect Wallet'}
               </button>
             )
@@ -443,7 +461,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
               {connectedWallet
                 ? minting
                   ? 'Minting...'
-                  : 'Mint Now'
+                  : `Mint Now ${numMinted}/${totalSupply}`
                 : 'Connect Wallet'}
             </button>
           ))}
