@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Contract } from '../../model/types';
 import { isValidAddress, generateNewContract, whitelist, getNewLaunchedContract, readyToTransact } from '../../utils/web3'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
+import { Link } from 'react-router-dom';
 
 const PageSix: React.FC<StepperFormProps> = ({
     handleInputData,
@@ -131,10 +132,18 @@ const PageSix: React.FC<StepperFormProps> = ({
             {(!ContractCreationResult) && <p id="modal-text">Our platform waits for two blocks to confirm your transaction, to ensure your transaction is secure</p>}
             <br></br>
             { (ContractCreationSuccess && ContractCreationResult) ? 
+            <div className="space-y-2">
+            <Link
+            to={`/project/${data.name}`}
+            className="bg-medici-purple text-white p-3 rounded-3xl whitespace-nowrap"
+            >
+            Manage your Project
+            </Link>
             <a 
             target="_blank"
             rel="noreferrer"
-            href={`${currentChain!.etherscanUrl}/tx/${ContractCreationResult.txhash}`}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a> : <CircularProgress sx={{color: '#B81CD4'}}/>}
+            href={`${currentChain!.etherscanUrl}/tx/${ContractCreationResult.txhash}`}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">Etherscan</span></a>
+            </div> : <CircularProgress sx={{color: '#B81CD4'}}/>}
           </div>
           </Modal>
       </div>
