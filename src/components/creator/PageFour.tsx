@@ -104,7 +104,7 @@ const PageFour: React.FC<StepperFormProps> = ({
           <br></br>
           <a href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500">This is where you upload the content for your collection.</a>
           <br></br>
-          <a href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500"> <u> Check our docs here for more information on upload formats.</u></a>
+          <a target="_blank" href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500" rel="noreferrer"> <u> Check our docs here for more information on upload formats.</u></a>
           
       </div>
       { !imageUploadSuccess ?
