@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { StepperFormProps } from '../../model/types';
-import { getMerkleRoot, readyToTransact, generateNewContract, getNewLaunchedContract, whitelist } from '../../utils/web3'
+import { getMerkleRoot, generateNewContract, getNewLaunchedContract, whitelist } from '../../utils/web3'
 import { parseData } from '../../utils/parse'
 import useWallet from '../../hooks/useWallet'
 import { Contract } from '../../model/types';
 import { Modal, CircularProgress } from '@mui/material';
 import { utils } from 'ethers'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 const PageFive: React.FC<StepperFormProps> = ({
     nextStep,
     handleInputData,
     data
 }) => {
-    const { wallet, connect, setChain, currentChain } = useWallet();
+    const { wallet, currentChain } = useWallet();
     const connectedWallet = wallet?.accounts[0]
     const [allowlistStrData, setAllowlistStrData] = useState<any>();
     const [hasAllowlist, setHasAllowlist] = useState<boolean>(false);
@@ -58,7 +58,6 @@ const PageFive: React.FC<StepperFormProps> = ({
     },[showModal])
 
     const onSubmit = async () => {
-      console.log(data)
       if (allowlistStrData && hasAllowlist) {
         console.log(allowlistStrData);
         const parsedStrings = await parseData(allowlistStrData);
@@ -96,11 +95,12 @@ const PageFive: React.FC<StepperFormProps> = ({
     <div className="w-full flex flex-col items-center p-10 h-screen">
         <div className="text-center w-4/5 mt-10 md:mt-52">
           <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-[#9403fc] font-semibold">Does your collection have an allowlist?</h1>
+          <h2 className="text-zinc-500">Reward community members and fans with a guranteed mint!</h2>
         </div>
         <div id="menu-options" className="flex flex-col space-y-4 m-10 items-center">
+        <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={() => setHasAllowlist(false)}>No</button>
         <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={onUploadAllowlist}>Yes</button>
-          <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]" onClick={() => { setHasAllowlist(false); onSubmit()}}>No</button>
-          <button className="bg-[#2e2c38] hover:bg-gradient-to-br hover:from-medici-purple hover:to-medici-purple-dark focus:bg-gradient-to-br from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">What's that?</button>
+          <a href="https://docs.medicilabs.xyz/docs/Minting/overview#allow-listing" target="_blank"  className="bg-[#2e2c38] hover:bg-gradient-to-br text-center from-medici-purple to-medici-purple-dark p-3 rounded-3xl w-[450px] sm:w-[500px]">What's that?</a>
         </div>
         <div id="allowlist-options" className="m-10 items-center hidden space-y-5 w-3/5">
           <div id="allowlist-upload">
@@ -136,22 +136,35 @@ const PageFive: React.FC<StepperFormProps> = ({
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-          <div className="relative top-[30%] mx-auto p-5 w-96 h-[300px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
-            {(!ContractCreationResult) && <h1 id="modal-header" className="text-center text-2xl">Generating your Smart Contract</h1>}
-            {(!ContractCreationResult) && <p id="modal-text">Our platform waits for two blocks to confirm your transaction, to ensure your transaction is secure</p>}
+          <div className="relative top-[30%] mx-auto p-5 w-96 h-[400px] shadow-lg rounded-2xl bg-[#2e2c38] text-white flex flex-col items-center justify-center">
+            {(!ContractCreationResult) && <h1 id="modal-header" className="text-center text-2xl">Deploying your Smart Contract</h1>}
+            {(!ContractCreationResult) && <p id="modal-text">Hang tight, our platform waits for two blocks before confirming your contract deployment</p>}
             <br></br>
+
             { (ContractCreationSuccess && ContractCreationResult) ? 
-             <div className="flex flex-col gap-2 space-y-2 items-center">
-             <Link
-             to={`/project/${data.name}`}
-             className="bg-medici-purple text-white  p-3 rounded-3xl min-w-[100px] whitespace-nowrap"
+             <div className="flex flex-col gap-2 space-y-3 items-center">
+               <h1 id="modal-header" className="text-center text-2xl">Upload succesful!</h1>
+              <p id="modal-text">You can now manage your project or head over to the launch flow to deploy your custom mint site! </p>
+              <a
+              target="_blank"
+              rel="noreferrer"
+             href={`/launch/${data.name}`}
+             className="bg-medici-purple text-white text-center  p-3 rounded-3xl w-[200px] whitespace-nowrap"
              >
-             Manage your Project
-            </Link>
+             Launch your Project page
+            </a>
+             <a
+             target="_blank"
+             rel="noreferrer"
+             href={`/project/${data.name}`}
+             className="bg-medici-purple text-white text-center  p-3 rounded-3xl w-[200px] whitespace-nowrap"
+             >
+             Manage your Project details
+            </a>
              <a 
              target="_blank"
              rel="noreferrer"
-             href={`${currentChain!.etherscanUrl}/tx/${ContractCreationResult.txhash}`}><span className="bg-medici-purple text-white  p-3 rounded-3xl w-2/5 min-w-[100px]">View on Etherscan</span></a>
+             href={`${currentChain!.etherscanUrl}/tx/${ContractCreationResult.txhash}`} className="bg-medici-purple text-white text-center  p-3 rounded-3xl w-[200px]">View on Etherscan</a>
              </div>
             : <CircularProgress sx={{color: '#B81CD4'}}/>}
           </div>

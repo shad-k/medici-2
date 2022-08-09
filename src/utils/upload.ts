@@ -1,7 +1,6 @@
 import apiClient from './apiClient'
 import { API_PATHS, CONFIG } from './config'
 import JSZip from 'jszip';
-import FileSaver from 'file-saver';
 
 const localenv = CONFIG.DEV
 

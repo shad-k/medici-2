@@ -102,9 +102,9 @@ const PageFour: React.FC<StepperFormProps> = ({
       <div className="text-center w-4/5 mt-10 md:mt-52">
           <h1 className="bg-transparent text-[50px] inline w-fit text-center tracking-wide text-transparent bg-clip-text text-[#9403fc] font-semibold">Upload your collection media</h1>
           <br></br>
-          <a href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500">This is where you upload the content for your collection.</a>
+          <a target="_blank"  href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500" rel="noreferrer">This is where you upload the content for your collection.</a>
           <br></br>
-          <a target="_blank" href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500" rel="noreferrer"> <u> Check our docs here for more information on upload formats.</u></a>
+          <a target="_blank"  href="https://docs.medicilabs.xyz/docs/Minting/overview#collection-upload" className="text-zinc-500" rel="noreferrer"> <u> Check our docs here for more information on upload formats.</u></a>
           
       </div>
       { !imageUploadSuccess ?
@@ -142,7 +142,7 @@ const PageFour: React.FC<StepperFormProps> = ({
         <button className="text-[#8E00FF] text-2xl" onClick={onSubmit}>Next</button>
       </div>
       { showLoader && <div className="w-4/5">
-      <h1>Hang tight!</h1>
+      <h1>Hang tight, your art is uploading! May take a few minutes for larger media and leaving will cancel upload.</h1>
       <LinearProgress
         id="progress-loader"
         variant="determinate"
