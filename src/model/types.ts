@@ -92,6 +92,11 @@ export enum TemplateTier {
   MUSIC = 'music'
 }
 
+export enum CollectionType {
+  IMAGE = 'image',
+  MUSIC = 'music'
+}
+
 export type Claim = {
   contract: string
   tier: PaymentTier | null
@@ -106,6 +111,7 @@ export type Claim = {
   twitter: string | null
   discord: string | null
   chainid: string
+  type?: CollectionType
 }
 
 export enum Accordions {
@@ -130,6 +136,7 @@ export type FormState = {
   tier: PaymentTier | null
   template: TemplateTier | null
   chainid: string
+  type?: CollectionType
 }
 
 export type ChainConfigReturn = {
