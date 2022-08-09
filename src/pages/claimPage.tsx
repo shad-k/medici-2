@@ -44,6 +44,7 @@ export const ClaimPageRenderer: React.FC<{
 
 const ClaimPage: React.FC<{}> = () => {
   const [claim, setClaim] = React.useState<Claim>();
+  console.log(claim)
 
   const { name: contractName } = useParams();
 

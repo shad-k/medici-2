@@ -21,7 +21,7 @@ import { Accordions } from '../model/types';
 import useWallet from '../hooks/useWallet';
 import apiClient from '../utils/apiClient';
 import { API_PATHS, CONFIG } from '../utils/config';
-import { Contract, FormState, PaymentTier, TemplateTier } from '../model/types';
+import { Contract, FormState, PaymentTier, TemplateTier, CollectionType } from '../model/types';
 import { claimsInit } from '../utils/web3';
 import DrawerAccordions from '../components/dropEditor/DrawerAccordions';
 import DrawerIcons from '../components/dropEditor/DrawerIcons';
@@ -232,6 +232,9 @@ const DropEditor: React.FC<{}> = () => {
       try {
         const { success, type } = await getResourceType(contract.name);
         setCollectionType(type);
+        if (type === CollectionType.MUSIC) {
+          changeFormState("template", CollectionType.MUSIC)
+        }
       } catch {
         alert('Error getting contract type');
       }

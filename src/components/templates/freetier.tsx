@@ -4,7 +4,7 @@ import FontPicker from 'font-picker-react';
 import { BsTwitter } from 'react-icons/bs';
 import { HiOutlineMail } from 'react-icons/hi';
 import { FaDiscord } from 'react-icons/fa';
-import { Chain, Claim, Contract } from '../../model/types';
+import { Chain, Claim, CollectionType, Contract } from '../../model/types';
 import useWallet from '../../hooks/useWallet';
 import { getThumbnails } from '../../utils/reservations';
 import { API_ENDPOINT, API_PATHS, CONFIG } from '../../utils/config';
@@ -362,6 +362,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
         </div>
         <div className="w-[500px] z-30">
           <Slider {...stackSettings}>
+          {claim.type === CollectionType.MUSIC &&
             <div className="flex rounded-2xl w-full max-h-[500px] outline-none overflow-hidden">
               <img
                 src={cover}
@@ -369,6 +370,7 @@ const FreeTier: React.FC<FreeTierProps> = ({
                 className="object-cover h-full w-full rounded-2xl"
               />
             </div>
+            }
             {thumbnails &&
               Object.keys(thumbnails).map((i: string) => (
                 <div
