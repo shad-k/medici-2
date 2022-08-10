@@ -12,7 +12,7 @@ const Home: React.FC<{}> = () => {
   const [visited, setVisited] = useLocalStorage("visited", false);
 
   const navigateAway = useCallback(() => {
-    setVisited(true)
+    setVisited(false)
   }, [setVisited])
   
   useEffect(() => {
@@ -79,9 +79,9 @@ useEffect(() => {
         </IconButton>
           <h1 className="text-3xl m-2">🚀 What's New 🚀</h1>
             <div className="space-y-3 w-4/5 mt-5">
-              <p> 💫 ability to launch 1 - 1000 sized NFT collections</p>
-              <p> 💫 ability to launch a custom mint page from one of our templates </p>
-              <p> 💫 ability to manage contract and withdraw funds</p>
+              <p> 💫 launch music NFTs and Mint Pages </p>
+              <p> 💫 manage project details and preview tokens </p>
+              <p> 💫 customize mint style and experience </p>
             </div>
             <img src={`${process.env.PUBLIC_URL}/medici_demo_1.gif`} className="w-1/2"/>
           </div>
